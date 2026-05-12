@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './main/index.css'
-import App from './main/App.tsx'
+import './main/global.css'
+import Layout from './main/layout.tsx'
 
 const rootElement = document.getElementById('root')
 
@@ -11,6 +11,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <Layout />
   </StrictMode>,
 )
