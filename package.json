@@ -5,9 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:desktop": "vite --config vite.config.desktop.ts",
+    "dev:mobile": "vite --config vite.config.mobile.ts",
     "build": "tsc -b && vite build",
+    "build:desktop": "tsc -b && vite build --config vite.config.desktop.ts",
+    "build:mobile": "tsc -b && vite build --config vite.config.mobile.ts",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:desktop": "vite preview --config vite.config.desktop.ts",
+    "preview:mobile": "vite preview --config vite.config.mobile.ts"
   },
   "dependencies": {
     "@heddy/design-tokens": "link:./pakages/design-tokens",
