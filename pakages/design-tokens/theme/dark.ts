@@ -2,7 +2,7 @@ import type { Theme } from "./types";
 
 export const darkTheme: Theme = {
     primary: {
-        normal: "#F1070A",
+        normal: "#41BE8E",
     },
     label: {
         normal: "#F5F5F5",
