@@ -11,6 +11,7 @@ export const lightTheme: Theme = {
         alternative: "#5A5C5D",
         assistive: "#76787A",
         disable: "#E6E6E7",
+        buttonText: "#F5F5F5",
     },
     line: {
         normal: "#C1C2C3",
@@ -20,12 +21,12 @@ export const lightTheme: Theme = {
     fill: {
         normal: "#F7F7F7",
         neutral: "#E6E6E7",
-        alternative: "#DDE0DF",
+        alternative: "#DDDEDF",
     },
     background: {
         normal: "#FFFFFF",
         neutral: "#F7F7F7",
-        alternative: "#F7F7F7",
+        alternative: "#FAFAFA",
     },
     status: {
         error: "#EE2A2B",

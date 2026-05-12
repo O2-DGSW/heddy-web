@@ -9,6 +9,7 @@ export interface Theme {
     alternative: string;
     assistive: string;
     disable: string;
+    buttonText: string;
   };
   line: {
     normal: string;

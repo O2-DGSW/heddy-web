@@ -11,6 +11,7 @@ export const darkTheme: Theme = {
         alternative: "#C4C5C6",
         assistive: "#9C9D9F",
         disable: "#3C3E3F",
+        buttonText: "#0C0C0D",
     },
     line: {
         normal: "#747678",
