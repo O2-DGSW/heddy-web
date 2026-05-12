@@ -18,7 +18,8 @@
   "dependencies": {
     "@heddy/design-tokens": "link:./pakages/design-tokens",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "react-router-dom": "^7.15.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
