@@ -27,4 +27,10 @@ export const lightTheme: Theme = {
         neutral: "#F7F7F7",
         alternative: "#F7F7F7",
     },
+    status: {
+        error: "#EE2A2B",
+        info:"#1A97FF",
+        success: "#31E87A",
+        warning: "#FFD11A",
+    }
 };

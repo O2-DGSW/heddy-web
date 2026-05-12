@@ -27,4 +27,10 @@ export const darkTheme: Theme = {
         neutral: "#4D4F51",
         alternative: "#303234",
     },
+    status: {
+        error: "#EE2A2B",
+        info:"#1A97FF",
+        success: "#31E87A",
+        warning: "#FFD11A",
+    }
 };

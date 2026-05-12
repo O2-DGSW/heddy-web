@@ -25,4 +25,10 @@ export interface Theme {
     neutral: string;
     alternative: string;
   };
+  status: {
+      error: string;
+      warning: string;
+      success: string;
+      info: string;
+  }
 }
