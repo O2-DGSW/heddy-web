@@ -19,6 +19,7 @@
     "@capacitor/camera": "^8.2.0",
     "@capacitor/cli": "^8.3.3",
     "@capacitor/core": "^8.3.3",
+    "@capacitor/ios": "^8.3.4",
     "@heddy/design-tokens": "link:./pakages/design-tokens",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
