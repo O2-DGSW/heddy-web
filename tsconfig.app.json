@@ -23,6 +23,8 @@
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
+      "@design-tokens": ["pakages/design-tokens/index.ts"],
+      "@/shared/*": ["src/renderer/shared/*"],
       "@/*": ["src/renderer/mobile/src/*"]
     }
   },
