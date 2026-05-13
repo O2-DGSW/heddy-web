@@ -1,1 +1,10 @@
-// 기존 api-response 요청 코드를 작성하는 파일입니다.
+import { api, ApiResponse } from '@/shared/api'
+
+import type { FeatNameResponse } from '../model/featName.types'
+
+export const featNameApi = {
+  getFeatName: async () => {
+    const result = await api.get<ApiResponse<FeatNameResponse>>('/user/name')
+    return result.data
+  },
+}
