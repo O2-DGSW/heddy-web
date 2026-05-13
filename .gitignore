@@ -14,7 +14,8 @@ dist-ssr
 *.local
 
 # Capacitor
-ios/DerivedData
+ios/
+android/
 
 # Editor directories and files
 .vscode/*

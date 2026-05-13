@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "ios": "npx cap add ios",
+    "android": "npx cap add android",
     "dev": "vite",
     "dev:desktop": "vite --config vite.config.desktop.ts",
     "dev:mobile": "vite --config vite.config.mobile.ts",
+    "dev:android": "npx cap open android",
+    "dev:ios": "npx cap open ios",
     "build": "tsc -b && vite build",
     "build:desktop": "tsc -b && vite build --config vite.config.desktop.ts",
     "build:mobile": "tsc -b && vite build --config vite.config.mobile.ts",
@@ -16,6 +20,7 @@
     "preview:mobile": "vite preview --config vite.config.mobile.ts"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.4",
     "@capacitor/camera": "^8.2.0",
     "@capacitor/cli": "^8.3.3",
     "@capacitor/core": "^8.3.3",
