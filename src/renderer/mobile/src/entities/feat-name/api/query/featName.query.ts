@@ -1,1 +1,0 @@
-// 기존 api-response 요청 코드를 토대로 Tanstack-query를 이용한 쿼리문을 작성하는 파일입니다.
