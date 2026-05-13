@@ -7,9 +7,16 @@ export default defineConfig({
   root: resolve(__dirname, 'src/renderer/desktop'),
   plugins: [react(), tailwindcss()],
   resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src/renderer/desktop/src'),
-    },
+    alias: [
+      {
+        find: '@/shared',
+        replacement: resolve(__dirname, 'src/renderer/shared'),
+      },
+      {
+        find: '@',
+        replacement: resolve(__dirname, 'src/renderer/desktop/src'),
+      },
+    ],
   },
   server: {
     port: 5173,
