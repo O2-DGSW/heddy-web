@@ -4,16 +4,18 @@ import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
 
 export default defineConfig({
+  root: resolve(__dirname, 'src/renderer/desktop'),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src/renderer/desktop/src'),
     },
   },
+  server: {
+    port: 5173,
+  },
   build: {
-    rollupOptions: {
-      input: resolve(__dirname, 'desktop.html'),
-    },
-    outDir: 'dist/desktop',
+    outDir: resolve(__dirname, 'dist/desktop'),
+    emptyOutDir: true,
   },
 })
