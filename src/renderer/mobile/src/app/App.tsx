@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="App pt-safe pb-safe px-safe">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />
