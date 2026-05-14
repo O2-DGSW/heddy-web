@@ -1,5 +1,6 @@
 export type FontVariants = {
     bold: string;
+    semiBold: string;
     medium: string;
     regular: string;
 }
