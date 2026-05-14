@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const isLive = process.env.CAPACITOR_LIVE === 'true';
