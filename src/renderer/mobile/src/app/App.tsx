@@ -1,14 +1,33 @@
 import { MainPage } from "@/pages/main";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { ProfilePage } from "@/pages/profile";
+import { BottomBar } from "@/widgets/bottom-bar/BottomBar";
 
-const App = () => {
+const Layout = () => {
+  const location = useLocation();
+
+  const hideBottomBar = location.pathname === "/login";
+
   return (
-    <div className="App">
-      <BrowserRouter>
+    <div className="h-full flex flex-col">
+      <div className="flex-1">
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<></>} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
+      </div>
+
+      {!hideBottomBar && <BottomBar />}
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <div className="mt-[2rem] mb-[2rem] size-full">
+      <BrowserRouter>
+        <Layout />
       </BrowserRouter>
     </div>
   );
