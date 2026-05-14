@@ -36,10 +36,10 @@ pnpm build:desktop
 pnpm build:mobile
 
 # iOS
-pnpm dev:ios
+pnpm build:ios
 
 # Android
-pnpm dev:android
+pnpm build:android
 ```
 
 ## 빌드 결과물 미리보기
