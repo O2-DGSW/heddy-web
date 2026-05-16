@@ -19,7 +19,7 @@ export const SETTING_ITEMS: SettingItemProps[] = [
   {
     icon: SettingsIcon,
     alt: "setting",
-    title: "설정 관리",
+    title: "회원정보 수정",
   },
   {
     icon: AlarmIcon,
