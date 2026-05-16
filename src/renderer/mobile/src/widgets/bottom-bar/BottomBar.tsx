@@ -11,11 +11,11 @@ import ProfileIcon from "./assets/profile.svg?react";
 
 type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
-interface NavItem {
+type NavItem = {
   Icon: IconType;
   title: string;
   to: string;
-}
+};
 
 const NAV_ITEMS: NavItem[] = [
   { Icon: HomeIcon, title: "홈", to: "/" },
