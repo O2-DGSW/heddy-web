@@ -30,7 +30,7 @@ const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
   );
 };
 
-const STATS = [
+const stats = [
   {
     icon: CustomerIcon,
     alt: "customer",
@@ -99,7 +99,7 @@ export const FieldOfTopProfile = () => {
             backgroundColor: palette.main[97],
           }}
         >
-          {STATS.map(item => (
+          {stats.map(item => (
             <StatItem
               key={item.alt}
               icon={item.icon}
