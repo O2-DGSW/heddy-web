@@ -1,7 +1,7 @@
 import { MainPage } from "@/pages/main";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ProfilePage } from "@/pages/profile";
-import { BottomBar } from "@/widgets/bottom-bar/BottomBar";
+import { BottomBar } from "@/widgets/bottom-bar";
 
 const Layout = () => {
   const location = useLocation();
@@ -16,7 +16,7 @@ const Layout = () => {
           <Route path="/login" element={<></>} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
-      </div>
+      </BrowserRouter>
 
       {!hideBottomBar && <BottomBar />}
     </div>
