@@ -2,10 +2,10 @@ import { font, lightTheme, palette } from "@design-tokens";
 
 import { useDefaultProfile } from "@/features/profile/model/default/useDefaultProfile.ts";
 
-import ProfileImg from "@/features/profile/assets/top-field/ANAG.png";
-import CustomerIcon from "@/features/profile/assets/top-field/customer.svg";
-import DocumentIcon from "@/features/profile/assets/top-field/document.svg";
-import DateIcon from "@/features/profile/assets/top-field/cate.svg";
+import ProfileImg from "@/features/profile/assets/default/top-field/ANAG.png";
+import CustomerIcon from "@/features/profile/assets/default/top-field/customer.svg";
+import DocumentIcon from "@/features/profile/assets/default/top-field/document.svg";
+import DateIcon from "@/features/profile/assets/default/top-field/cate.svg";
 
 interface StatItemProps {
   icon: string;

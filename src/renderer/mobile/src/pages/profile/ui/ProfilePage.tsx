@@ -1,8 +1,14 @@
 import { lightTheme } from "@design-tokens";
 
-import { FieldOfTopProfile } from "@/features/profile/ui/default/FieldOfTopProfile.tsx";
-import { FieldOfSetting } from "@/features/profile/ui/default/FieldOfSetting.tsx";
 import { Route, Routes } from "react-router-dom";
+
+// default
+import { DefaultProfile } from "@/features/profile/ui/default/DefaultProfile.tsx";
+import { DefaultSetting } from "@/features/profile/ui/default/DefaultSetting.tsx";
+
+// 회원 정보 수정
+import { EditSetting } from "@/features/profile/ui/edit/EditSetting.tsx";
+import { EditProfile } from "@/features/profile/ui/edit/EditProfile.tsx";
 
 export const ProfilePage = () => {
   return (
@@ -10,12 +16,12 @@ export const ProfilePage = () => {
       <Route
         path="/"
         element={
-          <div id="wrapper" className="flex flex-col min-h-dvh">
+          <div id="wrapper" className="flex flex-col h-full">
             <div className="h-[14rem]">
-              <FieldOfTopProfile />
+              <DefaultProfile />
             </div>
             <div className="flex-1" style={{ backgroundColor: lightTheme.fill.normal }}>
-              <FieldOfSetting />
+              <DefaultSetting />
             </div>
           </div>
         }
@@ -24,12 +30,13 @@ export const ProfilePage = () => {
       <Route
         path="/edit"
         element={
-          <div id="wrapper" className="flex flex-col min-h-dvh">
-            <div className="h-[14rem]">
-              <FieldOfTopProfile />
+          <div id="wrapper" className="flex flex-col">
+            <div className="h-[17rem]">
+              <EditProfile />
             </div>
-            <div className="flex-1" style={{ backgroundColor: lightTheme.fill.normal }}>
-              <FieldOfSetting />
+            <div className="h-[0.625rem]" style={{ backgroundColor: lightTheme.fill.normal }} />
+            <div className="flex-1" style={{ backgroundColor: lightTheme.background.normal }}>
+              <EditSetting />
             </div>
           </div>
         }

@@ -1,5 +1,5 @@
 import { font, lightTheme } from "@design-tokens";
-import ArrowIcon from "@/features/profile/assets/setting-field/Arrow.svg";
+import ArrowIcon from "@/features/profile/assets/default/setting-field/Arrow.svg";
 import { SETTING_ITEMS } from "@/features/profile/constrants/setting-items.ts";
 import type { SettingItemProps } from "@/features/profile";
 import { useDefaultSetting } from "@/features/profile/model/default/useDefaultSetting.ts";
