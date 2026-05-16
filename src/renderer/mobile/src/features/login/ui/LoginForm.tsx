@@ -1,4 +1,5 @@
 import { lightTheme, font } from "@design-tokens";
+import { Link } from "react-router-dom";
 import { useLoginForm } from "../model/login";
 
 export const LoginForm = () => {
@@ -43,6 +44,17 @@ export const LoginForm = () => {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
+      </div>
+
+      <div
+        className={`flex justify-center gap-2 ${font.caption.medium}`}
+        style={{ color: lightTheme.label.assistive }}
+      >
+        <Link to="/find-id">아이디찾기</Link>
+        <span>·</span>
+        <Link to="/find-password">비밀번호 찾기</Link>
+        <span>·</span>
+        <Link to="/signup">회원가입</Link>
       </div>
 
       <button
