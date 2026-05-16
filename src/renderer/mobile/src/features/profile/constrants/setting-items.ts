@@ -1,9 +1,9 @@
 import type { SettingItemProps } from "@/features/profile";
 
-import BookmarkIcon from "@/features/profile/assets/setting-field/Bookmark.svg";
-import SettingsIcon from "@/features/profile/assets/setting-field/Setting.svg";
-import PortfolioIcon from "@/features/profile/assets/setting-field/Portfolio.svg";
-import AlarmIcon from "@/features/profile/assets/setting-field/Alarm.svg";
+import BookmarkIcon from "@/features/profile/assets/default/setting-field/Bookmark.svg";
+import SettingsIcon from "@/features/profile/assets/default/setting-field/Setting.svg";
+import PortfolioIcon from "@/features/profile/assets/default/setting-field/Portfolio.svg";
+import AlarmIcon from "@/features/profile/assets/default/setting-field/Alarm.svg";
 
 export const SETTING_ITEMS: SettingItemProps[] = [
   {
