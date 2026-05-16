@@ -31,16 +31,16 @@ export const LoginForm = () => {
           className={`${font.label.medium} pl-2`}
           style={{ color: lightTheme.label.assistive }}
         >
-          비밀 번호
+          비밀번호
         </label>
         <input
           type="password"
           className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
           style={{
-            backgroundColor: lightTheme.fill.normal,
+            backgroundColor: lightTheme.background.neutral,
             color: lightTheme.label.assistive,
           }}
-          placeholder="비밀 번호"
+          placeholder="비밀번호"
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
