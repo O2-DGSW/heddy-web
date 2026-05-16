@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const useFieldOfSetting = () => {
+export const useDefaultSetting = () => {
   const navigate = useNavigate();
 
   // navigate

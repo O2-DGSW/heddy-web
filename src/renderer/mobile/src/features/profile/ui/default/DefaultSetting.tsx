@@ -2,7 +2,7 @@ import { font, lightTheme } from "@design-tokens";
 import ArrowIcon from "@/features/profile/assets/setting-field/Arrow.svg";
 import { SETTING_ITEMS } from "@/features/profile/constrants/setting-items.ts";
 import type { SettingItemProps } from "@/features/profile";
-import { useFieldOfSetting } from "@/features/profile/model/useFieldOfSetting.ts";
+import { useDefaultSetting } from "@/features/profile/model/default/useDefaultSetting.ts";
 
 const SettingItem = ({ icon, alt, title, onClick }: SettingItemProps) => {
   return (
@@ -27,8 +27,8 @@ const SettingItem = ({ icon, alt, title, onClick }: SettingItemProps) => {
   );
 };
 
-export const FieldOfSetting = () => {
-  const { handleNavigation } = useFieldOfSetting();
+export const DefaultSetting = () => {
+  const { handleNavigation } = useDefaultSetting();
 
   return (
     <div className="size-full px-[1.4rem] py-[2.25rem]">
