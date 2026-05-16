@@ -1,7 +1,8 @@
 import { MainPage } from "@/pages/main";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { LoginPage } from "@/pages/login";
 import { ProfilePage } from "@/pages/profile";
 import { BottomBar } from "@/widgets/bottom-bar";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 const Layout = () => {
   const location = useLocation();
