@@ -1,0 +1,35 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { NAV_ITEMS } from "../constrants/nav-items.ts";
+import { getBarItemState } from "../model/focusEffect";
+import { BarItem } from "./BarItem";
+
+export const BottomBar = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (
+    <div
+      className="
+        flex fixed bottom-0 left-0 w-full
+        rounded-2xl p-[0.5rem]
+        shadow-[0_-2px_6px_rgba(0,0,0,0.05)]
+      "
+    >
+      {NAV_ITEMS.map(({ Icon, title, to }) => {
+        const state = getBarItemState(location.pathname, to);
+
+        return (
+          <BarItem
+            key={to}
+            Icon={Icon}
+            title={title}
+            iconColor={state.iconColor}
+            backgroundColor={state.backgroundColor}
+            textColor={state.textColor}
+            onClick={() => navigate(to)}
+          />
+        );
+      })}
+    </div>
+  );
+};
