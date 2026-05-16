@@ -1,4 +1,5 @@
 import { lightTheme, font } from '@design-tokens'
+import { LoginForm, SocialLogin } from '@/features/login'
 
 export const LoginPage = () => {
   return (
@@ -13,6 +14,11 @@ export const LoginPage = () => {
         </p>
       </div>
 
+      <LoginForm />
+
+      <div className="w-full mt-10">
+        <SocialLogin />
+      </div>
     </div>
   )
 }
