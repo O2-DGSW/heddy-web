@@ -1,6 +1,6 @@
 import { font, lightTheme, palette } from "@design-tokens";
 
-import { useFieldOfTopProfile } from "@/features/profile/model/useFieldOfTopProfile";
+import { useFieldOfTopProfile } from "@/features/profile/model/useFieldOfTopProfile.ts";
 
 import ProfileImg from "@/features/profile/assets/top-field/ANAG.png";
 

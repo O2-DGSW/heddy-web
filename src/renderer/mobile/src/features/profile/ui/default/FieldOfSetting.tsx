@@ -2,7 +2,7 @@ import { font, lightTheme } from "@design-tokens";
 import ArrowIcon from "@/features/profile/assets/setting-field/Arrow.svg";
 import { SETTING_ITEMS } from "@/features/profile/constrants/setting-items.ts";
 import type { SettingItemProps } from "@/features/profile";
-import { useFieldOfSetting } from "@/features/profile/model/useFieldOfSetting";
+import { useFieldOfSetting } from "@/features/profile/model/useFieldOfSetting.ts";
 
 const SettingItem = ({ icon, alt, title, onClick }: SettingItemProps) => {
   return (
