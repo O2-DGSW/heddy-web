@@ -1,6 +1,6 @@
 import { lightTheme, font } from "@design-tokens";
 import { Link } from "react-router-dom";
-import { useLoginForm } from "../model/login";
+import { useLoginForm } from "@/features/login/model/login";
 
 export const LoginForm = () => {
   const { id, setId, password, setPassword, handleLogin } = useLoginForm();

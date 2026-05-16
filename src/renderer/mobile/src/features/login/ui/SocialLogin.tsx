@@ -1,8 +1,8 @@
 import { lightTheme, font } from "@design-tokens";
-import google from "@/features/login/assets/social-field/google.svg";
-import kakao from "@/features/login/assets/social-field/kakao.svg";
-import naver from "@/features/login/assets/social-field/naver.svg";
-import { useSocialLogin } from "../model/socialLogin";
+import GoogleIcon from "@/features/login/assets/social-field/google.svg";
+import KakaoIcon from "@/features/login/assets/social-field/kakao.svg";
+import NaverIcon from "@/features/login/assets/social-field/naver.svg";
+import { useSocialLogin } from "@/features/login/model/socialLogin";
 
 export const SocialLogin = () => {
   const { handleKakaoLogin, handleNaverLogin, handleGoogleLogin } = useSocialLogin();
@@ -19,15 +19,15 @@ export const SocialLogin = () => {
 
       <div className="flex gap-6">
         <button onClick={handleKakaoLogin}>
-          <img src={kakao} alt="카카오 로그인" className="size-12" />
+          <img src={KakaoIcon} alt="카카오 로그인" className="size-12" />
         </button>
 
         <button onClick={handleNaverLogin}>
-          <img src={naver} alt="네이버 로그인" className="size-12" />
+          <img src={NaverIcon} alt="네이버 로그인" className="size-12" />
         </button>
 
         <button onClick={handleGoogleLogin}>
-          <img src={google} alt="구글 로그인" className="size-12" />
+          <img src={GoogleIcon} alt="구글 로그인" className="size-12" />
         </button>
       </div>
     </div>
