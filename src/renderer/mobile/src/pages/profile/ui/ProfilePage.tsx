@@ -5,8 +5,8 @@ import { FieldOfSetting } from "@/features/profile/ui/FieldOfSetting.tsx";
 
 export const ProfilePage = () => {
   return (
-    <div className="flex flex-col h-screen">
-      <div className="h-[31%]">
+    <div className="flex flex-col min-h-dvh">
+      <div className="h-[14rem]">
         <FieldOfTopProfile />
       </div>
       <div className="flex-1" style={{ backgroundColor: lightTheme.fill.normal }}>

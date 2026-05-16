@@ -30,7 +30,7 @@ export const FieldOfSetting = () => {
   return (
     <div className="size-full px-[1.4rem] py-[2.25rem]">
       <div
-        className="w-full h-[72.5%] rounded-[1rem]"
+        className="w-full rounded-[1rem]"
         style={{
           backgroundColor: lightTheme.background.normal,
         }}
