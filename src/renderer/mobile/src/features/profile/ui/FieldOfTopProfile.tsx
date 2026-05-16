@@ -1,6 +1,9 @@
 import { font, lightTheme, palette } from "@design-tokens";
 
+import { useFieldOfTopProfile } from "@/features/profile/model/useFieldOfTopProfile";
+
 import ProfileImg from "@/features/profile/assets/top-field/ANAG.png";
+
 import CustomerIcon from "@/features/profile/assets/top-field/customer.svg";
 import DocumentIcon from "@/features/profile/assets/top-field/document.svg";
 import DateIcon from "@/features/profile/assets/top-field/cate.svg";
@@ -18,11 +21,21 @@ const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
       <img className="size-[2.25rem]" src={icon} alt={alt} />
 
       <div className="flex flex-row gap-[0.175rem]">
-        <p className={font.label.medium} style={{ color: lightTheme.primary.normal }}>
+        <p
+          className={font.label.medium}
+          style={{
+            color: lightTheme.primary.normal,
+          }}
+        >
           {value}
         </p>
 
-        <p className={font.label.medium} style={{ color: lightTheme.label.assistive }}>
+        <p
+          className={font.label.medium}
+          style={{
+            color: lightTheme.label.assistive,
+          }}
+        >
           {unit}
         </p>
       </div>
@@ -30,28 +43,30 @@ const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
   );
 };
 
-const stats = [
-  {
-    icon: CustomerIcon,
-    alt: "customer",
-    value: 12,
-    unit: "명",
-  },
-  {
-    icon: DateIcon,
-    alt: "date",
-    value: 12,
-    unit: "건",
-  },
-  {
-    icon: DocumentIcon,
-    alt: "document",
-    value: 12,
-    unit: "데이터",
-  },
-];
-
 export const FieldOfTopProfile = () => {
+  const { data } = useFieldOfTopProfile();
+
+  const stats = [
+    {
+      icon: CustomerIcon,
+      alt: "customer",
+      value: data.customer,
+      unit: "명",
+    },
+    {
+      icon: DateIcon,
+      alt: "date",
+      value: data.cutCnt,
+      unit: "건",
+    },
+    {
+      icon: DocumentIcon,
+      alt: "document",
+      value: data.cutData,
+      unit: "데이터",
+    },
+  ];
+
   return (
     <div className="h-full px-[1.25rem] py-[1.75rem]">
       <div
@@ -65,7 +80,7 @@ export const FieldOfTopProfile = () => {
 
           <div className="flex flex-row items-center gap-[0.5rem]">
             <div className="flex flex-row items-center gap-[0.325rem]">
-              <p className={font.headline1.bold}>오용준</p>
+              <p className={font.headline1.bold}>{data.name}</p>
 
               <p className={font.headline1.bold}>님</p>
             </div>
@@ -85,7 +100,7 @@ export const FieldOfTopProfile = () => {
                 color: lightTheme.label.assistive,
               }}
             >
-              디자이너
+              {data.role}
             </p>
           </div>
         </div>
@@ -93,7 +108,8 @@ export const FieldOfTopProfile = () => {
         <div
           className="
             flex flex-row justify-around
-            w-full rounded-[1rem] px-[1rem] py-[0.5rem]
+            w-full rounded-[1rem]
+            px-[1rem] py-[0.5rem]
           "
           style={{
             backgroundColor: palette.main[97],
