@@ -10,13 +10,11 @@ const Layout = () => {
 
   return (
     <div className="App pt-safe pb-safe px-safe">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<></>} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/login" element={<></>} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
 
       {!hideBottomBar && <BottomBar />}
     </div>
