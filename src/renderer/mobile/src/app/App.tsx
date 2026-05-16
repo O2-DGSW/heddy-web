@@ -9,8 +9,8 @@ const Layout = () => {
   const hideBottomBar = location.pathname === "/login";
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex-1">
+    <div className="App pt-safe pb-safe px-safe">
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<></>} />
