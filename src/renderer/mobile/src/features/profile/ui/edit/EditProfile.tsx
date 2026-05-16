@@ -4,9 +4,11 @@ import { useDefaultProfile } from "@/features/profile/model/default/useDefaultPr
 
 import ProfileImg from "@/features/profile/assets/edit/ANAG.png";
 import ArrowIcon from "@/features/profile/assets/edit/Arrow.svg";
+import { useNavigate } from "react-router-dom";
 
 export const EditProfile = () => {
   const { data } = useDefaultProfile();
+  const navigate = useNavigate();
 
   return (
     <div className="h-full px-[1.25rem] py-[1.75rem]">
@@ -17,7 +19,7 @@ export const EditProfile = () => {
         }}
       >
         <div className="flex flex-row justify-between items-center">
-          <button className="size-[1.25rem]">
+          <button className="size-[1.25rem]" onClick={() => navigate("/profile")}>
             <img className="rotate-180 size-full" src={ArrowIcon} alt="arrow" />
           </button>
           <p className={font.headline1.semiBold} style={{ color: lightTheme.label.neutral }}>
