@@ -5,12 +5,12 @@ import CustomerIcon from "@/features/profile/assets/top-field/customer.svg";
 import DocumentIcon from "@/features/profile/assets/top-field/document.svg";
 import DateIcon from "@/features/profile/assets/top-field/cate.svg";
 
-type StatItemProps = {
+interface StatItemProps {
   icon: string;
   alt: string;
   value: number;
   unit: string;
-};
+}
 
 const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
   return (

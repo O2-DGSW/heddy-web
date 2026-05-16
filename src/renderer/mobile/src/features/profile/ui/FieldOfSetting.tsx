@@ -6,11 +6,11 @@ import PortfolioIcon from "@/features/profile/assets/setting-field/Portfolio.svg
 import AlarmIcon from "@/features/profile/assets/setting-field/Alarm.svg";
 import ArrowIcon from "@/features/profile/assets/setting-field/Arrow.svg";
 
-type SettingItemProps = {
+interface SettingItemProps {
   icon: string;
   alt: string;
   title: string;
-};
+}
 
 const SETTING_ITEMS = [
   {
