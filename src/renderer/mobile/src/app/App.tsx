@@ -13,7 +13,7 @@ const Layout = () => {
     <div className="App pt-safe pb-safe px-safe">
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<></>} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/profile/*" element={<ProfilePage />} />
       </Routes>
 
