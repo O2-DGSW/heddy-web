@@ -1,0 +1,59 @@
+import { font, lightTheme } from '@design-tokens';
+import {
+  useSignup,
+  SignupTypeSelect,
+  TermsAgreement,
+  CustomerAccountForm,
+  OwnerAccountForm,
+  ShopForm,
+} from '@/features/signup';
+import { STEP_TITLE } from '@/features/signup/constants/signup';
+
+export const SignupPage = () => {
+  const {
+    step,
+    memberType,
+    customerForm,
+    setCustomerForm,
+    ownerForm,
+    setOwnerForm,
+    shopForm,
+    setShopForm,
+    selectMemberType,
+    nextStep,
+  } = useSignup();
+
+  return (
+    <div
+      className="h-full overflow-y-auto flex flex-col items-center px-6 pt-8"
+      style={{ backgroundColor: lightTheme.background.normal }}
+    >
+      <div className="flex flex-col items-center gap-2 mb-14">
+        <img src="/heddyIcon.svg" alt="heddy" className="w-50" />
+        <p className={font.body.medium} style={{ color: lightTheme.label.assistive }}>
+          {STEP_TITLE[step]}
+        </p>
+      </div>
+
+      {step === 'type-select' && (
+        <SignupTypeSelect onSelect={selectMemberType} />
+      )}
+
+      {step === 'terms' && (
+        <TermsAgreement onNext={nextStep} />
+      )}
+
+      {step === 'account' && memberType === 'customer' && (
+        <CustomerAccountForm form={customerForm} onChange={setCustomerForm} onNext={nextStep} />
+      )}
+
+      {step === 'account' && memberType === 'owner' && (
+        <OwnerAccountForm form={ownerForm} onChange={setOwnerForm} onNext={nextStep} />
+      )}
+
+      {step === 'shop' && (
+        <ShopForm form={shopForm} onChange={setShopForm} onNext={nextStep} />
+      )}
+    </div>
+  );
+};

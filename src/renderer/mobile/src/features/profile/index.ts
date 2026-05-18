@@ -1,3 +1,3 @@
-export { FieldOfSetting } from "@/features/profile/ui/FieldOfSetting.tsx";
-export { FieldOfTopProfile } from "@/features/profile/ui/FieldOfTopProfile.tsx";
-export type { SettingItemProps } from "@/features/profile/model/SettingItem.types.ts";
+export { DefaultSetting } from "@/features/profile/ui/default/DefaultSetting.tsx";
+export { DefaultProfile } from "@/features/profile/ui/default/DefaultProfile.tsx";
+export type { SettingItemProps } from "@/features/profile/model/default/types/SettingItem.types.ts";
