@@ -14,7 +14,7 @@ const Layout = () => {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/*" element={<ProfilePage />} />
       </Routes>
 
       {!hideBottomBar && <BottomBar />}

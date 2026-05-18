@@ -1,7 +1,9 @@
 import { lightTheme } from "@design-tokens";
 
 export const getBarItemState = (currentPath: string, targetPath: string) => {
-  const isActive = currentPath === targetPath;
+  const isActive =
+    currentPath === targetPath ||
+    (targetPath !== "/" && currentPath.startsWith(`${targetPath}/`));
 
   return {
     isActive,
