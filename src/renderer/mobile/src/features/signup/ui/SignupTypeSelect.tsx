@@ -14,7 +14,7 @@ export const SignupTypeSelect = ({ onSelect }: Props) => {
 
   return (
     <div className="flex flex-col w-full">
-      <button className="flex items-center gap-6 w-full py-8 pl-4" onClick={handleCustomerSelect}>
+      <button className="flex items-center gap-6 w-full py-8 pl-6" onClick={handleCustomerSelect}>
         <img src={AgerUserIcon} alt="고객/디자이너 회원" className="w-28 h-28 object-contain" />
         <div className="flex flex-col items-start gap-2">
           <p
@@ -33,7 +33,7 @@ export const SignupTypeSelect = ({ onSelect }: Props) => {
 
       <div className="w-full h-px" style={{ backgroundColor: lightTheme.line.alternative }} />
 
-      <button className="flex items-center gap-6 w-full py-8 pl-4" onClick={handleOwnerSelect}>
+      <button className="flex items-center gap-6 w-full py-8 pl-6" onClick={handleOwnerSelect}>
         <img src={AgerDesignerIcon} alt="원장 회원" className="w-28 h-28 object-contain" />
         <div className="flex flex-col items-start gap-2">
           <p
