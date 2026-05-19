@@ -2,6 +2,7 @@ import { font, lightTheme } from '@design-tokens';
 import type { Carrier, MvnoCarrier } from '../model/types';
 import { MAIN_CARRIERS, MVNO_CARRIERS } from '../constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
+import { formatPhone } from '@/private/shared/utils/formatPhone';
 
 interface Props {
   carrier: Carrier;
@@ -60,7 +61,7 @@ export const PhoneVerificationField = ({
           style={inputStyle}
           placeholder="휴대폰 번호"
           value={phone}
-          onChange={e => onPhoneChange(e.target.value)}
+          onChange={e => onPhoneChange(formatPhone(e.target.value))}
         />
         <button
           className={`px-6 py-4 rounded-xl ${font.caption.medium}`}
