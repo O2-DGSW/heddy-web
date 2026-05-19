@@ -1,8 +1,8 @@
 import { font, lightTheme } from '@design-tokens';
 import { Link } from 'react-router-dom';
 import type { OwnerAccountForm as OwnerAccountFormType } from '../model/types';
-import { PasswordFields } from './PasswordFields';
-import { PhoneVerificationField } from './PhoneVerificationField';
+import { useAccountForm } from '../model/useAccountForm';
+import { AccountFormFields } from './AccountFormFields';
 
 interface Props {
   form: OwnerAccountFormType;
@@ -11,6 +11,11 @@ interface Props {
 }
 
 export const OwnerAccountForm = ({ form, onChange, onNext }: Props) => {
+  const { isValid, canRequestVerification, showPasswordError, showPhoneError, submitted, handleNext } =
+    useAccountForm(form, !!form.representativeName, onNext);
+
+  const showRepresentativeNameError = submitted && !form.representativeName;
+
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
     color: lightTheme.label.normal,
@@ -18,48 +23,39 @@ export const OwnerAccountForm = ({ form, onChange, onNext }: Props) => {
 
   return (
     <div className="flex flex-col w-full gap-4">
-      <div className="flex flex-col gap-1">
-        <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>이메일</p>
-        <input
-          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
-          style={inputStyle}
-          placeholder="이메일"
-          value={form.email}
-          onChange={e => onChange({ ...form, email: e.target.value })}
-        />
-      </div>
-
-      <PasswordFields
-        password={form.password}
-        passwordConfirm={form.passwordConfirm}
-        onPasswordChange={v => onChange({ ...form, password: v })}
-        onPasswordConfirmChange={v => onChange({ ...form, passwordConfirm: v })}
-      />
-
-      <div className="flex flex-col gap-1">
-        <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>대표자명</p>
-        <input
-          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
-          style={inputStyle}
-          placeholder="대표자명"
-          value={form.representativeName}
-          onChange={e => onChange({ ...form, representativeName: e.target.value })}
-        />
-      </div>
-
-      <PhoneVerificationField
-        carrier={form.carrier}
-        phone={form.phone}
-        verificationCode={form.verificationCode}
-        onCarrierChange={v => onChange({ ...form, carrier: v })}
-        onPhoneChange={v => onChange({ ...form, phone: v })}
-        onVerificationCodeChange={v => onChange({ ...form, verificationCode: v })}
+      <AccountFormFields
+        form={form}
+        showPasswordError={showPasswordError}
+        showPhoneError={showPhoneError}
+        canRequestVerification={canRequestVerification}
+        onChange={v => onChange({ ...form, ...v })}
+        middleSlot={
+          <div className="flex flex-col gap-1">
+            <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>대표자명</p>
+            <input
+              className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+              style={inputStyle}
+              placeholder="대표자명"
+              value={form.representativeName}
+              onChange={e => onChange({ ...form, representativeName: e.target.value })}
+            />
+            {showRepresentativeNameError && (
+              <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
+                대표자명을 입력해주세요.
+              </p>
+            )}
+          </div>
+        }
       />
 
       <button
         className={`w-full py-4 rounded-2xl mt-2 ${font.headline2.semiBold}`}
-        style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
-        onClick={onNext}
+        style={{
+          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.fill.neutral,
+          color: isValid ? lightTheme.fill.normal : lightTheme.label.assistive,
+        }}
+        disabled={!isValid}
+        onClick={handleNext}
       >
         다음으로
       </button>
