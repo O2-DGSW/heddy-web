@@ -6,7 +6,7 @@ export type MainCarrier = "SKT" | "KT" | "LG U+";
 export type MvnoCarrier = "SKT 알뜰폰" | "KT 알뜰폰" | "LGU+ 알뜰폰";
 export type Carrier = MainCarrier | MvnoCarrier;
 
-export type CustomerAccountForm = {
+export type BaseAccountForm = {
   id: string;
   password: string;
   passwordConfirm: string;
@@ -15,14 +15,10 @@ export type CustomerAccountForm = {
   verificationCode: string;
 };
 
-export type OwnerAccountForm = {
-  email: string;
-  password: string;
-  passwordConfirm: string;
+export type CustomerAccountForm = BaseAccountForm;
+
+export type OwnerAccountForm = BaseAccountForm & {
   representativeName: string;
-  carrier: Carrier;
-  phone: string;
-  verificationCode: string;
 };
 
 export type ShopForm = {

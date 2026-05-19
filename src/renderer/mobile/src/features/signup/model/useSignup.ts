@@ -15,7 +15,7 @@ export const useSignup = () => {
   });
 
   const [ownerForm, setOwnerForm] = useState<OwnerAccountForm>({
-    email: '',
+    id: '',
     password: '',
     passwordConfirm: '',
     representativeName: '',
