@@ -28,12 +28,6 @@ export const CustomerAccountForm = ({ form, onChange, onNext }: Props) => {
             value={form.id}
             onChange={e => onChange({ ...form, id: e.target.value })}
           />
-          <button
-            className={`px-4 py-4 rounded-xl ${font.caption.medium}`}
-            style={{ backgroundColor: lightTheme.fill.neutral, color: lightTheme.label.assistive }}
-          >
-            중복확인
-          </button>
         </div>
       </div>
 

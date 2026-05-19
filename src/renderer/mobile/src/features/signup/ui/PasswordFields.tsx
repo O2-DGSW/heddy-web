@@ -18,7 +18,7 @@ export const PasswordFields = ({ password, passwordConfirm, onPasswordChange, on
       <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>비밀 번호</p>
       <input
         type="password"
-        className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+        className={`w-full px-4 py-4 mb-[3px] rounded-xl focus:outline-none ${font.caption.regular}`}
         style={inputStyle}
         placeholder="비밀 번호"
         value={password}
