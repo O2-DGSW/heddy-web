@@ -1,8 +1,10 @@
-export type MemberType = 'customer' | 'owner';
+export type MemberType = "customer" | "owner";
 
-export type SignupStep = 'type-select' | 'terms' | 'account' | 'shop';
+export type SignupStep = "type-select" | "terms" | "account" | "shop";
 
-export type Carrier = 'SKT' | 'KT' | 'LG U+' | '알뜰폰';
+export type MainCarrier = "SKT" | "KT" | "LG U+";
+export type MvnoCarrier = "SKT 알뜰폰" | "KT 알뜰폰" | "LGU+ 알뜰폰";
+export type Carrier = MainCarrier | MvnoCarrier;
 
 export type CustomerAccountForm = {
   id: string;

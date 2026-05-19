@@ -1,6 +1,6 @@
 import { font, lightTheme } from '@design-tokens';
-import type { Carrier } from '../model/types';
-import { CARRIERS } from '../constants/signup';
+import type { Carrier, MvnoCarrier } from '../model/types';
+import { MAIN_CARRIERS, MVNO_CARRIERS } from '../constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 
 interface Props {
@@ -11,6 +11,9 @@ interface Props {
   onPhoneChange: (value: string) => void;
   onVerificationCodeChange: (value: string) => void;
 }
+
+const MVNO_SET = new Set<string>(MVNO_CARRIERS);
+const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
 
 export const PhoneVerificationField = ({
   carrier,
@@ -25,11 +28,13 @@ export const PhoneVerificationField = ({
     color: lightTheme.label.normal,
   };
 
+  const isAlddulSelected = isMvno(carrier);
+
   return (
     <div className="flex flex-col gap-2">
       <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>휴대폰 번호</p>
-      <div className="flex gap-3 flex-wrap">
-        {CARRIERS.map(c => (
+      <div className="flex items-center gap-9 flex-wrap ml-2">
+        {MAIN_CARRIERS.map(c => (
           <RadioButton
             key={c}
             label={c}
@@ -37,6 +42,17 @@ export const PhoneVerificationField = ({
             onClick={() => onCarrierChange(c)}
           />
         ))}
+        <select
+          className={`focus:outline-none bg-transparent ${font.caption.medium}`}
+          style={{ color: isAlddulSelected ? lightTheme.primary.normal : lightTheme.label.assistive }}
+          value={isAlddulSelected ? carrier : ''}
+          onChange={e => onCarrierChange(e.target.value as MvnoCarrier)}
+        >
+          <option value="" disabled>알뜰폰</option>
+          {MVNO_CARRIERS.map(c => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
       <div className="flex gap-2">
         <input
@@ -47,7 +63,7 @@ export const PhoneVerificationField = ({
           onChange={e => onPhoneChange(e.target.value)}
         />
         <button
-          className={`px-4 py-4 rounded-xl ${font.caption.medium}`}
+          className={`px-6 py-4 rounded-xl ${font.caption.medium}`}
           style={{ backgroundColor: lightTheme.fill.neutral, color: lightTheme.label.assistive }}
         >
           인증번호
