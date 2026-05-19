@@ -10,9 +10,14 @@ import { DefaultSetting } from "@/features/profile/ui/default/DefaultSetting.tsx
 import { EditSetting } from "@/features/profile/ui/edit/EditSetting.tsx";
 import { EditProfile } from "@/features/profile/ui/edit/EditProfile.tsx";
 
+// 알람 설정
+import { AlarmTop } from "@/features/profile/ui/alarm/AlarmTop.tsx";
+import { AlarmBottom } from "@/features/profile/ui/alarm/AlarmBottom.tsx";
+
 export const ProfilePage = () => {
   return (
     <Routes>
+      {/* 기본 프로필 렌더 페이지*/}
       <Route
         path="/"
         element={
@@ -27,6 +32,7 @@ export const ProfilePage = () => {
         }
       />
       <Route path="/bookmarks/styles" element={<></>} />
+      {/* 회원 정보 수정 페이지 */}
       <Route
         path="/edit"
         element={
@@ -41,8 +47,37 @@ export const ProfilePage = () => {
           </div>
         }
       />
+
+      {/* 포폴 페이지 */}
       <Route path="/portfolio" element={<></>} />
-      <Route path="/alarm" element={<></>} />
+
+      {/* 알람 설정 페이지 */}
+      <Route
+        path="/alarm"
+        element={
+          <div id="wrapper" className="flex flex-col h-[37rem]">
+            <div className="h-[17rem]">
+              <AlarmTop />
+            </div>
+
+            <div
+              className="h-1"
+              style={{
+                backgroundColor: lightTheme.line.alternative,
+              }}
+            />
+
+            <div
+              className="flex-1"
+              style={{
+                backgroundColor: lightTheme.background.normal,
+              }}
+            >
+              <AlarmBottom />
+            </div>
+          </div>
+        }
+      />
     </Routes>
   );
 };
