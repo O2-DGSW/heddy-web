@@ -67,10 +67,10 @@ export const PhoneVerificationField = ({
           onChange={e => onPhoneChange(formatPhone(e.target.value))}
         />
         <button
-          className={`px-6 py-4 rounded-xl ${font.caption.medium}`}
+          className={`px-6 py-4 rounded-xl ${font.label.medium}`}
           style={{
-            backgroundColor: canRequestVerification ? lightTheme.primary.normal : lightTheme.fill.neutral,
-            color: canRequestVerification ? lightTheme.fill.normal : lightTheme.label.assistive,
+            backgroundColor: canRequestVerification ? lightTheme.primary.normal : lightTheme.line.alternative,
+            color: canRequestVerification ? lightTheme.fill.normal : lightTheme.line.normal,
           }}
           disabled={!canRequestVerification}
         >

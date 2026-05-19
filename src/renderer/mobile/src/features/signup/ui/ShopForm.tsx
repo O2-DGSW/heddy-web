@@ -39,8 +39,8 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
             readOnly
           />
           <button
-            className={`px-4 py-4 rounded-xl ${font.caption.medium}`}
-            style={{ backgroundColor: lightTheme.fill.neutral, color: lightTheme.label.assistive }}
+            className={`px-6 py-4 rounded-xl ${font.label.medium}`}
+            style={{ backgroundColor: lightTheme.line.alternative, color: lightTheme.label.assistive }}
           >
             주소검색
           </button>
