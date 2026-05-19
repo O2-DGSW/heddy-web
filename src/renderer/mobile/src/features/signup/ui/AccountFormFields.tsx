@@ -1,0 +1,64 @@
+import React from 'react';
+import { font, lightTheme } from '@design-tokens';
+import type { BaseAccountForm } from '../model/types';
+import { PasswordFields } from './PasswordFields';
+import { PhoneVerificationField } from './PhoneVerificationField';
+
+interface Props {
+  form: BaseAccountForm;
+  showPasswordError: boolean;
+  showPhoneError: boolean;
+  canRequestVerification: boolean;
+  onChange: (form: BaseAccountForm) => void;
+  middleSlot?: React.ReactNode;
+}
+
+export const AccountFormFields = ({
+  form,
+  showPasswordError,
+  showPhoneError,
+  canRequestVerification,
+  onChange,
+  middleSlot,
+}: Props) => {
+  const inputStyle = {
+    backgroundColor: lightTheme.background.neutral,
+    color: lightTheme.label.normal,
+  };
+
+  return (
+    <>
+      <div className="flex flex-col gap-1">
+        <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>아이디</p>
+        <input
+          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+          style={inputStyle}
+          placeholder="아이디"
+          value={form.id}
+          onChange={e => onChange({ ...form, id: e.target.value })}
+        />
+      </div>
+
+      <PasswordFields
+        password={form.password}
+        passwordConfirm={form.passwordConfirm}
+        showError={showPasswordError}
+        onPasswordChange={v => onChange({ ...form, password: v })}
+        onPasswordConfirmChange={v => onChange({ ...form, passwordConfirm: v })}
+      />
+
+      {middleSlot}
+
+      <PhoneVerificationField
+        carrier={form.carrier}
+        phone={form.phone}
+        verificationCode={form.verificationCode}
+        canRequestVerification={canRequestVerification}
+        showPhoneError={showPhoneError}
+        onCarrierChange={v => onChange({ ...form, carrier: v })}
+        onPhoneChange={v => onChange({ ...form, phone: v })}
+        onVerificationCodeChange={v => onChange({ ...form, verificationCode: v })}
+      />
+    </>
+  );
+};

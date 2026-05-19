@@ -25,10 +25,10 @@ export const SignupPage = () => {
 
   return (
     <div
-      className="h-full overflow-y-auto flex flex-col items-center px-6 pt-8"
+      className="h-full overflow-y-auto flex flex-col items-center px-6 pt-4"
       style={{ backgroundColor: lightTheme.background.normal }}
     >
-      <div className="flex flex-col items-center gap-2 mb-14">
+      <div className="flex flex-col items-center gap-2 mb-8">
         <img src="/heddyIcon.svg" alt="heddy" className="w-50" />
         <p className={font.body.medium} style={{ color: lightTheme.label.assistive }}>
           {STEP_TITLE[step]}

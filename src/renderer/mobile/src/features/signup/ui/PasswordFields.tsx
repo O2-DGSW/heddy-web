@@ -3,11 +3,12 @@ import { font, lightTheme } from '@design-tokens';
 interface Props {
   password: string;
   passwordConfirm: string;
+  showError?: boolean;
   onPasswordChange: (value: string) => void;
   onPasswordConfirmChange: (value: string) => void;
 }
 
-export const PasswordFields = ({ password, passwordConfirm, onPasswordChange, onPasswordConfirmChange }: Props) => {
+export const PasswordFields = ({ password, passwordConfirm, showError = false, onPasswordChange, onPasswordConfirmChange }: Props) => {
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
     color: lightTheme.label.normal,
@@ -32,6 +33,11 @@ export const PasswordFields = ({ password, passwordConfirm, onPasswordChange, on
         value={passwordConfirm}
         onChange={e => onPasswordConfirmChange(e.target.value)}
       />
+      {showError && (
+        <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
+          비밀번호가 일치하지 않습니다.
+        </p>
+      )}
     </div>
   );
 };

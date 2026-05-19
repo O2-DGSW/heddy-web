@@ -3,11 +3,12 @@ import type { Carrier, MvnoCarrier } from '../model/types';
 import { MAIN_CARRIERS, MVNO_CARRIERS } from '../constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 import { formatPhone } from '@/private/shared/utils/formatPhone';
-
 interface Props {
   carrier: Carrier;
   phone: string;
   verificationCode: string;
+  canRequestVerification: boolean;
+  showPhoneError?: boolean;
   onCarrierChange: (carrier: Carrier) => void;
   onPhoneChange: (value: string) => void;
   onVerificationCodeChange: (value: string) => void;
@@ -20,6 +21,8 @@ export const PhoneVerificationField = ({
   carrier,
   phone,
   verificationCode,
+  canRequestVerification,
+  showPhoneError = false,
   onCarrierChange,
   onPhoneChange,
   onVerificationCodeChange,
@@ -65,11 +68,20 @@ export const PhoneVerificationField = ({
         />
         <button
           className={`px-6 py-4 rounded-xl ${font.caption.medium}`}
-          style={{ backgroundColor: lightTheme.fill.neutral, color: lightTheme.label.assistive }}
+          style={{
+            backgroundColor: canRequestVerification ? lightTheme.primary.normal : lightTheme.fill.neutral,
+            color: canRequestVerification ? lightTheme.fill.normal : lightTheme.label.assistive,
+          }}
+          disabled={!canRequestVerification}
         >
           인증번호
         </button>
       </div>
+      {showPhoneError && (
+        <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
+          올바른 휴대폰 번호를 입력해주세요.
+        </p>
+      )}
       <input
         className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
         style={inputStyle}
