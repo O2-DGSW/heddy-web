@@ -1,6 +1,7 @@
 import { font, lightTheme } from '@design-tokens';
 import type { Carrier } from '../model/types';
 import { CARRIERS } from '../constants/signup';
+import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 
 interface Props {
   carrier: Carrier;
@@ -29,21 +30,12 @@ export const PhoneVerificationField = ({
       <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>휴대폰 번호</p>
       <div className="flex gap-3 flex-wrap">
         {CARRIERS.map(c => (
-          <button
+          <RadioButton
             key={c}
-            className={`flex items-center gap-1 ${font.caption.medium}`}
-            style={{ color: carrier === c ? lightTheme.primary.normal : lightTheme.label.assistive }}
+            label={c}
+            selected={carrier === c}
             onClick={() => onCarrierChange(c)}
-          >
-            <div
-              className="w-4 h-4 rounded-full border-2"
-              style={{
-                borderColor: carrier === c ? lightTheme.primary.normal : lightTheme.line.normal,
-                backgroundColor: carrier === c ? lightTheme.primary.normal : 'transparent',
-              }}
-            />
-            {c}
-          </button>
+          />
         ))}
       </div>
       <div className="flex gap-2">
