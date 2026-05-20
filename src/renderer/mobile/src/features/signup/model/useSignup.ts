@@ -44,7 +44,7 @@ export const useSignup = () => {
     else if (step === 'shop') setStep('terms');
   };
 
-  const submitSignup = () => {
+  const submitSignup = async () => {
     // TODO: API 연동
     // memberType === 'owner' ? { ...ownerForm, ...shopForm } : customerForm
     console.log('submitSignup', { memberType, customerForm, ownerForm, shopForm });

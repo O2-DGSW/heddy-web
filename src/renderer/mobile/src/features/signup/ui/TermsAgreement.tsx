@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 
 interface Props {
-  onSignup?: () => void;
+  onSignup?: () => Promise<void>;
 }
 
 export const TermsAgreement = ({ onSignup }: Props) => {
@@ -12,8 +12,8 @@ export const TermsAgreement = ({ onSignup }: Props) => {
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
 
-  const handleSignup = () => {
-    onSignup?.();
+  const handleSignup = async () => {
+    await onSignup?.();
     navigate('/login');
   };
 
