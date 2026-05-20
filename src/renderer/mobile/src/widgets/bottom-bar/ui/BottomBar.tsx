@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { NAV_ITEMS } from "../constrants/nav-items.ts";
 import { getBarItemState } from "../model/focusEffect";
 import { BarItem } from "./BarItem";
+import { lightTheme } from "@design-tokens";
 
 export const BottomBar = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export const BottomBar = () => {
         rounded-2xl p-[0.5rem]
         shadow-[0_-2px_6px_rgba(0,0,0,0.05)]
       "
+      style={{ backgroundColor: lightTheme.background.normal }}
     >
       {NAV_ITEMS.map(({ Icon, title, to }) => {
         const state = getBarItemState(location.pathname, to);
