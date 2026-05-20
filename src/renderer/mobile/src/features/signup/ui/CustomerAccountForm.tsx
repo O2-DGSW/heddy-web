@@ -4,13 +4,13 @@ import type { CustomerAccountForm as CustomerAccountFormType } from '@/features/
 import { useAccountForm } from '@/features/signup/model/useAccountForm';
 import { AccountFormFields } from '@/features/signup/ui/AccountFormFields';
 
-interface Props {
+interface CustomerAccountFormProps {
   form: CustomerAccountFormType;
   onChange: (form: CustomerAccountFormType) => void;
   onNext: () => void;
 }
 
-export const CustomerAccountForm = ({ form, onChange, onNext }: Props) => {
+export const CustomerAccountForm = ({ form, onChange, onNext }: CustomerAccountFormProps) => {
   const { isValid, canRequestVerification, showPasswordError, showPhoneError, handleNext } =
     useAccountForm(form, true, onNext);
 

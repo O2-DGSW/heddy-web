@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { lightTheme, font } from '@design-tokens';
 
-interface Props {
+interface AddressSearchModalProps {
   onClose: () => void;
   embedPostcode: (element: HTMLElement) => void;
 }
 
-export const AddressSearchModal = ({ onClose, embedPostcode }: Props) => {
+export const AddressSearchModal = ({ onClose, embedPostcode }: AddressSearchModalProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

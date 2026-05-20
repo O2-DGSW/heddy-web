@@ -4,13 +4,13 @@ import type { OwnerAccountForm as OwnerAccountFormType } from '@/features/signup
 import { useAccountForm } from '@/features/signup/model/useAccountForm';
 import { AccountFormFields } from '@/features/signup/ui/AccountFormFields';
 
-interface Props {
+interface OwnerAccountFormProps {
   form: OwnerAccountFormType;
   onChange: (form: OwnerAccountFormType) => void;
   onNext: () => void;
 }
 
-export const OwnerAccountForm = ({ form, onChange, onNext }: Props) => {
+export const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => {
   const { isValid, canRequestVerification, showPasswordError, showPhoneError, submitted, handleNext } =
     useAccountForm(form, !!form.representativeName, onNext);
 

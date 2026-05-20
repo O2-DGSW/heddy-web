@@ -4,11 +4,11 @@ import type { MemberType } from "@/features/signup/model/types";
 import AgerUserIcon from "@/features/signup/assets/signup-type/agerUser.svg";
 import AgerDesignerIcon from "@/features/signup/assets/signup-type/agerDesigner.svg";
 
-interface Props {
+interface SignupTypeSelectProps {
   onSelect: (type: MemberType) => void;
 }
 
-export const SignupTypeSelect = ({ onSelect }: Props) => {
+export const SignupTypeSelect = ({ onSelect }: SignupTypeSelectProps) => {
   const handleCustomerSelect = () => onSelect("customer");
   const handleOwnerSelect = () => onSelect("owner");
 

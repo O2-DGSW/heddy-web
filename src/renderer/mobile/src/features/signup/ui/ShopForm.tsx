@@ -8,13 +8,13 @@ import { SHOP_CATEGORIES } from '@/features/signup/constants/signup';
 import { formatLandline } from '@/private/shared/utils/formatLandline';
 import { formatBusinessNumber } from '@/private/shared/utils/formatBusinessNumber';
 
-interface Props {
+interface ShopFormProps {
   form: ShopFormType;
   onChange: (form: ShopFormType) => void;
   onNext: () => void;
 }
 
-export const ShopForm = ({ form, onChange, onNext }: Props) => {
+export const ShopForm = ({ form, onChange, onNext }: ShopFormProps) => {
   const [showModal, setShowModal] = useState(false);
 
   const { embedPostcode } = useAddressSearch((address, zonecode) => {
