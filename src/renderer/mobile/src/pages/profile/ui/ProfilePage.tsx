@@ -13,6 +13,8 @@ import { EditProfile } from "@/features/profile/ui/edit/EditProfile.tsx";
 // 알람 설정
 import { AlarmTop } from "@/features/profile/ui/alarm/AlarmTop.tsx";
 import { AlarmBottom } from "@/features/profile/ui/alarm/AlarmBottom.tsx";
+
+// 저장 스타일
 import { Bookmark } from "@/features/profile/ui/bookmark/Bookmark.tsx";
 
 export const ProfilePage = () => {
@@ -37,10 +39,8 @@ export const ProfilePage = () => {
       <Route
         path="/bookmarks/styles"
         element={
-          <div id="wrapper" className="flex flex-col h-full">
-            <div className="h-[14rem]" style={{ backgroundColor: lightTheme.fill.normal }}>
-              <Bookmark />
-            </div>
+          <div id="wrapper" className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
+            <Bookmark />
           </div>
         }
       />
