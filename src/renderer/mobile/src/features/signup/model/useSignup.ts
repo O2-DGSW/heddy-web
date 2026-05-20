@@ -28,7 +28,7 @@ export const useSignup = () => {
     shopName: '',
     address: '',
     addressDetail: '',
-    categories: [],
+    category: '',
     landline: '',
     businessNumber: '',
   });

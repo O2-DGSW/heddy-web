@@ -25,7 +25,7 @@ export type ShopForm = {
   shopName: string;
   address: string;
   addressDetail: string;
-  categories: string[];
+  category: string;
   landline: string;
   businessNumber: string;
 };

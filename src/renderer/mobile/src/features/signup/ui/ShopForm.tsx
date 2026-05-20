@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import type { ShopForm as ShopFormType } from '@/features/signup/model/types';
 import { useAddressSearch } from '../model/useAddressSearch';
 import { AddressSearchModal } from './AddressSearchModal';
+import { SHOP_CATEGORIES } from '../constants/signup';
+import { formatLandline } from '@/private/shared/utils/formatLandline';
+import { formatBusinessNumber } from '@/private/shared/utils/formatBusinessNumber';
 
 interface Props {
   form: ShopFormType;
@@ -68,13 +71,17 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
 
       <div className="flex flex-col gap-1">
         <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>상점 카테고리</p>
-        <div
-          className={`w-full px-4 py-4 rounded-xl flex items-center justify-between ${font.caption.regular}`}
-          style={inputStyle}
+        <select
+          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+          style={{ ...inputStyle, color: form.category ? lightTheme.label.normal : lightTheme.label.assistive }}
+          value={form.category}
+          onChange={e => onChange({ ...form, category: e.target.value })}
         >
-          <span style={{ color: lightTheme.label.assistive }}>카테고리를 선택해주세요 (최대 5개)</span>
-          <span style={{ color: lightTheme.label.assistive }}>▼</span>
-        </div>
+          <option value="" disabled>카테고리를 선택해주세요</option>
+          {SHOP_CATEGORIES.map(cat => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -84,7 +91,7 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
           style={inputStyle}
           placeholder="유선번호"
           value={form.landline}
-          onChange={e => onChange({ ...form, landline: e.target.value })}
+          onChange={e => onChange({ ...form, landline: formatLandline(e.target.value) })}
         />
       </div>
 
@@ -95,7 +102,7 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
           style={inputStyle}
           placeholder="사업자등록번호"
           value={form.businessNumber}
-          onChange={e => onChange({ ...form, businessNumber: e.target.value })}
+          onChange={e => onChange({ ...form, businessNumber: formatBusinessNumber(e.target.value) })}
         />
       </div>
 
