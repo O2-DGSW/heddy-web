@@ -39,7 +39,7 @@ export const ProfilePage = () => {
       <Route
         path="/bookmarks/styles"
         element={
-          <div id="wrapper" className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
+          <div className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
             <Bookmark />
           </div>
         }
