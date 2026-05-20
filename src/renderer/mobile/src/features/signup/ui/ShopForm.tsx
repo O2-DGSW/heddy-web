@@ -22,6 +22,8 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
     setShowModal(false);
   });
 
+  const isValid = !!form.shopName && !!form.address && !!form.category && !!form.landline && !!form.businessNumber;
+
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
     color: lightTheme.label.normal,
@@ -50,7 +52,6 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
             placeholder="주소검색"
             value={form.address}
             onChange={e => onChange({ ...form, address: e.target.value })}
-            readOnly
           />
           <button
             className={`px-6 py-4 rounded-xl ${font.label.medium}`}
@@ -108,7 +109,11 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
 
       <button
         className={`w-full py-4 rounded-2xl mt-2 ${font.headline2.semiBold}`}
-        style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
+        style={{
+          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.line.alternative,
+          color: isValid ? lightTheme.fill.normal : lightTheme.line.normal,
+        }}
+        disabled={!isValid}
         onClick={onNext}
       >
         다음으로
