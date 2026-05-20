@@ -13,6 +13,7 @@ import { EditProfile } from "@/features/profile/ui/edit/EditProfile.tsx";
 // 알람 설정
 import { AlarmTop } from "@/features/profile/ui/alarm/AlarmTop.tsx";
 import { AlarmBottom } from "@/features/profile/ui/alarm/AlarmBottom.tsx";
+import { Bookmark } from "@/features/profile/ui/bookmark/Bookmark.tsx";
 
 export const ProfilePage = () => {
   return (
@@ -31,7 +32,19 @@ export const ProfilePage = () => {
           </div>
         }
       />
-      <Route path="/bookmarks/styles" element={<></>} />
+
+      {/* 저장 스타일 */}
+      <Route
+        path="/bookmarks/styles"
+        element={
+          <div id="wrapper" className="flex flex-col h-full">
+            <div className="h-[14rem]" style={{ backgroundColor: lightTheme.fill.normal }}>
+              <Bookmark />
+            </div>
+          </div>
+        }
+      />
+
       {/* 회원 정보 수정 페이지 */}
       <Route
         path="/edit"
