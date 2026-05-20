@@ -1,4 +1,4 @@
-import type { MainCarrier, MvnoCarrier, SignupStep } from "../model/types";
+import type { MainCarrier, MvnoCarrier, SignupStep } from '@/features/signup/model/types';
 
 export const MAIN_CARRIERS: MainCarrier[] = ["SKT", "KT", "LG U+"];
 

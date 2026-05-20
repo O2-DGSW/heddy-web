@@ -1,12 +1,5 @@
 import { font, lightTheme } from '@design-tokens';
-
-interface Props {
-  password: string;
-  passwordConfirm: string;
-  showError?: boolean;
-  onPasswordChange: (value: string) => void;
-  onPasswordConfirmChange: (value: string) => void;
-}
+import type { PasswordFieldsProps as Props } from '@/features/signup/ui/types';
 
 export const PasswordFields = ({ password, passwordConfirm, showError = false, onPasswordChange, onPasswordConfirmChange }: Props) => {
   const inputStyle = {
@@ -35,7 +28,7 @@ export const PasswordFields = ({ password, passwordConfirm, showError = false, o
       />
       {showError && (
         <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
-          비밀번호가 일치하지 않습니다.
+          비밀 번호가 일치하지 않습니다.
         </p>
       )}
     </div>

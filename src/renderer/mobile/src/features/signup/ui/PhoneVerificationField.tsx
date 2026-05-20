@@ -1,18 +1,9 @@
 import { font, lightTheme } from '@design-tokens';
-import type { Carrier, MvnoCarrier } from '../model/types';
-import { MAIN_CARRIERS, MVNO_CARRIERS } from '../constants/signup';
+import type { MvnoCarrier } from '@/features/signup/model/types';
+import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 import { formatPhone } from '@/private/shared/utils/formatPhone';
-interface Props {
-  carrier: Carrier;
-  phone: string;
-  verificationCode: string;
-  canRequestVerification: boolean;
-  showPhoneError?: boolean;
-  onCarrierChange: (carrier: Carrier) => void;
-  onPhoneChange: (value: string) => void;
-  onVerificationCodeChange: (value: string) => void;
-}
+import type { PhoneVerificationFieldProps as Props } from '@/features/signup/ui/types';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);

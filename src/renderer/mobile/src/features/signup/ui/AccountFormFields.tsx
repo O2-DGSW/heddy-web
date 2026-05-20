@@ -1,17 +1,7 @@
-import React from 'react';
 import { font, lightTheme } from '@design-tokens';
-import type { BaseAccountForm } from '../model/types';
-import { PasswordFields } from './PasswordFields';
-import { PhoneVerificationField } from './PhoneVerificationField';
-
-interface Props {
-  form: BaseAccountForm;
-  showPasswordError: boolean;
-  showPhoneError: boolean;
-  canRequestVerification: boolean;
-  onChange: (form: BaseAccountForm) => void;
-  middleSlot?: React.ReactNode;
-}
+import { PasswordFields } from '@/features/signup/ui/PasswordFields';
+import { PhoneVerificationField } from '@/features/signup/ui/PhoneVerificationField';
+import type { AccountFormFieldsProps as Props } from '@/features/signup/ui/types';
 
 export const AccountFormFields = ({
   form,

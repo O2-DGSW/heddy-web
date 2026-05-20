@@ -1,8 +1,8 @@
 import { font, lightTheme } from '@design-tokens';
 import { Link } from 'react-router-dom';
-import type { OwnerAccountForm as OwnerAccountFormType } from '../model/types';
-import { useAccountForm } from '../model/useAccountForm';
-import { AccountFormFields } from './AccountFormFields';
+import type { OwnerAccountForm as OwnerAccountFormType } from '@/features/signup/model/types';
+import { useAccountForm } from '@/features/signup/model/useAccountForm';
+import { AccountFormFields } from '@/features/signup/ui/AccountFormFields';
 
 interface Props {
   form: OwnerAccountFormType;
