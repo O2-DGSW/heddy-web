@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { font, lightTheme } from '@design-tokens';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 
 interface Props {
-  onNext: () => void;
+  onSignup?: () => void;
 }
 
-export const TermsAgreement = ({ onNext }: Props) => {
+export const TermsAgreement = ({ onSignup }: Props) => {
+  const navigate = useNavigate();
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
+
+  const handleSignup = () => {
+    onSignup?.();
+    navigate('/login');
+  };
 
   const allAgreed = agreedTerms && agreedPrivacy;
 
@@ -85,7 +91,7 @@ export const TermsAgreement = ({ onNext }: Props) => {
           backgroundColor: allAgreed ? lightTheme.primary.normal : lightTheme.line.alternative,
           color: allAgreed ? lightTheme.fill.normal : lightTheme.line.normal,
         }}
-        onClick={onNext}
+        onClick={handleSignup}
         disabled={!allAgreed}
       >
         회원가입

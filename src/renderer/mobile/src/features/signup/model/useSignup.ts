@@ -44,6 +44,12 @@ export const useSignup = () => {
     else if (step === 'shop') setStep('terms');
   };
 
+  const submitSignup = () => {
+    // TODO: API 연동
+    // memberType === 'owner' ? { ...ownerForm, ...shopForm } : customerForm
+    console.log('submitSignup', { memberType, customerForm, ownerForm, shopForm });
+  };
+
   return {
     step,
     memberType,
@@ -55,5 +61,6 @@ export const useSignup = () => {
     setShopForm,
     selectMemberType,
     nextStep,
+    submitSignup,
   };
 };

@@ -21,6 +21,7 @@ export const SignupPage = () => {
     setShopForm,
     selectMemberType,
     nextStep,
+    submitSignup,
   } = useSignup();
 
   return (
@@ -40,7 +41,7 @@ export const SignupPage = () => {
       )}
 
       {step === 'terms' && (
-        <TermsAgreement onNext={nextStep} />
+        <TermsAgreement onSignup={submitSignup} />
       )}
 
       {step === 'account' && memberType === 'customer' && (
