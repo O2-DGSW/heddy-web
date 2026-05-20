@@ -4,9 +4,7 @@ import OYJ from "@/features/profile/assets/bookmark/oyj-profile.jpeg";
 
 import { useNavigate } from "react-router-dom";
 
-interface CategoryProps {
-  text: string;
-}
+import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 
 type StyleData = {
   id: number;
@@ -15,19 +13,6 @@ type StyleData = {
   rank: number;
   image: string;
   categories: string[];
-};
-
-const Category = ({ text }: CategoryProps) => {
-  return (
-    <div
-      className="px-[0.325rem] py-[0.125rem] rounded-[0.325rem]"
-      style={{ backgroundColor: lightTheme.fill.neutral }}
-    >
-      <p className={font.caption.medium} style={{ color: lightTheme.label.alternative }}>
-        # {text}
-      </p>
-    </div>
-  );
 };
 
 interface StyleBoxProps {
@@ -69,7 +54,7 @@ const StyleBox = ({ data }: StyleBoxProps) => {
 
       <div className="flex flex-row flex-wrap gap-[0.5rem]">
         {data.categories.map(category => (
-          <Category key={category} text={category} />
+          <CutsTag key={category} text={category} />
         ))}
       </div>
     </div>
