@@ -18,7 +18,7 @@ export const AlarmTop = () => {
         <div className="size-[1.25rem]" />
       </div>
 
-      <div className="size-full flex-col justify-between py-[2.5rem]">
+      <div className="size-full flex flex-col justify-between py-[2.5rem]">
         <div className="size-full flex flex-col justify-between items-start">
           <p className={font.headline1.semiBold} style={{ color: lightTheme.label.neutral }}>
             활동 푸시
