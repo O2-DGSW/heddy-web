@@ -4,14 +4,15 @@ export interface RadioButtonProps {
   label: string;
   selected: boolean;
   onClick: () => void;
+  neutralLabel?: boolean;
 }
 
-export const RadioButton = ({ label, selected, onClick }: RadioButtonProps) => {
+export const RadioButton = ({ label, selected, onClick, neutralLabel = false }: RadioButtonProps) => {
   return (
     <button
       type="button"
       className={`flex items-center gap-1 ${font.caption.medium}`}
-      style={{ color: selected ? lightTheme.primary.normal : lightTheme.label.assistive }}
+      style={{ color: neutralLabel ? lightTheme.label.normal : selected ? lightTheme.primary.normal : lightTheme.label.assistive }}
       onClick={onClick}
     >
       <div
