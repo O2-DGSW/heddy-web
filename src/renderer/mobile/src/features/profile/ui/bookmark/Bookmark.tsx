@@ -80,7 +80,7 @@ export const Bookmark = () => {
         style={{ backgroundColor: lightTheme.fill.normal }}
       >
         {dummyData.map(data => (
-          <StyleBox key={data.id} data={data} />
+          <StyleBox key={data.id} data={data} usedBy="bookmark" />
         ))}
       </div>
     </div>
