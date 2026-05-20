@@ -17,6 +17,9 @@ import { AlarmBottom } from "@/features/profile/ui/alarm/AlarmBottom.tsx";
 // 저장 스타일
 import { Bookmark } from "@/features/profile/ui/bookmark/Bookmark.tsx";
 
+// 포트폴리오
+import { Portfolio } from "@/features/profile/ui/portfolio/Portfolio.tsx";
+
 export const ProfilePage = () => {
   return (
     <Routes>
@@ -62,7 +65,14 @@ export const ProfilePage = () => {
       />
 
       {/* 포폴 페이지 */}
-      <Route path="/portfolio" element={<></>} />
+      <Route
+        path="/portfolio"
+        element={
+          <div className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
+            <Portfolio />
+          </div>
+        }
+      />
 
       {/* 알람 설정 페이지 */}
       <Route
