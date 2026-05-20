@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { font, lightTheme } from '@design-tokens';
 import { Link } from 'react-router-dom';
 import type { ShopForm as ShopFormType } from '@/features/signup/model/types';
+import { useAddressSearch } from '../model/useAddressSearch';
+import { AddressSearchModal } from './AddressSearchModal';
 
 interface Props {
   form: ShopFormType;
@@ -9,12 +12,20 @@ interface Props {
 }
 
 export const ShopForm = ({ form, onChange, onNext }: Props) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const { embedPostcode } = useAddressSearch((address, zonecode) => {
+    onChange({ ...form, address: `[${zonecode}] ${address}` });
+    setShowModal(false);
+  });
+
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
     color: lightTheme.label.normal,
   };
 
   return (
+    <>
     <div className="flex flex-col w-full gap-4">
       <div className="flex flex-col gap-1">
         <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>상점명</p>
@@ -41,6 +52,7 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
           <button
             className={`px-6 py-4 rounded-xl ${font.label.medium}`}
             style={{ backgroundColor: lightTheme.line.alternative, color: lightTheme.label.assistive }}
+            onClick={() => setShowModal(true)}
           >
             주소검색
           </button>
@@ -100,5 +112,13 @@ export const ShopForm = ({ form, onChange, onNext }: Props) => {
         <Link to="/login" style={{ color: lightTheme.primary.normal }}>로그인</Link>
       </div>
     </div>
+
+    {showModal && (
+      <AddressSearchModal
+        onClose={() => setShowModal(false)}
+        embedPostcode={embedPostcode}
+      />
+    )}
+    </>
   );
 };
