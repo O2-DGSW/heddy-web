@@ -41,7 +41,7 @@ export const useSignup = () => {
   const nextStep = () => {
     if (step === 'account' && memberType === 'owner') setStep('shop');
     else if (step === 'account') setStep('terms');
-    // TODO: API 연동 후 회원가입 완료 처리
+    else if (step === 'shop') setStep('terms');
   };
 
   return {
