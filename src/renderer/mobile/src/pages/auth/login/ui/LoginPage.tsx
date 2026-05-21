@@ -1,5 +1,5 @@
 import { lightTheme, font } from '@design-tokens'
-import { LoginForm, SocialLogin } from '@/features/login'
+import { LoginForm, SocialLogin } from '@/features/auth/login'
 
 export const LoginPage = () => {
   return (

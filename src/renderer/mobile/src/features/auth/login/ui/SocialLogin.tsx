@@ -1,8 +1,8 @@
 import { lightTheme, font } from "@design-tokens";
-import GoogleIcon from "@/features/login/assets/social-field/google.svg";
-import KakaoIcon from "@/features/login/assets/social-field/kakao.svg";
-import NaverIcon from "@/features/login/assets/social-field/naver.svg";
-import { useSocialLogin } from "@/features/login/model/socialLogin";
+import GoogleIcon from "@/features/auth/login/assets/social-field/google.svg";
+import KakaoIcon from "@/features/auth/login/assets/social-field/kakao.svg";
+import NaverIcon from "@/features/auth/login/assets/social-field/naver.svg";
+import { useSocialLogin } from "@/features/auth/login/model/socialLogin";
 
 export const SocialLogin = () => {
   const { handleKakaoLogin, handleNaverLogin, handleGoogleLogin } = useSocialLogin();
