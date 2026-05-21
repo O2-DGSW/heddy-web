@@ -2,7 +2,7 @@ import { MainPage } from "@/pages/main";
 import { LoginPage } from "@/pages/login";
 import { SignupPage } from "@/pages/signup";
 import { ProfilePage } from "@/pages/profile";
-import { FindAccountPage } from "@/pages/find-account";
+import { FindPage } from "@/pages/find";
 import { BottomBar } from "@/widgets/bottom-bar";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
@@ -18,8 +18,8 @@ const Layout = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/find-id" element={<FindAccountPage />} />
-        <Route path="/find-password" element={<FindAccountPage />} />
+        <Route path="/find-id" element={<FindPage />} />
+        <Route path="/find-password" element={<FindPage />} />
       </Routes>
 
       {!hideBottomBar && <BottomBar />}
