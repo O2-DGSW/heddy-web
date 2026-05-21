@@ -12,10 +12,9 @@ import TrashIcon from "@/features/profile/assets/portfolio/trash.svg";
 // 저장 스타일
 import BookmarkIcon from "@/features/profile/assets/bookmark/bookmark-button.svg";
 
-interface StyleBoxProps {
-  data: StyleData | PortfolioData;
-  usedBy: "bookmark" | "portfolio";
-}
+type StyleBoxProps =
+  | { data: StyleData; usedBy: "bookmark" }
+  | { data: PortfolioData; usedBy: "portfolio" };
 
 export const StyleBox = ({ data, usedBy }: StyleBoxProps) => {
   const isBookmark = usedBy === "bookmark";
