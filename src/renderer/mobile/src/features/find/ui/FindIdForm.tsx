@@ -4,7 +4,7 @@ import { useFindId } from '@/features/find/model/useFindId';
 
 export const FindIdForm = () => {
   const navigate = useNavigate();
-  const { phone, verificationCode, canRequestVerification, handlePhoneChange, setVerificationCode } = useFindId();
+  const { phone, verificationCode, canRequestVerification, canSubmit, handlePhoneChange, setVerificationCode } = useFindId();
 
   return (
     <div className="flex flex-col w-full flex-1">
@@ -66,9 +66,10 @@ export const FindIdForm = () => {
         <button
           className={`w-full py-4 rounded-2xl ${font.headline2.semiBold}`}
           style={{
-            backgroundColor: lightTheme.primary.normal,
-            color: lightTheme.fill.normal,
+            backgroundColor: canSubmit ? lightTheme.primary.normal : lightTheme.line.alternative,
+            color: canSubmit ? lightTheme.fill.normal : lightTheme.line.normal,
           }}
+          disabled={!canSubmit}
         >
           아이디 찾기
         </button>
