@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const LoginForm = () => {
   return (
     <form className="flex w-full flex-col" aria-label="로그인">
@@ -28,17 +30,17 @@ const LoginForm = () => {
       </div>
 
       <nav className="mt-[25px] flex justify-center gap-1 font-['Pretendard'] text-xs font-medium leading-[130%] text-[#76787A]" aria-label="계정 찾기">
-        <a href="/find-id" className="hover:text-[#41be8e]">
+        <Link to="/find-id" className="hover:text-[#41be8e]">
           아이디찾기
-        </a>
+        </Link>
         <span>·</span>
-        <a href="/find-password" className="hover:text-[#41be8e]">
+        <Link to="/find-password" className="hover:text-[#41be8e]">
           비밀번호 찾기
-        </a>
+        </Link>
         <span>·</span>
-        <a href="/signup" className="hover:text-[#41be8e]">
+        <Link to="/signup" className="hover:text-[#41be8e]">
           회원가입
-        </a>
+        </Link>
       </nav>
 
       <button
