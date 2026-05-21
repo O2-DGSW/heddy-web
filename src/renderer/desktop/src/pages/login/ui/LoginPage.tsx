@@ -1,3 +1,5 @@
+import { lightTheme } from "@design-tokens";
+
 import loginCharacter from "@/features/login/assets/images/login-character.png";
 import { LoginForm, SocialLogin } from "@/features/login";
 
@@ -12,7 +14,10 @@ const LoginPage = () => {
         aria-hidden="true"
       />
 
-      <h1 className="mt-8 text-center font-['Pretendard'] text-base font-medium leading-[130%] text-[#76787A]">
+      <h1
+        className="mt-8 text-center font-['Pretendard'] text-base font-medium leading-[130%]"
+        style={{ color: lightTheme.label.assistive }}
+      >
         heddy에 오신것을 환영해요!
       </h1>
 
