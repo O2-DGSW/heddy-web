@@ -4,9 +4,13 @@ import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 import type { StyleData } from "@/features/profile/model/bookmark/types/Bookmark.types.ts";
 import type { PortfolioData } from "@/features/profile/model/portfolio/types/Portfolio.types.ts";
 
+// 포트폴리오
 import DateIcon from "@/features/profile/assets/portfolio/date.svg";
 import EditIcon from "@/features/profile/assets/portfolio/edit.svg";
-import TranshIcon from "@/features/profile/assets/portfolio/trash.svg";
+import TrashIcon from "@/features/profile/assets/portfolio/trash.svg";
+
+// 저장 스타일
+import BookmarkIcon from "@/features/profile/assets/bookmark/bookmark-button.svg";
 
 interface StyleBoxProps {
   data: StyleData | PortfolioData;
@@ -28,9 +32,13 @@ export const StyleBox = ({ data, usedBy }: StyleBoxProps) => {
           alt={data.title}
         />
 
-        {!isBookmark && (
+        {isBookmark ? (
           <button className="absolute bottom-[0.5rem] right-[0.5rem]">
-            <img className="size-[1.5rem]" src={TranshIcon} alt="trash" />
+            <img className="size-[1.5rem]" src={BookmarkIcon} alt="bookmark-btn" />
+          </button>
+        ) : (
+          <button className="absolute bottom-[0.5rem] right-[0.5rem]">
+            <img className="size-[1.5rem]" src={TrashIcon} alt="trash" />
           </button>
         )}
       </div>
