@@ -6,6 +6,7 @@ export const useFindId = () => {
   const [verificationCode, setVerificationCode] = useState('');
 
   const canRequestVerification = phone.length >= 13;
+  const canSubmit = phone.length >= 13 && verificationCode.length > 0;
 
   const handlePhoneChange = (value: string) => {
     setPhone(formatPhone(value));
@@ -15,6 +16,7 @@ export const useFindId = () => {
     phone,
     verificationCode,
     canRequestVerification,
+    canSubmit,
     handlePhoneChange,
     setVerificationCode,
   };
