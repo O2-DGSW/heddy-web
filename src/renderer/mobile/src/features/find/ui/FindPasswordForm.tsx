@@ -24,8 +24,8 @@ export const FindPasswordForm = () => {
   const tabs = (
     <div className="flex w-full mb-8" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
       {[
-        { label: '아이디 찾기', path: '/find-id', isActive: false },
-        { label: '비밀번호 찾기', path: '/find-password', isActive: true },
+        { label: '아이디 찾기', path: '/find/id', isActive: false },
+        { label: '비밀번호 찾기', path: '/find/password', isActive: true },
       ].map(({ label, path, isActive }) => (
         <button
           key={path}

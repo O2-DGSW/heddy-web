@@ -10,8 +10,8 @@ export const FindIdForm = () => {
     <div className="flex flex-col w-full flex-1">
       <div className="flex w-full mb-8" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
         {[
-          { label: '아이디 찾기', path: '/find-id', isActive: true },
-          { label: '비밀번호 찾기', path: '/find-password', isActive: false },
+          { label: '아이디 찾기', path: '/find/id', isActive: true },
+          { label: '비밀번호 찾기', path: '/find/password', isActive: false },
         ].map(({ label, path, isActive }) => (
           <button
             key={path}
