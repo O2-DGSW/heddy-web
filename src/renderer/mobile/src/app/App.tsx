@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 const Layout = () => {
   const location = useLocation();
 
-  const hideBottomBar = ["/login", "/signup", "/find-id", "/find-password"].includes(location.pathname);
+  const hideBottomBar = ["/login", "/signup"].includes(location.pathname) || location.pathname.startsWith("/find/");
 
   return (
     <div className="App pt-safe pb-safe px-safe">
@@ -18,8 +18,7 @@ const Layout = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/find-id" element={<FindPage />} />
-        <Route path="/find-password" element={<FindPage />} />
+        <Route path="/find/:type" element={<FindPage />} />
       </Routes>
 
       {!hideBottomBar && <BottomBar />}
