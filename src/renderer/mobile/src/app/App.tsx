@@ -1,8 +1,8 @@
 import { MainPage } from "@/pages/main";
-import { LoginPage } from "@/pages/login";
-import { SignupPage } from "@/pages/signup";
+import { LoginPage } from "@/pages/auth/login";
+import { SignupPage } from "@/pages/auth/signup";
 import { ProfilePage } from "@/pages/profile";
-import { FindPage } from "@/pages/find";
+import { FindPage } from "@/pages/auth/find";
 import { BottomBar } from "@/widgets/bottom-bar";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
