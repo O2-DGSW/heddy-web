@@ -1,1 +1,5 @@
-// 만들어 놓은 기능들을 종합하여 페이징을 하는 파일입니다
+const FeatureNamePage = () => {
+  return <div>Desktop main page</div>;
+};
+
+export { FeatureNamePage };
