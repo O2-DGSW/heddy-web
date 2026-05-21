@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.mobile.tsbuildinfo",
+    "paths": {
+      "@design-tokens": ["pakages/design-tokens/index.ts"],
+      "@/shared/*": ["src/renderer/shared/*"],
+      "@/*": ["src/renderer/mobile/src/*"]
+    }
+  },
+  "include": ["src/renderer/mobile/src", "src/renderer/shared", "src/vite-env.d.ts"]
+}
