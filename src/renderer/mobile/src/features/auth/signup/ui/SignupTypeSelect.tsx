@@ -1,8 +1,8 @@
 import { font, lightTheme } from "@design-tokens";
 import { Link } from "react-router-dom";
-import type { MemberType } from "@/features/signup/model/types";
-import AgerUserIcon from "@/features/signup/assets/signup-type/agerUser.svg";
-import AgerDesignerIcon from "@/features/signup/assets/signup-type/agerDesigner.svg";
+import type { MemberType } from "@/features/auth/signup/model/types";
+import AgerUserIcon from "@/features/auth/signup/assets/signup-type/agerUser.svg";
+import AgerDesignerIcon from "@/features/auth/signup/assets/signup-type/agerDesigner.svg";
 
 interface SignupTypeSelectProps {
   onSelect: (type: MemberType) => void;

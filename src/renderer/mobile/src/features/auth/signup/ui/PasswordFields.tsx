@@ -1,5 +1,5 @@
 import { font, lightTheme } from '@design-tokens';
-import type { PasswordFieldsProps as Props } from '@/features/signup/ui/types';
+import type { PasswordFieldsProps as Props } from '@/features/auth/signup/ui/types';
 
 export const PasswordFields = ({ password, passwordConfirm, showError = false, onPasswordChange, onPasswordConfirmChange }: Props) => {
   const inputStyle = {

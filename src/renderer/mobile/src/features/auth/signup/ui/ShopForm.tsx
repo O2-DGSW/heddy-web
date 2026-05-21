@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { font, lightTheme } from '@design-tokens';
 import { Link } from 'react-router-dom';
-import type { ShopForm as ShopFormType } from '@/features/signup/model/types';
-import { useAddressSearch } from '@/features/signup/model/useAddressSearch';
-import { AddressSearchModal } from '@/features/signup/ui/AddressSearchModal';
-import { SHOP_CATEGORIES } from '@/features/signup/constants/signup';
+import type { ShopForm as ShopFormType } from '@/features/auth/signup/model/types';
+import { useAddressSearch } from '@/features/auth/signup/model/useAddressSearch';
+import { AddressSearchModal } from '@/features/auth/signup/ui/AddressSearchModal';
+import { SHOP_CATEGORIES } from '@/features/auth/signup/constants/signup';
 import { formatLandline } from '@/private/shared/utils/formatLandline';
 import { formatBusinessNumber } from '@/private/shared/utils/formatBusinessNumber';
 

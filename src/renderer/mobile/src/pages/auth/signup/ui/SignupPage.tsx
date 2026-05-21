@@ -6,8 +6,8 @@ import {
   CustomerAccountForm,
   OwnerAccountForm,
   ShopForm,
-} from '@/features/signup';
-import { STEP_TITLE } from '@/features/signup/constants/signup';
+} from '@/features/auth/signup';
+import { STEP_TITLE } from '@/features/auth/signup/constants/signup';
 
 export const SignupPage = () => {
   const {

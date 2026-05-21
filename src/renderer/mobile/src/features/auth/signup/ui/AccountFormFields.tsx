@@ -1,7 +1,7 @@
 import { font, lightTheme } from '@design-tokens';
-import { PasswordFields } from '@/features/signup/ui/PasswordFields';
-import { PhoneVerificationField } from '@/features/signup/ui/PhoneVerificationField';
-import type { AccountFormFieldsProps as Props } from '@/features/signup/ui/types';
+import { PasswordFields } from '@/features/auth/signup/ui/PasswordFields';
+import { PhoneVerificationField } from '@/features/auth/signup/ui/PhoneVerificationField';
+import type { AccountFormFieldsProps as Props } from '@/features/auth/signup/ui/types';
 
 export const AccountFormFields = ({
   form,

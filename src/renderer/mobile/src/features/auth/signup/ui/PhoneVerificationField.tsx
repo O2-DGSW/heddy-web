@@ -1,9 +1,9 @@
 import { font, lightTheme } from '@design-tokens';
-import type { Carrier, MvnoCarrier } from '@/features/signup/model/types';
-import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/signup/constants/signup';
+import type { Carrier, MvnoCarrier } from '@/features/auth/signup/model/types';
+import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/auth/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 import { formatPhone } from '@/private/shared/utils/formatPhone';
-import type { PhoneVerificationFieldProps as Props } from '@/features/signup/ui/types';
+import type { PhoneVerificationFieldProps as Props } from '@/features/auth/signup/ui/types';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);

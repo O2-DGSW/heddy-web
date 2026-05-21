@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { BaseAccountForm, Carrier } from '@/features/signup/model/types';
+import type { BaseAccountForm, Carrier } from '@/features/auth/signup/model/types';
 
 export interface AccountFormFieldsProps {
   form: BaseAccountForm;
