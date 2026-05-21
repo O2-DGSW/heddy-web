@@ -4,60 +4,54 @@ import OYJ from "@/features/profile/assets/bookmark/oyj-profile.jpeg";
 
 import { useNavigate } from "react-router-dom";
 
-import type { StyleData } from "@/features/profile/model/bookmark/types/Bookmark.types.ts";
 import { StyleBox } from "@/private/shared/ui/style-box/StyleBox.tsx";
+import type { PortfolioData } from "@/features/profile/model/portfolio/types/Portfolio.types.ts";
 
-export const Bookmark = () => {
+export const Portfolio = () => {
   const navigate = useNavigate();
 
-  const dummyData: StyleData[] = [
+  const dummyData: PortfolioData[] = [
     {
       id: 1,
       title: "남자 다운펌",
       description: "자연스럽게 눌러주는 남자 다운펌 스타일",
-      rank: 1,
       image: OYJ,
-      categories: ["남자", "다운펌"],
+      date: "2026-04-04",
     },
     {
       id: 2,
-      title: "쉐도우 펌",
-      description: "볼륨감 있는 쉐도우 펌 스타일",
-      rank: 2,
+      title: "남자 다운펌",
+      description: "자연스럽게 눌러주는 남자 다운펌 스타일",
       image: OYJ,
-      categories: ["펌", "쉐도우"],
+      date: "2026-04-04",
     },
     {
       id: 3,
-      title: "가르마 펌",
-      description: "부드러운 분위기의 가르마 펌",
-      rank: 3,
+      title: "남자 다운펌",
+      description: "자연스럽게 눌러주는 남자 다운펌 스타일",
       image: OYJ,
-      categories: ["가르마", "남친룩"],
+      date: "2026-04-04",
     },
     {
       id: 4,
-      title: "리프 컷",
-      description: "트렌디한 리프 컷 스타일",
-      rank: 4,
+      title: "남자 다운펌",
+      description: "자연스럽게 눌러주는 남자 다운펌 스타일",
       image: OYJ,
-      categories: ["리프컷", "트렌드"],
+      date: "2026-04-04",
     },
     {
       id: 5,
-      title: "애즈 펌",
-      description: "깔끔하고 세련된 애즈 펌",
-      rank: 5,
+      title: "남자 다운펌",
+      description: "자연스럽게 눌러주는 남자 다운펌 스타일",
       image: OYJ,
-      categories: ["애즈펌", "훈훈"],
+      date: "2026-04-04",
     },
     {
       id: 6,
-      title: "아이비리그 컷",
-      description: "짧고 단정한 남자 스타일",
-      rank: 6,
+      title: "남자 다운펌",
+      description: "자연스럽게 눌러주는 남자 다운펌 스타일",
       image: OYJ,
-      categories: ["짧은머리", "남자"],
+      date: "2026-04-04",
     },
   ];
 
@@ -69,7 +63,7 @@ export const Bookmark = () => {
         </button>
 
         <p className={font.headline1.semiBold} style={{ color: lightTheme.label.neutral }}>
-          저장 스타일
+          포트폴리오 관리
         </p>
 
         <div className="size-[1.25rem]" />
@@ -80,7 +74,7 @@ export const Bookmark = () => {
         style={{ backgroundColor: lightTheme.fill.normal }}
       >
         {dummyData.map(data => (
-          <StyleBox key={data.id} data={data} usedBy="bookmark" />
+          <StyleBox key={data.id} data={data} usedBy="portfolio" />
         ))}
       </div>
     </div>
