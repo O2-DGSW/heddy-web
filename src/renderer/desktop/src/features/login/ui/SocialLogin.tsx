@@ -1,12 +1,17 @@
+import { lightTheme } from "@design-tokens";
+
 import { socialLoginItems } from "@/features/login/constants/socialLoginItems";
 
 const SocialLogin = () => {
   return (
     <section className="mt-[26px] w-full" aria-label="소셜 로그인">
-      <div className="flex h-7 items-center justify-center gap-2.5 overflow-hidden font-['Pretendard'] text-xs font-normal leading-[130%] text-[#dadbdc]">
-        <div className="h-px flex-1 bg-[#dadbdc]" />
+      <div
+        className="flex h-7 items-center justify-center gap-2.5 overflow-hidden font-['Pretendard'] text-xs font-normal leading-[130%]"
+        style={{ color: lightTheme.line.neutral }}
+      >
+        <div className="h-px flex-1" style={{ backgroundColor: lightTheme.line.neutral }} />
         <span className="whitespace-nowrap">또는 다음으로 로그인</span>
-        <div className="h-px flex-1 bg-[#dadbdc]" />
+        <div className="h-px flex-1" style={{ backgroundColor: lightTheme.line.neutral }} />
       </div>
 
       <div className="mt-[clamp(20px,2.7vh,26px)] flex justify-center gap-6">
