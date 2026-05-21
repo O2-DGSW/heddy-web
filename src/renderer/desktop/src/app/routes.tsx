@@ -1,11 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 
-import { FeatureNamePage } from "../pages/featureName";
+import { DesktopLayout } from "./layouts";
+import { FeatureNamePage } from "@/pages/featureName";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<FeatureNamePage />} />
+      <Route element={<DesktopLayout />}>
+        <Route path="/" element={<FeatureNamePage />} />
+      </Route>
     </Routes>
   );
 };
