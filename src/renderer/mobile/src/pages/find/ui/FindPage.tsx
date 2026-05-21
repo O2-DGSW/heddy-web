@@ -1,10 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { font, lightTheme } from '@design-tokens';
 import { FindIdForm, FindPasswordForm } from '@/features/find';
 
 export const FindPage = () => {
-  const location = useLocation();
-  const isPassword = location.pathname === '/find-password';
+  const { type } = useParams<{ type: string }>();
+  const isPassword = type === 'password';
   const title = isPassword ? '비밀번호 찾기' : '아이디 찾기';
 
   return (
