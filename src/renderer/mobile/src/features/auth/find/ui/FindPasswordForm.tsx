@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { font, lightTheme } from '@design-tokens';
-import { useFindPassword } from '@/features/find/model/useFindPassword';
-import { useResetPassword } from '@/features/find/model/useResetPassword';
-import type { Carrier, MvnoCarrier } from '@/features/signup/model/types';
-import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/signup/constants/signup';
+import { useFindPassword } from '@/features/auth/find/model/useFindPassword';
+import { useResetPassword } from '@/features/auth/find/model/useResetPassword';
+import type { Carrier, MvnoCarrier } from '@/features/auth/signup/model/types';
+import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/auth/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);

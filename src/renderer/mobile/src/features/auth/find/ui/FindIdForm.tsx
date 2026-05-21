@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { font, lightTheme } from '@design-tokens';
-import { useFindId } from '@/features/find/model/useFindId';
+import { useFindId } from '@/features/auth/find/model/useFindId';
 
 export const FindIdForm = () => {
   const navigate = useNavigate();

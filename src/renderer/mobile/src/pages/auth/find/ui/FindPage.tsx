@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { font, lightTheme } from '@design-tokens';
-import { FindIdForm, FindPasswordForm } from '@/features/find';
+import { FindIdForm, FindPasswordForm } from '@/features/auth/find';
 
 export const FindPage = () => {
   const { type } = useParams<{ type: string }>();

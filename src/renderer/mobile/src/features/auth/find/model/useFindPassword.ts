@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { formatPhone } from '@/private/shared/utils/formatPhone';
-import type { Carrier } from '@/features/signup/model/types';
-import { MAIN_CARRIERS } from '@/features/signup/constants/signup';
+import type { Carrier } from '@/features/auth/signup/model/types';
+import { MAIN_CARRIERS } from '@/features/auth/signup/constants/signup';
 
 export const useFindPassword = () => {
   const [id, setId] = useState('');
