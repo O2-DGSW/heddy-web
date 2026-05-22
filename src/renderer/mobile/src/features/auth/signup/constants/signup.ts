@@ -13,7 +13,7 @@ export const SHOP_CATEGORIES = [
 ] as const;
 
 export const STEP_TITLE: Record<SignupStep, string> = {
-  "type-select": "헤디에 오신것을 환영해요!",
+  "type-select": "헤디에 오신 것을 환영해요!",
   terms: "계정 생성",
   account: "계정 생성",
   shop: "상점 생성",
