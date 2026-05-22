@@ -1,7 +1,7 @@
 import { lightTheme } from "@design-tokens";
 
-import loginCharacter from "@/features/login/assets/images/login-character.png";
-import { LoginForm, SocialLogin } from "@/features/login";
+import loginCharacter from "@/features/auth/login/assets/images/login-character.png";
+import { LoginForm, SocialLogin } from "@/features/auth/login";
 
 const LoginPage = () => {
   return (
@@ -18,7 +18,7 @@ const LoginPage = () => {
         className="mt-8 text-center font-['Pretendard'] text-base font-medium leading-[130%]"
         style={{ color: lightTheme.label.assistive }}
       >
-        heddy에 오신것을 환영해요!
+        heddy에 오신 것을 환영해요!
       </h1>
 
       <div className="mt-[clamp(48px,7.5vh,74px)] w-full">

@@ -1,6 +1,6 @@
 import { lightTheme } from "@design-tokens";
 
-import { socialLoginItems } from "@/features/login/constants/socialLoginItems";
+import { socialLoginItems } from "@/features/auth/login/constants/socialLoginItems";
 
 const SocialLogin = () => {
   return (

@@ -1,6 +1,6 @@
-import googleIcon from "@/features/login/assets/svg/google.svg";
-import kakaoIcon from "@/features/login/assets/svg/kakao.svg";
-import naverIcon from "@/features/login/assets/svg/naver.svg";
+import googleIcon from "@/features/auth/login/assets/svg/google.svg";
+import kakaoIcon from "@/features/auth/login/assets/svg/kakao.svg";
+import naverIcon from "@/features/auth/login/assets/svg/naver.svg";
 
 export const socialLoginItems = [
   {
