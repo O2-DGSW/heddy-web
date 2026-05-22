@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { lightTheme } from "@design-tokens";
 
@@ -16,6 +16,10 @@ const scrollStyleByTermId: Record<TermId, string> = {
   service: "scrollbar-hidden",
   privacy: "scrollbar-hidden",
 };
+
+const primaryRingStyle = {
+  "--primary-ring-color": lightTheme.primary.normal,
+} as CSSProperties;
 
 const TermsAgreement = () => {
   const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>(
@@ -50,8 +54,9 @@ const TermsAgreement = () => {
                 onChange={() => handleTermChange(id)}
               />
               <span
-                className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[#41be8e]/35 peer-focus-visible:ring-offset-2"
+                className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--primary-ring-color)]/35 peer-focus-visible:ring-offset-2"
                 style={{
+                  ...primaryRingStyle,
                   backgroundColor: checkedTerms[id] ? lightTheme.primary.normal : lightTheme.background.normal,
                   borderColor: lightTheme.primary.normal,
                 }}
@@ -113,8 +118,9 @@ const TermsAgreement = () => {
             onChange={handleAllChange}
           />
           <span
-            className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[#41be8e]/35 peer-focus-visible:ring-offset-2"
+            className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--primary-ring-color)]/35 peer-focus-visible:ring-offset-2"
             style={{
+              ...primaryRingStyle,
               backgroundColor: isAllChecked ? lightTheme.primary.normal : lightTheme.background.normal,
               borderColor: lightTheme.primary.normal,
             }}
@@ -138,8 +144,12 @@ const TermsAgreement = () => {
       <div className="mt-16 flex flex-col items-center gap-[26px] [@media(max-height:900px)]:mt-10 [@media(max-height:900px)]:gap-[18px]">
         <button
           type="button"
-          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#41be8e]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
+          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            ...primaryRingStyle,
+            backgroundColor: lightTheme.primary.normal,
+            color: lightTheme.fill.normal,
+          }}
           disabled={!isAllChecked}
         >
           다음으로
