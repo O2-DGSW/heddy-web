@@ -9,16 +9,18 @@ type TermId = (typeof termsSections)[number]["id"];
 
 const requiredTermIds = termsSections.filter(({ required }) => required).map(({ id }) => id);
 
+const createInitialCheckedTerms = (checked = false): Record<TermId, boolean> =>
+  Object.fromEntries(termsSections.map(({ id }) => [id, checked])) as Record<TermId, boolean>;
+
 const scrollStyleByTermId: Record<TermId, string> = {
   service: "scrollbar-hidden",
   privacy: "scrollbar-hidden",
 };
 
 const TermsAgreement = () => {
-  const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>({
-    service: false,
-    privacy: false,
-  });
+  const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>(
+    createInitialCheckedTerms,
+  );
 
   const isAllChecked = useMemo(
     () => requiredTermIds.every((id) => checkedTerms[id]),
@@ -32,10 +34,7 @@ const TermsAgreement = () => {
   const handleAllChange = () => {
     const nextChecked = !isAllChecked;
 
-    setCheckedTerms({
-      service: nextChecked,
-      privacy: nextChecked,
-    });
+    setCheckedTerms(createInitialCheckedTerms(nextChecked));
   };
 
   return (
