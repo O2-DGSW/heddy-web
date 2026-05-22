@@ -2,8 +2,8 @@ import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { lightTheme } from "@design-tokens";
 
-import checkIcon from "@/features/signup/assets/svg/check.svg";
-import { termsSections } from "@/features/signup/constants/terms";
+import checkIcon from "@/features/auth/signup/assets/svg/check.svg";
+import { termsSections } from "@/features/auth/signup/constants/terms";
 
 type TermId = (typeof termsSections)[number]["id"];
 

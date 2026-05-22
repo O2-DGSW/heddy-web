@@ -1,7 +1,7 @@
 import { lightTheme } from "@design-tokens";
 
-import loginCharacter from "@/features/login/assets/images/login-character.png";
-import { TermsAgreement } from "@/features/signup";
+import loginCharacter from "@/features/auth/login/assets/images/login-character.png";
+import { TermsAgreement } from "@/features/auth/signup";
 
 const SignupTermsPage = () => {
   return (

@@ -1,7 +1,7 @@
 import { lightTheme } from "@design-tokens";
 
-import loginCharacter from "@/features/login/assets/images/login-character.png";
-import { LoginForm, SocialLogin } from "@/features/login";
+import loginCharacter from "@/features/auth/login/assets/images/login-character.png";
+import { LoginForm, SocialLogin } from "@/features/auth/login";
 
 const LoginPage = () => {
   return (
