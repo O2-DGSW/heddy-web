@@ -25,7 +25,7 @@ export const ProfilePage = () => {
     <Routes>
       {/* 기본 프로필 렌더 페이지*/}
       <Route
-        path="/"
+        index
         element={
           <div id="wrapper" className="flex flex-col h-full">
             <div className="h-[14rem]">
@@ -40,7 +40,7 @@ export const ProfilePage = () => {
 
       {/* 저장 스타일 */}
       <Route
-        path="/bookmarks/styles"
+        path="bookmarks/styles"
         element={
           <div className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
             <Bookmark />
@@ -50,7 +50,7 @@ export const ProfilePage = () => {
 
       {/* 회원 정보 수정 페이지 */}
       <Route
-        path="/edit"
+        path="edit"
         element={
           <div id="wrapper" className="flex flex-col">
             <div className="h-[17rem]">
@@ -66,7 +66,7 @@ export const ProfilePage = () => {
 
       {/* 포폴 페이지 */}
       <Route
-        path="/portfolio"
+        path="portfolio"
         element={
           <div className="flex flex-col h-screen max-h-[37.5rem] min-h-0">
             <Portfolio />
@@ -76,7 +76,7 @@ export const ProfilePage = () => {
 
       {/* 알람 설정 페이지 */}
       <Route
-        path="/alarm"
+        path="alarm"
         element={
           <div id="wrapper" className="flex flex-col h-[37rem]">
             <div className="h-[17rem]">
