@@ -55,10 +55,10 @@ const inputStyle = {
 };
 
 const fieldLabelClassName =
-  "pl-[7px] font-['Pretendard'] text-sm font-medium leading-[130%]";
+  "pl-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]";
 
 const inputClassName =
-  "h-[47px] w-full rounded-[10px] px-[15px] font-['Pretendard'] text-xs font-normal leading-[130%] outline-none placeholder:text-[#c1c2c3] focus:ring-2 focus:ring-[var(--primary-ring-color)]/30";
+  "h-[47px] w-full rounded-[10px] px-3.5 font-['Pretendard'] text-xs font-normal leading-[130%] outline-none placeholder:text-[#c1c2c3] focus:ring-2 focus:ring-[var(--primary-ring-color)]/30";
 
 const secondaryButtonClassName =
   "h-[47px] w-[78px] shrink-0 rounded-[10px] font-['Pretendard'] text-sm font-medium leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/30";
@@ -72,7 +72,7 @@ const TextField = ({
   type = "text",
   onChange,
 }: TextFieldProps) => (
-  <div className="flex flex-col gap-0.5">
+  <div className="flex flex-col gap-1">
     <label htmlFor={id} className={fieldLabelClassName} style={{ color: lightTheme.label.assistive }}>
       {label}
     </label>
@@ -96,7 +96,7 @@ const SignupFooter = ({
   disabled: boolean;
   onNext: () => void;
 }) => (
-  <div className="mt-[50px] flex flex-col items-center gap-[26px] [@media(max-height:900px)]:mt-8 [@media(max-height:900px)]:gap-[18px]">
+  <div className="mt-8 flex flex-col items-center gap-[26px] [@media(max-height:900px)]:gap-[18px]">
     <button
       type="button"
       disabled={disabled}
@@ -169,7 +169,7 @@ const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => 
 
   return (
     <form className="w-full" aria-label="오너 계정 정보">
-      <div className="flex flex-col gap-[14px]">
+      <div className="flex flex-col">
         <TextField
           id="signup-owner-id"
           name="id"
@@ -179,7 +179,7 @@ const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => 
           onChange={(id) => onChange({ ...form, id })}
         />
 
-        <div className="flex flex-col gap-0.5">
+        <div className="mt-6 flex flex-col gap-1">
           <label
             htmlFor="signup-owner-password"
             className={fieldLabelClassName}
@@ -211,16 +211,18 @@ const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => 
           </div>
         </div>
 
-        <TextField
-          id="signup-owner-name"
-          name="representativeName"
-          label="대표자명"
-          placeholder="대표자명"
-          value={form.representativeName}
-          onChange={(representativeName) => onChange({ ...form, representativeName })}
-        />
+        <div className="mt-6">
+          <TextField
+            id="signup-owner-name"
+            name="representativeName"
+            label="대표자명"
+            placeholder="대표자명"
+            value={form.representativeName}
+            onChange={(representativeName) => onChange({ ...form, representativeName })}
+          />
+        </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="mt-6 flex flex-col gap-3">
           <label
             htmlFor="signup-owner-phone"
             className={fieldLabelClassName}
@@ -321,7 +323,7 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
 
   return (
     <form className="w-full" aria-label="상점 정보">
-      <div className="flex flex-col gap-[14px]">
+      <div className="flex flex-col">
         <TextField
           id="signup-shop-name"
           name="shopName"
@@ -331,7 +333,7 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
           onChange={(shopName) => onChange({ ...form, shopName })}
         />
 
-        <div className="flex flex-col gap-0.5">
+        <div className="mt-6 flex flex-col gap-1">
           <label
             htmlFor="signup-shop-address"
             className={fieldLabelClassName}
@@ -376,7 +378,7 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-0.5">
+        <div className="mt-6 flex flex-col gap-1">
           <label
             htmlFor="signup-shop-category"
             className={fieldLabelClassName}
@@ -407,25 +409,29 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
           </select>
         </div>
 
-        <TextField
-          id="signup-shop-landline"
-          name="landline"
-          label="유선번호"
-          placeholder="유선번호"
-          value={form.landline}
-          onChange={(landline) => onChange({ ...form, landline: formatLandline(landline) })}
-        />
+        <div className="mt-6">
+          <TextField
+            id="signup-shop-landline"
+            name="landline"
+            label="유선번호"
+            placeholder="유선번호"
+            value={form.landline}
+            onChange={(landline) => onChange({ ...form, landline: formatLandline(landline) })}
+          />
+        </div>
 
-        <TextField
-          id="signup-shop-business-number"
-          name="businessNumber"
-          label="사업자등록번호"
-          placeholder="사업자등록번호"
-          value={form.businessNumber}
-          onChange={(businessNumber) =>
-            onChange({ ...form, businessNumber: formatBusinessNumber(businessNumber) })
-          }
-        />
+        <div className="mt-6">
+          <TextField
+            id="signup-shop-business-number"
+            name="businessNumber"
+            label="사업자등록번호"
+            placeholder="사업자등록번호"
+            value={form.businessNumber}
+            onChange={(businessNumber) =>
+              onChange({ ...form, businessNumber: formatBusinessNumber(businessNumber) })
+            }
+          />
+        </div>
       </div>
 
       <SignupFooter disabled={!isValid} onNext={onNext} />
