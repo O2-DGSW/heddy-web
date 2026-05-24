@@ -21,6 +21,12 @@ const primaryRingStyle = {
   "--primary-ring-color": lightTheme.primary.normal,
 } as CSSProperties;
 
+const getCheckboxIndicatorStyle = (checked: boolean): CSSProperties => ({
+  ...primaryRingStyle,
+  backgroundColor: checked ? lightTheme.primary.normal : lightTheme.background.normal,
+  borderColor: checked ? lightTheme.primary.normal : lightTheme.line.normal,
+});
+
 const TermsAgreement = () => {
   const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>(
     createInitialCheckedTerms,
@@ -55,11 +61,7 @@ const TermsAgreement = () => {
               />
               <span
                 className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--primary-ring-color)]/35 peer-focus-visible:ring-offset-2"
-                style={{
-                  ...primaryRingStyle,
-                  backgroundColor: checkedTerms[id] ? lightTheme.primary.normal : lightTheme.background.normal,
-                  borderColor: lightTheme.primary.normal,
-                }}
+                style={getCheckboxIndicatorStyle(checkedTerms[id])}
                 aria-hidden="true"
               >
                 <img
@@ -119,11 +121,7 @@ const TermsAgreement = () => {
           />
           <span
             className="flex size-[15px] shrink-0 items-center justify-center rounded-full border-[2px] peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--primary-ring-color)]/35 peer-focus-visible:ring-offset-2"
-            style={{
-              ...primaryRingStyle,
-              backgroundColor: isAllChecked ? lightTheme.primary.normal : lightTheme.background.normal,
-              borderColor: lightTheme.primary.normal,
-            }}
+            style={getCheckboxIndicatorStyle(isAllChecked)}
             aria-hidden="true"
           >
             <img
