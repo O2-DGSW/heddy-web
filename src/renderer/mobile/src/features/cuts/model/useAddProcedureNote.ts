@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type {
   AddProcedureNoteForm,
+  ProcedureNote,
   UseAddProcedureNoteReturn,
 } from "./types/AddProcedureNoteModal.types";
 
@@ -10,6 +11,7 @@ import type {
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
 export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
+  const [notes, setNotes] = useState<ProcedureNote[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState<AddProcedureNoteForm>({
     title: "",
@@ -50,10 +52,21 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
 
   /** 시술기록 추가 제출 - TODO: API 연동 */
   const onSubmit = () => {
+    const newNote: ProcedureNote = {
+      id: crypto.randomUUID(),
+      customerName: "오용준", // TODO: 서버 연결 시 동적으로 처리
+      title: form.title,
+      description: form.description,
+      date: form.date,
+      tags: form.tags,
+      imageUrl: form.image ? URL.createObjectURL(form.image) : null,
+    };
+    setNotes((prev) => [newNote, ...prev]);
     onClose();
   };
 
   return {
+    notes,
     isOpen,
     onOpen,
     onClose,

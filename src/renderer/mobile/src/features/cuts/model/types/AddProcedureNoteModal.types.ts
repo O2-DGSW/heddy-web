@@ -20,8 +20,21 @@ export interface AddProcedureNoteModalProps {
   onSubmit: () => void;
 }
 
+/** 저장된 시술기록 도메인 타입 */
+export interface ProcedureNote {
+  id: string;
+  /** TODO: 서버 연결 시 동적으로 처리 */
+  customerName: string;
+  title: string;
+  description: string;
+  date: Date;
+  tags: string;
+  imageUrl: string | null;
+}
+
 /** useAddProcedureNote 훅 반환 타입 */
 export interface UseAddProcedureNoteReturn {
+  notes: ProcedureNote[];
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
