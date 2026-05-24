@@ -2,17 +2,12 @@ import { NavLink } from "react-router-dom";
 
 import { font, lightTheme } from "@design-tokens";
 
-const TABS = [
-  { label: "시술기록", to: "/cuts" },
-  { label: "QR 코드", to: "/cuts/qr-code" },
-  { label: "QR 리딩", to: "/cuts/qr-reading" },
-  { label: "공개설정", to: "/cuts/public" },
-] as const;
+import { CUTS_TABS } from "@/features/cuts/constrants/tabs";
 
 export const CutsTabBar = () => {
   return (
     <nav className="flex justify-center" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
-      {TABS.map((tab) => (
+      {CUTS_TABS.map((tab) => (
         <NavLink
           key={tab.to}
           to={tab.to}
