@@ -13,7 +13,7 @@ export const CutsLayout = ({ children }: CutsLayoutProps) => {
         시술기록
       </h1>
       <CutsTabBar />
-      <div className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
         {children}
       </div>
     </div>
