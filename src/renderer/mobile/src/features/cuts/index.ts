@@ -1,3 +1,4 @@
+export { CutsLayout } from "./ui/CutsLayout";
 export { CutsTabBar } from "./ui/CutsTabBar";
 export { ProcedureNoteList } from "./ui/ProcedureNoteList";
 export { QrCode } from "./ui/QrCode";
