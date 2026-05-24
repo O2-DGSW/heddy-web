@@ -1,1 +1,1 @@
-export { ProcedureNotePage } from "./ui/ProcedureNotePage.tsx";
+export { ProcedureNotePage } from "./ui/ProcedureNotePage";
