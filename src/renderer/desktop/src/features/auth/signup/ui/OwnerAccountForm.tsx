@@ -3,11 +3,7 @@ import { lightTheme } from "@design-tokens";
 
 import { MAIN_CARRIERS, MVNO_CARRIERS } from "@/features/auth/signup/constants/signup";
 import { formatPhone } from "@/features/auth/signup/model/formatters";
-import type {
-  Carrier,
-  MvnoCarrier,
-  OwnerAccountFormValues,
-} from "@/features/auth/signup/model/types";
+import type { Carrier, MvnoCarrier } from "@/features/auth/signup/model/types";
 import {
   fieldLabelClassName,
   inputClassName,
@@ -17,12 +13,10 @@ import {
   SignupInlineButton,
   SignupTextField,
 } from "@/features/auth/signup/ui/SignupFormControls";
-
-interface OwnerAccountFormProps {
-  form: OwnerAccountFormValues;
-  onChange: (form: OwnerAccountFormValues) => void;
-  onNext: () => void;
-}
+import type {
+  CarrierButtonProps,
+  OwnerAccountFormProps,
+} from "@/features/auth/signup/ui/types";
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 
@@ -32,11 +26,7 @@ const CarrierButton = ({
   carrier,
   selected,
   onSelect,
-}: {
-  carrier: Carrier;
-  selected: boolean;
-  onSelect: (carrier: Carrier) => void;
-}) => (
+}: CarrierButtonProps) => (
   <button
     type="button"
     onClick={() => onSelect(carrier)}

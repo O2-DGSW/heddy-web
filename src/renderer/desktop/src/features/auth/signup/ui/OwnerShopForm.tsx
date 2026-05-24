@@ -6,7 +6,6 @@ import {
   formatBusinessNumber,
   formatLandline,
 } from "@/features/auth/signup/model/formatters";
-import type { OwnerShopFormValues } from "@/features/auth/signup/model/types";
 import {
   fieldLabelClassName,
   inputClassName,
@@ -16,12 +15,7 @@ import {
   SignupInlineButton,
   SignupTextField,
 } from "@/features/auth/signup/ui/SignupFormControls";
-
-interface OwnerShopFormProps {
-  form: OwnerShopFormValues;
-  onChange: (form: OwnerShopFormValues) => void;
-  onNext: () => void;
-}
+import type { OwnerShopFormProps } from "@/features/auth/signup/ui/types";
 
 const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
   const isValid = useMemo(

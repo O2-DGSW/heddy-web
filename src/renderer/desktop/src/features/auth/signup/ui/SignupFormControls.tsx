@@ -1,25 +1,12 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { lightTheme } from "@design-tokens";
 
-interface SignupTextFieldProps {
-  id: string;
-  label: string;
-  name: string;
-  placeholder: string;
-  value: string;
-  type?: string;
-  onChange: (value: string) => void;
-}
-
-interface SignupFooterProps {
-  disabled: boolean;
-  onNext: () => void;
-}
-
-interface SignupInlineButtonProps {
-  children: ReactNode;
-}
+import type {
+  SignupFooterProps,
+  SignupInlineButtonProps,
+  SignupTextFieldProps,
+} from "@/features/auth/signup/ui/types";
 
 const primaryRingStyle = {
   "--primary-ring-color": lightTheme.primary.normal,
