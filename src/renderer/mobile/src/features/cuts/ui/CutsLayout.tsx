@@ -1,14 +1,9 @@
-import React from "react";
-
 import { font, lightTheme } from "@design-tokens";
 
 import { CutsTabBar } from "@/features/cuts/ui/CutsTabBar";
+import type { CutsLayoutProps } from "@/features/cuts/model/types/CutsLayout.types";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export const CutsLayout = ({ children }: Props) => {
+export const CutsLayout = ({ children }: CutsLayoutProps) => {
   return (
     <div className="flex flex-col h-screen min-h-0 overflow-hidden">
       <h1
