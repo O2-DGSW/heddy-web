@@ -17,8 +17,7 @@ const inputStyle = {
   color: lightTheme.label.neutral,
 };
 
-const fieldLabelClassName =
-  "pl-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]";
+const fieldLabelClassName = "pl-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]";
 
 const inputClassName =
   "h-[47px] w-full rounded-[10px] px-3.5 font-['Pretendard'] text-xs font-normal leading-[130%] outline-none placeholder:text-[#c1c2c3] focus:ring-2 focus:ring-[var(--primary-ring-color)]/30";
@@ -36,7 +35,11 @@ const SignupTextField = ({
   onChange,
 }: SignupTextFieldProps) => (
   <div className="flex flex-col gap-1">
-    <label htmlFor={id} className={fieldLabelClassName} style={{ color: lightTheme.label.assistive }}>
+    <label
+      htmlFor={id}
+      className={fieldLabelClassName}
+      style={{ color: lightTheme.label.assistive }}
+    >
       {label}
     </label>
     <input
@@ -45,7 +48,7 @@ const SignupTextField = ({
       type={type}
       placeholder={placeholder}
       value={value}
-      onChange={(event) => onChange(event.target.value)}
+      onChange={event => onChange(event.target.value)}
       className={inputClassName}
       style={{ ...primaryRingStyle, ...inputStyle }}
     />
@@ -72,11 +75,12 @@ const SignupFooter = ({ disabled, onNext }: SignupFooterProps) => (
       type="button"
       disabled={disabled}
       onClick={onNext}
-      className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
       style={{
         ...primaryRingStyle,
-        backgroundColor: disabled ? lightTheme.line.alternative : lightTheme.primary.normal,
-        color: disabled ? lightTheme.line.normal : lightTheme.fill.normal,
+        backgroundColor: lightTheme.primary.normal,
+        color: lightTheme.fill.normal,
+        opacity: disabled ? 0.5 : 1,
       }}
     >
       다음으로

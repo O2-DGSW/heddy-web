@@ -32,17 +32,13 @@ interface TermsAgreementProps {
 }
 
 const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
-  const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>(
-    createInitialCheckedTerms,
-  );
+  const [checkedTerms, setCheckedTerms] =
+    useState<Record<TermId, boolean>>(createInitialCheckedTerms);
 
-  const isAllChecked = useMemo(
-    () => requiredTermIds.every((id) => checkedTerms[id]),
-    [checkedTerms],
-  );
+  const isAllChecked = useMemo(() => requiredTermIds.every(id => checkedTerms[id]), [checkedTerms]);
 
   const handleTermChange = (id: TermId) => {
-    setCheckedTerms((prev) => ({ ...prev, [id]: !prev[id] }));
+    setCheckedTerms(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleAllChange = () => {
@@ -147,11 +143,12 @@ const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
         <button
           type="button"
           onClick={onNext}
-          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
           style={{
             ...primaryRingStyle,
             backgroundColor: lightTheme.primary.normal,
             color: lightTheme.fill.normal,
+            opacity: isAllChecked ? 1 : 0.5,
           }}
           disabled={!isAllChecked}
         >
