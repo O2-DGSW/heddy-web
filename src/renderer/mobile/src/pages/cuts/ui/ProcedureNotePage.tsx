@@ -1,4 +1,4 @@
-// 만들어 놓은 기능들을 종합하여 페이징을 하는 파일입니다
+// 만들어 놓은 기능들을 종합하여 라우팅 및 페이지 구성을 하는 파일입니다
 
 import { Route, Routes } from "react-router-dom";
 
