@@ -1,0 +1,124 @@
+import { lightTheme } from "@design-tokens";
+
+import { MAIN_CARRIERS, MVNO_CARRIERS } from "@/features/auth/signup/constants/signup";
+import { formatPhone } from "@/features/auth/signup/model/formatters";
+import type { Carrier, MvnoCarrier } from "@/features/auth/signup/model/types";
+import {
+  fieldLabelClassName,
+  inputClassName,
+  inputStyle,
+  primaryRingStyle,
+  SignupInlineButton,
+} from "@/features/auth/signup/ui/SignupFormControls";
+import type {
+  CarrierButtonProps,
+  PhoneVerificationFieldProps,
+} from "@/features/auth/signup/ui/types";
+
+const MVNO_SET = new Set<string>(MVNO_CARRIERS);
+
+const isMvnoCarrier = (carrier: Carrier): carrier is MvnoCarrier => MVNO_SET.has(carrier);
+
+const CarrierButton = ({
+  carrier,
+  selected,
+  onSelect,
+}: CarrierButtonProps) => (
+  <button
+    type="button"
+    onClick={() => onSelect(carrier)}
+    className="flex h-4 items-center gap-2 font-['Pretendard'] text-sm font-medium leading-[130%] focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/30"
+    style={{ ...primaryRingStyle, color: lightTheme.label.assistive }}
+  >
+    <span
+      className="flex size-[15px] items-center justify-center rounded-full border-[4px]"
+      style={{ borderColor: selected ? lightTheme.primary.normal : lightTheme.line.normal }}
+      aria-hidden="true"
+    >
+      {selected && <span className="size-[7px] rounded-full bg-white" />}
+    </span>
+    {carrier}
+  </button>
+);
+
+const PhoneVerificationField = ({
+  carrier,
+  phone,
+  verificationCode,
+  onCarrierChange,
+  onPhoneChange,
+  onVerificationCodeChange,
+}: PhoneVerificationFieldProps) => {
+  const isMvnoSelected = isMvnoCarrier(carrier);
+
+  return (
+    <div className="mt-6 flex flex-col gap-3">
+      <label
+        htmlFor="signup-owner-phone"
+        className={fieldLabelClassName}
+        style={{ color: lightTheme.label.assistive }}
+      >
+        전화번호
+      </label>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-center gap-[31px]">
+          {MAIN_CARRIERS.map((mainCarrier) => (
+            <CarrierButton
+              key={mainCarrier}
+              carrier={mainCarrier}
+              selected={carrier === mainCarrier}
+              onSelect={onCarrierChange}
+            />
+          ))}
+
+          <select
+            aria-label="알뜰폰 통신사"
+            value={isMvnoSelected ? carrier : ""}
+            onChange={(event) => onCarrierChange(event.target.value as MvnoCarrier)}
+            className="h-5 bg-transparent font-['Pretendard'] text-sm font-medium leading-[130%] outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/30"
+            style={{
+              ...primaryRingStyle,
+              color: isMvnoSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
+            }}
+          >
+            <option value="" disabled>
+              알뜰폰
+            </option>
+            {MVNO_CARRIERS.map((mvnoCarrier) => (
+              <option key={mvnoCarrier} value={mvnoCarrier}>
+                {mvnoCarrier}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            id="signup-owner-phone"
+            name="phone"
+            type="tel"
+            placeholder="전화번호"
+            value={phone}
+            onChange={(event) => onPhoneChange(formatPhone(event.target.value))}
+            className={inputClassName}
+            style={{ ...primaryRingStyle, ...inputStyle }}
+          />
+          <SignupInlineButton>인증번호</SignupInlineButton>
+        </div>
+
+        <input
+          id="signup-owner-verification-code"
+          name="verificationCode"
+          type="text"
+          placeholder="인증번호"
+          value={verificationCode}
+          onChange={(event) => onVerificationCodeChange(event.target.value)}
+          className={inputClassName}
+          style={{ ...primaryRingStyle, ...inputStyle }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export { PhoneVerificationField };

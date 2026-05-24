@@ -1,20 +1,12 @@
 import { useMemo } from "react";
-import { lightTheme } from "@design-tokens";
 
-import { SHOP_CATEGORIES } from "@/features/auth/signup/constants/signup";
 import {
   formatBusinessNumber,
   formatLandline,
 } from "@/features/auth/signup/model/formatters";
-import {
-  fieldLabelClassName,
-  inputClassName,
-  inputStyle,
-  primaryRingStyle,
-  SignupFooter,
-  SignupInlineButton,
-  SignupTextField,
-} from "@/features/auth/signup/ui/SignupFormControls";
+import { AddressFields } from "@/features/auth/signup/ui/AddressFields";
+import { CategorySelectField } from "@/features/auth/signup/ui/CategorySelectField";
+import { SignupFooter, SignupTextField } from "@/features/auth/signup/ui/SignupFormControls";
 import type { OwnerShopFormProps } from "@/features/auth/signup/ui/types";
 
 const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
@@ -43,71 +35,17 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
           onChange={(shopName) => onChange({ ...form, shopName })}
         />
 
-        <div className="mt-6 flex flex-col gap-1">
-          <label
-            htmlFor="signup-shop-address"
-            className={fieldLabelClassName}
-            style={{ color: lightTheme.label.assistive }}
-          >
-            주소 (사업장 소재지)
-          </label>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <input
-                id="signup-shop-address"
-                name="address"
-                type="text"
-                placeholder="주소검색"
-                value={form.address}
-                onChange={(event) => onChange({ ...form, address: event.target.value })}
-                className={inputClassName}
-                style={{ ...primaryRingStyle, ...inputStyle }}
-              />
-              <SignupInlineButton>주소검색</SignupInlineButton>
-            </div>
-            <input
-              id="signup-shop-address-detail"
-              name="addressDetail"
-              type="text"
-              placeholder="상세주소"
-              value={form.addressDetail}
-              onChange={(event) => onChange({ ...form, addressDetail: event.target.value })}
-              className={inputClassName}
-              style={{ ...primaryRingStyle, ...inputStyle }}
-            />
-          </div>
-        </div>
+        <AddressFields
+          address={form.address}
+          addressDetail={form.addressDetail}
+          onAddressChange={(address) => onChange({ ...form, address })}
+          onAddressDetailChange={(addressDetail) => onChange({ ...form, addressDetail })}
+        />
 
-        <div className="mt-6 flex flex-col gap-1">
-          <label
-            htmlFor="signup-shop-category"
-            className={fieldLabelClassName}
-            style={{ color: lightTheme.label.assistive }}
-          >
-            상점 카테고리
-          </label>
-          <select
-            id="signup-shop-category"
-            name="category"
-            value={form.category}
-            onChange={(event) => onChange({ ...form, category: event.target.value })}
-            className={`${inputClassName} appearance-none bg-[right_15px_center]`}
-            style={{
-              ...primaryRingStyle,
-              ...inputStyle,
-              color: form.category ? lightTheme.label.neutral : lightTheme.line.normal,
-            }}
-          >
-            <option value="" disabled>
-              카테고리를 선택해주세요
-            </option>
-            {SHOP_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
+        <CategorySelectField
+          value={form.category}
+          onChange={(category) => onChange({ ...form, category })}
+        />
 
         <div className="mt-6">
           <SignupTextField

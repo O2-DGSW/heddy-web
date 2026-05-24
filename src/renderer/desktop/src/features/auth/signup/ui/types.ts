@@ -42,3 +42,31 @@ export interface CarrierButtonProps {
   selected: boolean;
   onSelect: (carrier: Carrier) => void;
 }
+
+export interface PasswordFieldsProps {
+  password: string;
+  passwordConfirm: string;
+  onPasswordChange: (value: string) => void;
+  onPasswordConfirmChange: (value: string) => void;
+}
+
+export interface PhoneVerificationFieldProps {
+  carrier: Carrier;
+  phone: string;
+  verificationCode: string;
+  onCarrierChange: (carrier: Carrier) => void;
+  onPhoneChange: (value: string) => void;
+  onVerificationCodeChange: (value: string) => void;
+}
+
+export interface AddressFieldsProps {
+  address: string;
+  addressDetail: string;
+  onAddressChange: (value: string) => void;
+  onAddressDetailChange: (value: string) => void;
+}
+
+export interface CategorySelectFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+}
