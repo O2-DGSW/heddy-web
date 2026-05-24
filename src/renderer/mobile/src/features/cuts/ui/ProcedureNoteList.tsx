@@ -1,10 +1,16 @@
 // 시술기록 목록 UI
 import { font, lightTheme } from "@design-tokens";
 
+import { useAddProcedureNote } from "@/features/cuts/model/useAddProcedureNote";
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
+import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
 
+/** 시술기록 목록 컴포넌트 - 기록이 없을 때 빈 상태 화면 표시 */
 export const ProcedureNoteList = () => {
+  const { isOpen, onOpen, onClose, form, onChangeTitle, onChangeDescription, onChangeDate, onChangeTags, onChangeImage, onSubmit } =
+    useAddProcedureNote();
+
   return (
     <div
       className="h-full flex flex-col overflow-hidden pb-20"
@@ -23,15 +29,30 @@ export const ProcedureNoteList = () => {
           </p>
         </div>
       </div>
+
+      {/* 시술기록 추가 FAB 버튼 */}
       <button
         className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
         style={{
           bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
           backgroundColor: lightTheme.primary.normal,
         }}
+        onClick={onOpen}
       >
         <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
       </button>
+
+      <AddProcedureNoteModal
+        isOpen={isOpen}
+        onClose={onClose}
+        form={form}
+        onChangeTitle={onChangeTitle}
+        onChangeDescription={onChangeDescription}
+        onChangeDate={onChangeDate}
+        onChangeTags={onChangeTags}
+        onChangeImage={onChangeImage}
+        onSubmit={onSubmit}
+      />
     </div>
   );
 };
