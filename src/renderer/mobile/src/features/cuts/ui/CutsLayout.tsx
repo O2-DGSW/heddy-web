@@ -5,7 +5,7 @@ import type { CutsLayoutProps } from "@/features/cuts/model/types/CutsLayout.typ
 
 export const CutsLayout = ({ children }: CutsLayoutProps) => {
   return (
-    <div className="flex flex-col h-screen min-h-0 overflow-hidden">
+    <div className="flex flex-col h-dvh min-h-0 overflow-hidden">
       <h1
         className={`pb-2 text-center ${font.headline1.bold}`}
         style={{ color: lightTheme.label.neutral }}
