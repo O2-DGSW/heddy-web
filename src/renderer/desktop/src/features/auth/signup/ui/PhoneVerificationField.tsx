@@ -1,5 +1,6 @@
 import { lightTheme } from "@design-tokens";
 
+import dropdownIcon from "@/features/auth/signup/assets/svg/dropdown.svg";
 import { MAIN_CARRIERS, MVNO_CARRIERS } from "@/features/auth/signup/constants/signup";
 import { formatPhone } from "@/features/auth/signup/model/formatters";
 import type { Carrier, MvnoCarrier } from "@/features/auth/signup/model/types";
@@ -71,25 +72,39 @@ const PhoneVerificationField = ({
             />
           ))}
 
-          <select
-            aria-label="알뜰폰 통신사"
-            value={isMvnoSelected ? carrier : ""}
-            onChange={(event) => onCarrierChange(event.target.value as MvnoCarrier)}
-            className="h-5 bg-transparent font-['Pretendard'] text-sm font-medium leading-[130%] outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/30"
-            style={{
-              ...primaryRingStyle,
-              color: isMvnoSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
-            }}
-          >
-            <option value="" disabled>
+          <div className="relative h-5 w-[61px] shrink-0">
+            <span
+              className="absolute left-0 top-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]"
+              style={{
+                color: isMvnoSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
+              }}
+              aria-hidden="true"
+            >
               알뜰폰
-            </option>
-            {MVNO_CARRIERS.map((mvnoCarrier) => (
-              <option key={mvnoCarrier} value={mvnoCarrier}>
-                {mvnoCarrier}
+            </span>
+            <select
+              aria-label="알뜰폰 통신사"
+              value={isMvnoSelected ? carrier : ""}
+              onChange={(event) => onCarrierChange(event.target.value as MvnoCarrier)}
+              className="absolute inset-0 h-full w-full cursor-pointer appearance-none opacity-0 outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/30"
+              style={primaryRingStyle}
+            >
+              <option value="" disabled>
+                알뜰폰
               </option>
-            ))}
-          </select>
+              {MVNO_CARRIERS.map((mvnoCarrier) => (
+                <option key={mvnoCarrier} value={mvnoCarrier}>
+                  {mvnoCarrier}
+                </option>
+              ))}
+            </select>
+            <img
+              src={dropdownIcon}
+              alt=""
+              className="pointer-events-none absolute right-0 top-0 size-5"
+              aria-hidden="true"
+            />
+          </div>
         </div>
 
         <div className="flex gap-2">
