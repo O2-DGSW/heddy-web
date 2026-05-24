@@ -1,5 +1,5 @@
-export { CutsTabBar } from "./ui/CutsTabBar.tsx";
-export { ProcedureNoteList } from "./ui/ProcedureNoteList.tsx";
-export { QrCode } from "./ui/QrCode.tsx";
-export { QrReading } from "./ui/QrReading.tsx";
-export { PublicSettings } from "./ui/PublicSettings.tsx";
+export { CutsTabBar } from "./ui/CutsTabBar";
+export { ProcedureNoteList } from "./ui/ProcedureNoteList";
+export { QrCode } from "./ui/QrCode";
+export { QrReading } from "./ui/QrReading";
+export { PublicSettings } from "./ui/PublicSettings";
