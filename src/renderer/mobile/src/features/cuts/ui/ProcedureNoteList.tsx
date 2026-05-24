@@ -2,13 +2,14 @@
 import { font, lightTheme } from "@design-tokens";
 
 import { useAddProcedureNote } from "@/features/cuts/model/useAddProcedureNote";
+import { ProcedureNoteItem } from "./ProcedureNoteItem";
+import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
-import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
 
-/** 시술기록 목록 컴포넌트 - 기록이 없을 때 빈 상태 화면 표시 */
+/** 시술기록 목록 컴포넌트 */
 export const ProcedureNoteList = () => {
-  const { isOpen, onOpen, onClose, form, onChangeTitle, onChangeDescription, onChangeDate, onChangeTags, onChangeImage, onSubmit } =
+  const { notes, isOpen, onOpen, onClose, form, onChangeTitle, onChangeDescription, onChangeDate, onChangeTags, onChangeImage, onSubmit } =
     useAddProcedureNote();
 
   return (
@@ -16,19 +17,29 @@ export const ProcedureNoteList = () => {
       className="h-full flex flex-col overflow-hidden pb-20"
       style={{ backgroundColor: lightTheme.fill.normal }}
     >
-      <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <img src={agerSadSvg} alt="시술기록 없음" className="w-32 h-32" />
-          <p
-            className={`text-center ${font.body.regular}`}
-            style={{ color: lightTheme.label.assistive }}
-          >
-            시술기록이
-            <br />
-            존재하지 않아요..
-          </p>
+      {notes.length === 0 ? (
+        /* 빈 상태 */
+        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <img src={agerSadSvg} alt="시술기록 없음" className="w-32 h-32" />
+            <p
+              className={`text-center ${font.body.regular}`}
+              style={{ color: lightTheme.label.assistive }}
+            >
+              시술기록이
+              <br />
+              존재하지 않아요..
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        /* 시술기록 리스트 */
+        <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
+          {notes.map((note) => (
+            <ProcedureNoteItem key={note.id} note={note} />
+          ))}
+        </div>
+      )}
 
       {/* 시술기록 추가 FAB 버튼 */}
       <button
