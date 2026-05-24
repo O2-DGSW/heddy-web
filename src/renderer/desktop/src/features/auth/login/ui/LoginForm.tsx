@@ -9,7 +9,7 @@ const LoginForm = () => {
 
   return (
     <form className="flex w-full flex-col" aria-label="로그인">
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-1">
         <label
           htmlFor="login-id"
           className="pl-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]"
@@ -27,7 +27,7 @@ const LoginForm = () => {
         />
       </div>
 
-      <div className="mt-6 flex flex-col gap-0.5">
+      <div className="mt-6 flex flex-col gap-1">
         <label
           htmlFor="login-password"
           className="pl-0.5 font-['Pretendard'] text-sm font-medium leading-[130%]"
