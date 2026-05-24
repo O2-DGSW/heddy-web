@@ -1,6 +1,6 @@
 import { font, lightTheme } from "@design-tokens";
 
-import { CutsTabBar } from "@/features/cuts/ui/CutsTabBar";
+import { CutsTabBar } from "./CutsTabBar";
 import type { CutsLayoutProps } from "@/features/cuts/model/types/CutsLayout.types";
 
 export const CutsLayout = ({ children }: CutsLayoutProps) => {
