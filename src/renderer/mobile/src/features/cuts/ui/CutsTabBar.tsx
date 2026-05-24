@@ -11,13 +11,13 @@ const TABS = [
 
 export const CutsTabBar = () => {
   return (
-    <nav className="flex" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
+    <nav className="flex justify-center" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
       {TABS.map((tab) => (
         <NavLink
           key={tab.to}
           to={tab.to}
           end
-          className={`relative flex-1 flex flex-col items-center py-3 transition-colors ${font.label.medium}`}
+          className={`relative flex flex-col items-center px-4 py-3 transition-colors ${font.headline2.medium}`}
           style={({ isActive }) => ({
             color: isActive ? lightTheme.label.strong : lightTheme.label.assistive,
           })}
