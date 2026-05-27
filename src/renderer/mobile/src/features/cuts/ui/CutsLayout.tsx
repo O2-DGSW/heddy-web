@@ -5,7 +5,7 @@ import type { CutsLayoutProps } from "@/features/cuts/model/types/CutsLayout.typ
 
 export const CutsLayout = ({ children }: CutsLayoutProps) => {
   return (
-    <div className="fixed inset-0 grid grid-rows-[auto_auto_1fr] overflow-hidden pt-[env(safe-area-inset-top)]">
+    <div className="fixed inset-0 grid grid-rows-[auto_auto_1fr] overflow-hidden pt-safe">
       <h1
         className={`py-2 pt-3 text-center ${font.headline1.bold}`}
         style={{ color: lightTheme.label.neutral }}
