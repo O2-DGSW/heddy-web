@@ -141,7 +141,7 @@ export const AddProcedureNoteModal = ({
               시술 태그
             </label>
             <Select
-              options={[...PROCEDURE_TAGS]}
+              options={PROCEDURE_TAGS}
               value={form.tags}
               onChange={onChangeTags}
               placeholder="시술 태그를 선택해주세요."
