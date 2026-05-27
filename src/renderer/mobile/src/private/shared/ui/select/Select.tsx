@@ -1,10 +1,10 @@
 import { font, lightTheme } from "@design-tokens";
 
 /** Select 컴포넌트의 옵션 항목 */
-interface SelectOption {
+type SelectOption = {
   label: string;
   value: string;
-}
+};
 
 /** Select 컴포넌트 props */
 interface SelectProps {
