@@ -13,7 +13,12 @@ import type { AddProcedureNoteModalProps } from "@/features/cuts/model/types/Add
  * @param date 변환할 날짜
  * @returns "YYYY-MM-DD" 형식의 문자열
  */
-const toInputDateValue = (date: Date) => date.toISOString().split("T")[0];
+const toInputDateValue = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 /**
  * 시술기록 추가 모달 컴포넌트
