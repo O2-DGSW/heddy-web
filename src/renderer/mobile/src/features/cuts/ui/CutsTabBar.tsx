@@ -6,13 +6,13 @@ import { CUTS_TABS } from "@/features/cuts/constrants/tabs";
 
 export const CutsTabBar = () => {
   return (
-    <nav className="flex justify-center" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
+    <nav className="flex" style={{ borderBottom: `1px solid ${lightTheme.line.alternative}` }}>
       {CUTS_TABS.map((tab) => (
         <NavLink
           key={tab.to}
           to={tab.to}
           end
-          className={`relative flex flex-col items-center px-4 py-3 transition-colors ${font.headline2.medium}`}
+          className={`relative flex-1 flex flex-col items-center px-2 py-3 transition-colors ${font.label.medium}`}
           style={({ isActive }) => ({
             color: isActive ? lightTheme.label.strong : lightTheme.label.assistive,
           })}
