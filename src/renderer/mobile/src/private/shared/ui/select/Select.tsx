@@ -9,7 +9,7 @@ type SelectOption = {
 /** Select 컴포넌트 props */
 interface SelectProps {
   /** 선택 옵션 목록 */
-  options: SelectOption[];
+  options: readonly SelectOption[];
   /** 현재 선택된 값 */
   value: string;
   /** 값 변경 핸들러 */
