@@ -36,6 +36,21 @@ export const AddProcedureNoteModal = ({
   onSubmit,
 }: AddProcedureNoteModalProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!form.image) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(form.image);
+    setPreviewUrl(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [form.image]);
 
   if (!isOpen) return null;
 
