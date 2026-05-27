@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import arrowSvg from "./assets/Arrow.svg";
 
