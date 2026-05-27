@@ -155,9 +155,9 @@ export const AddProcedureNoteModal = ({
               style={{ backgroundColor: lightTheme.background.neutral }}
               onClick={handleImageAreaClick}
             >
-              {form.image ? (
+              {previewUrl ? (
                 <img
-                  src={URL.createObjectURL(form.image)}
+                  src={previewUrl}
                   alt="업로드된 이미지"
                   className="w-full h-full object-cover rounded-xl"
                 />
