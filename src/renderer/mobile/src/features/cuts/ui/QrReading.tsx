@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
-import { font, lightTheme } from "@design-tokens";
+import { font, lightTheme, palette } from "@design-tokens";
+import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 
 export const QrReading = () => {
   // QR 스캔 결과 저장 state
@@ -66,10 +67,17 @@ export const QrReading = () => {
         {/* 스캔 가이드 오버레이 */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {/* QR을 맞추는 중앙 가이드 박스 */}
-          <div
-            className="aspect-square w-[60%] rounded-lg border-2 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
-            style={{ borderColor: lightTheme.fill.neutral }}
-          />
+          <div className="relative w-[60%]">
+            <img
+              src={PeekkomAgua}
+              alt="빼꼼! 아거"
+              className="absolute w-[5rem] top-[-2.25rem] left-[1rem]"
+            />
+            <div
+              className="aspect-square rounded-lg border-dashed border-4 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
+              style={{ borderColor: palette.main[50] }}
+            />
+          </div>
         </div>
       </div>
 
