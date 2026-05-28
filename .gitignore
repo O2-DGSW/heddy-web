@@ -27,3 +27,6 @@ android/
 *.njsproj
 *.sln
 *.sw?
+
+# Local docs
+docs/
