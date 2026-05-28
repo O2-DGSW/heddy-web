@@ -16,23 +16,31 @@ import { ShopInfoRow } from "./ShopInfoRow";
 
 export const ShopInfo = () => {
   return (
-    <div className="overflow-y-auto h-full" style={{ backgroundColor: lightTheme.background.normal }}>
+    <div
+      className="overflow-y-auto h-full"
+      style={{ backgroundColor: lightTheme.background.normal }}
+    >
       {/* 배너 이미지 — 서버 연결 시 제거 예정 */}
       <img src={DgswImg} alt="미용실 배너" className="w-full h-48 object-cover" />
 
-      {/* 미용실 이름 · 리뷰 · 태그 */}
-      <div className="flex items-start justify-between px-4 pt-4 pb-2">
-        <div>
-          <h2 className={font.headline1.semiBold} style={{ color: lightTheme.label.normal }}>
-            {SHOP_INFO.name}
-          </h2>
+      <div className="px-4 pt-4">
+        <h2
+          className={`break-keep ${font.headline1.semiBold}`}
+          style={{ color: lightTheme.label.normal }}
+        >
+          {SHOP_INFO.name}
+        </h2>
+      </div>
+      {/* 리뷰 · 태그 */}
+      <div className="flex items-start justify-between gap-2 px-4 pt-2 pb-2">
+        <div className="min-w-0 flex-1">
           <p className={`mt-1 ${font.body.medium}`} style={{ color: lightTheme.label.alternative }}>
             리뷰 · {SHOP_INFO.reviewCount.toLocaleString()}
           </p>
         </div>
 
-        <div className="flex gap-1.5 mt-1 flex-wrap justify-end">
-          {SHOP_INFO.tags.map((tag) => (
+        <div className="flex gap-1.5 mt-1 shrink-0 flex-wrap justify-end">
+          {SHOP_INFO.tags.map(tag => (
             <ShopInfoTag key={tag} label={tag} />
           ))}
         </div>
