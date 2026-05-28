@@ -1,0 +1,1 @@
+export { SalonPage } from "./ui/SalonPage";
