@@ -14,10 +14,30 @@ import type { AddProcedureNoteModalProps } from "@/features/cuts/model/types/Add
  * @returns "YYYY-MM-DD" 형식의 문자열
  */
 const toInputDateValue = (date: Date) => {
+  if (Number.isNaN(date.getTime())) return "";
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+const ImagePreview = ({ file }: { file: File }) => {
+  const [previewUrl] = useState(() => URL.createObjectURL(file));
+
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  return (
+    <img
+      src={previewUrl}
+      alt="업로드된 이미지"
+      className="w-full h-full object-cover rounded-xl"
+    />
+  );
 };
 
 /**
@@ -36,21 +56,6 @@ export const AddProcedureNoteModal = ({
   onSubmit,
 }: AddProcedureNoteModalProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!form.image) {
-      setPreviewUrl(null);
-      return;
-    }
-
-    const url = URL.createObjectURL(form.image);
-    setPreviewUrl(url);
-
-    return () => {
-      URL.revokeObjectURL(url);
-    };
-  }, [form.image]);
 
   if (!isOpen) return null;
 
@@ -155,11 +160,10 @@ export const AddProcedureNoteModal = ({
               style={{ backgroundColor: lightTheme.background.neutral }}
               onClick={handleImageAreaClick}
             >
-              {previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="업로드된 이미지"
-                  className="w-full h-full object-cover rounded-xl"
+              {form.image ? (
+                <ImagePreview
+                  key={`${form.image.name}-${form.image.size}-${form.image.lastModified}`}
+                  file={form.image}
                 />
               ) : (
                 <span className={font.caption.regular} style={{ color: lightTheme.label.assistive }}>

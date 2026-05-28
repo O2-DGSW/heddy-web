@@ -13,8 +13,11 @@ interface ProcedureNoteItemProps {
  * 날짜를 "M/D" 형식으로 변환
  * @param date 변환할 날짜
  */
-const formatShortDate = (date: Date) =>
-  `${date.getMonth() + 1}/${date.getDate()}`;
+const formatShortDate = (date: Date | string) => {
+  const d = new Date(date);
+
+  return Number.isNaN(d.getTime()) ? "" : `${d.getMonth() + 1}/${d.getDate()}`;
+};
 
 /**
  * 시술기록 목록 아이템 컴포넌트
