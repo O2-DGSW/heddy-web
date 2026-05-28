@@ -1,0 +1,1 @@
+export { ProcedureNotePage } from "./ui/ProcedureNotePage";
