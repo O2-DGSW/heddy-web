@@ -71,11 +71,11 @@ export const QrReading = () => {
             <img
               src={PeekkomAgua}
               alt="빼꼼! 아거"
-              className="absolute w-[5rem] top-[-2.25rem] left-[1rem]"
+              className="absolute w-[5rem] top-[-2.25rem] left-[30%]"
             />
             <div
-              className="aspect-square rounded-lg border-dashed border-4 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
-              style={{ borderColor: palette.main[50] }}
+              className="aspect-square rounded-lg border-solid border-3 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
+              style={{ borderColor: palette.main[70] }}
             />
           </div>
         </div>
