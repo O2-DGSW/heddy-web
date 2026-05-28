@@ -11,7 +11,7 @@ export interface TabItem {
 /** TabBar 컴포넌트 props */
 interface TabBarProps {
   /** 탭 목록 */
-  tabs: TabItem[];
+  tabs: readonly TabItem[];
 }
 
 /**
