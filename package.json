@@ -32,6 +32,7 @@
     "@heddy/api": "link:./pakages/api",
     "@heddy/design-tokens": "link:./pakages/design-tokens",
     "@tanstack/react-query": "^5.100.10",
+    "@yudiel/react-qr-scanner": "^2.6.0",
     "axios": "^1.16.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
