@@ -27,18 +27,18 @@ const getCheckboxIndicatorStyle = (checked: boolean): CSSProperties => ({
   borderColor: checked ? lightTheme.primary.normal : lightTheme.line.normal,
 });
 
-const TermsAgreement = () => {
-  const [checkedTerms, setCheckedTerms] = useState<Record<TermId, boolean>>(
-    createInitialCheckedTerms,
-  );
+interface TermsAgreementProps {
+  onNext: () => void;
+}
 
-  const isAllChecked = useMemo(
-    () => requiredTermIds.every((id) => checkedTerms[id]),
-    [checkedTerms],
-  );
+const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
+  const [checkedTerms, setCheckedTerms] =
+    useState<Record<TermId, boolean>>(createInitialCheckedTerms);
+
+  const isAllChecked = useMemo(() => requiredTermIds.every(id => checkedTerms[id]), [checkedTerms]);
 
   const handleTermChange = (id: TermId) => {
-    setCheckedTerms((prev) => ({ ...prev, [id]: !prev[id] }));
+    setCheckedTerms(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleAllChange = () => {
@@ -142,11 +142,13 @@ const TermsAgreement = () => {
       <div className="mt-16 flex flex-col items-center gap-[26px] [@media(max-height:900px)]:mt-10 [@media(max-height:900px)]:gap-[18px]">
         <button
           type="button"
-          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onNext}
+          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
           style={{
             ...primaryRingStyle,
             backgroundColor: lightTheme.primary.normal,
             color: lightTheme.fill.normal,
+            opacity: isAllChecked ? 1 : 0.5,
           }}
           disabled={!isAllChecked}
         >
