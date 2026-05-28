@@ -4,7 +4,7 @@ import { SignupPage } from "@/pages/auth/signup";
 import { ProfilePage } from "@/pages/profile";
 import { FindPage } from "@/pages/auth/find";
 import { ProcedureNotePage } from "@/pages/cuts";
-import { SalonPage } from "@/pages/salon";
+import { ShopPage } from "@/pages/shop";
 import { BottomBar } from "@/widgets/bottom-bar";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const Layout = () => {
         <Route path="/profile/*" element={<ProfilePage />} />
         <Route path="/find/:type" element={<FindPage />} />
         <Route path="/cuts/*" element={<ProcedureNotePage />} />
-        <Route path="/shop/*" element={<SalonPage />} />
+        <Route path="/shop/*" element={<ShopPage />} />
       </Routes>
 
       {!hideBottomBar && <BottomBar />}

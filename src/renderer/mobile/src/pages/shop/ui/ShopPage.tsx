@@ -2,16 +2,16 @@
 
 import { Route, Routes } from "react-router-dom";
 
-import { SalonLayout } from "@/features/salon";
+import { ShopLayout } from "@/features/shop";
 
-export const SalonPage = () => {
+export const ShopPage = () => {
   return (
-    <SalonLayout>
+    <ShopLayout>
       <Routes>
         <Route index element={null} />
         <Route path="reservation" element={null} />
         <Route path="schedule" element={null} />
       </Routes>
-    </SalonLayout>
+    </ShopLayout>
   );
 };
