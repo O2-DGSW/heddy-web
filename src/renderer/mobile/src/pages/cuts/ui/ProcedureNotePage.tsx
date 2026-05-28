@@ -9,7 +9,7 @@ export const ProcedureNotePage = () => {
     <CutsLayout>
       <Routes>
         <Route index element={<ProcedureNoteList />} />
-        <Route path="qr-code" element={<QrCode />} />
+        <Route path="qr-code" element={<QrCode value="테스트 테스트" />} />
         <Route path="qr-reading" element={<QrReading />} />
         <Route path="public" element={<PublicSettings />} />
       </Routes>
