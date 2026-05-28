@@ -1,9 +1,9 @@
 import { font, lightTheme } from "@design-tokens";
 
-import { SalonTabBar } from "./SalonTabBar";
-import type { SalonLayoutProps } from "@/features/salon/model/types/SalonLayout.types";
+import { ShopTabBar } from "./ShopTabBar";
+import type { ShopLayoutProps } from "@/features/shop/model/types/ShopLayout.types";
 
-export const SalonLayout = ({ children }: SalonLayoutProps) => {
+export const ShopLayout = ({ children }: ShopLayoutProps) => {
   return (
     <div className="fixed inset-0 grid grid-rows-[auto_auto_1fr] overflow-hidden pt-safe">
       <h1
@@ -12,7 +12,7 @@ export const SalonLayout = ({ children }: SalonLayoutProps) => {
       >
         미용실
       </h1>
-      <SalonTabBar />
+      <ShopTabBar />
       <div className="relative overflow-hidden">
         {children}
       </div>
