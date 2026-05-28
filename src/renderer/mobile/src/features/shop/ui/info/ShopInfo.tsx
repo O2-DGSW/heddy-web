@@ -5,6 +5,9 @@ import { SHOP_INFO } from "@/features/shop/constrants/shop-info";
 import CustomerIcon from "@/features/shop/assets/shop-info/Customer.svg?react";
 import CheckIcon from "@/features/shop/assets/shop-info/Check.svg?react";
 import DateIcon from "@/features/shop/assets/shop-info/Date.svg?react";
+import MapIcon from "@/features/shop/assets/shop-info/Map.svg?react";
+import CallIcon from "@/features/shop/assets/shop-info/Call.svg?react";
+import TimeIcon from "@/features/shop/assets/shop-info/Time.svg?react";
 import DgswImg from "@/features/shop/assets/shop-info/dgsw.png";
 
 import { ShopInfoTag } from "./ShopInfoTag";
@@ -46,9 +49,9 @@ export const ShopInfo = () => {
 
       {/* 상세 정보 */}
       <div className="flex flex-col gap-5 px-4 py-5">
-        <ShopInfoRow text={SHOP_INFO.address} />
-        <ShopInfoRow text={SHOP_INFO.phone} />
-        <ShopInfoRow text={SHOP_INFO.hours} />
+        <ShopInfoRow icon={<MapIcon />} text={SHOP_INFO.address} />
+        <ShopInfoRow icon={<CallIcon />} text={SHOP_INFO.phone} />
+        <ShopInfoRow icon={<TimeIcon />} text={SHOP_INFO.hours} />
       </div>
     </div>
   );

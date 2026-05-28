@@ -1,16 +1,15 @@
+import type { ReactNode } from "react";
+
 import { font, lightTheme } from "@design-tokens";
 
 interface ShopInfoRowProps {
+  icon: ReactNode;
   text: string;
 }
 
-export const ShopInfoRow = ({ text }: ShopInfoRowProps) => (
+export const ShopInfoRow = ({ icon, text }: ShopInfoRowProps) => (
   <div className="flex items-center gap-3">
-    {/* 아이콘 placeholder — 추후 SVG 아이콘으로 교체 */}
-    <div
-      className="w-5 h-5 shrink-0 rounded-full"
-      style={{ backgroundColor: lightTheme.label.disable }}
-    />
+    {icon}
     <span className={font.body.regular} style={{ color: lightTheme.label.neutral }}>
       {text}
     </span>
