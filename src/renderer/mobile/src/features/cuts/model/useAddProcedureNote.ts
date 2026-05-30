@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type {
   AddProcedureNoteForm,
@@ -41,6 +41,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     },
   ]);
   const [isOpen, setIsOpen] = useState(false);
+  const objectUrlsRef = useRef<Set<string>>(new Set());
   const [form, setForm] = useState<AddProcedureNoteForm>({
     title: "",
     description: "",
@@ -48,6 +49,30 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     tags: "",
     image: null,
   });
+
+  useEffect(() => {
+    const objectUrls = objectUrlsRef.current;
+
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+      objectUrls.clear();
+    };
+  }, []);
+
+  const createImageObjectUrl = (file: File | null) => {
+    if (!file) return null;
+
+    const url = URL.createObjectURL(file);
+    objectUrlsRef.current.add(url);
+    return url;
+  };
+
+  const revokeImageObjectUrl = (url: string | null) => {
+    if (!url || !objectUrlsRef.current.has(url)) return;
+
+    URL.revokeObjectURL(url);
+    objectUrlsRef.current.delete(url);
+  };
 
   /** 모달 열기 */
   const onOpen = () => setIsOpen(true);
@@ -87,10 +112,17 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       description: form.description,
       date: form.date,
       tags: form.tags,
-      imageUrl: form.image ? URL.createObjectURL(form.image) : null,
+      imageUrl: createImageObjectUrl(form.image),
     };
     setNotes((prev) => [newNote, ...prev]);
     onClose();
+  };
+
+  /** 시술기록 삭제 */
+  const onRemoveNote = (noteId: string) => {
+    const noteToRemove = notes.find((note) => note.id === noteId);
+    revokeImageObjectUrl(noteToRemove?.imageUrl ?? null);
+    setNotes((prev) => prev.filter((note) => note.id !== noteId));
   };
 
   return {
@@ -105,5 +137,6 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     onChangeTags,
     onChangeImage,
     onSubmit,
+    onRemoveNote,
   };
 };

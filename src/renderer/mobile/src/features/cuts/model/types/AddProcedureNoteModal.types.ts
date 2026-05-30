@@ -45,4 +45,5 @@ export interface UseAddProcedureNoteReturn {
   onChangeTags: (value: string) => void;
   onChangeImage: (file: File | null) => void;
   onSubmit: () => void;
+  onRemoveNote: (noteId: string) => void;
 }
