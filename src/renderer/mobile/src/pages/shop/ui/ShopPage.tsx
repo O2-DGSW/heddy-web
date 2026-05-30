@@ -2,14 +2,14 @@
 
 import { Route, Routes } from "react-router-dom";
 
-import { ShopLayout, ShopInfo, ReservationList } from "@/features/shop";
+import { ShopLayout, ShopInfo } from "@/features/shop";
 
 export const ShopPage = () => {
   return (
     <ShopLayout>
       <Routes>
         <Route index element={<ShopInfo />} />
-        <Route path="reservation" element={<ReservationList />} />
+        <Route path="reservation" element={null} />
         <Route path="schedule" element={null} />
       </Routes>
     </ShopLayout>

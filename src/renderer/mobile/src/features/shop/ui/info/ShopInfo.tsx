@@ -1,14 +1,14 @@
 import { font, lightTheme } from "@design-tokens";
 
-import { SHOP_INFO } from "@/features/shop/constrants/shop";
+import { SHOP_INFO } from "@/features/shop/constrants/shop-info";
 
-import CustomerIcon from "@/features/shop/assets/shop/Customer.svg?react";
-import CheckIcon from "@/features/shop/assets/shop/Check.svg?react";
-import DateIcon from "@/features/shop/assets/shop/Date.svg?react";
-import MapIcon from "@/features/shop/assets/shop/Map.svg?react";
-import CallIcon from "@/features/shop/assets/shop/Call.svg?react";
-import TimeIcon from "@/features/shop/assets/shop/Time.svg?react";
-import DgswImg from "@/features/shop/assets/shop/dgsw.png";
+import CustomerIcon from "@/features/shop/assets/shop-info/Customer.svg?react";
+import CheckIcon from "@/features/shop/assets/shop-info/Check.svg?react";
+import DateIcon from "@/features/shop/assets/shop-info/Date.svg?react";
+import MapIcon from "@/features/shop/assets/shop-info/Map.svg?react";
+import CallIcon from "@/features/shop/assets/shop-info/Call.svg?react";
+import TimeIcon from "@/features/shop/assets/shop-info/Time.svg?react";
+import DgswImg from "@/features/shop/assets/shop-info/dgsw.png";
 
 import { ShopInfoTag } from "./ShopInfoTag";
 import { ShopInfoStatCard } from "./ShopInfoStatCard";
