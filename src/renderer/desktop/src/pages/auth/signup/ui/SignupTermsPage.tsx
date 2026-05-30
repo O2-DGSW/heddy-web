@@ -8,7 +8,7 @@ import type {
   SignupStep,
 } from "@/features/auth/signup/model/types";
 import { SignupLayout } from "@/features/auth/signup/ui/SignupLayout";
-import { SignupLoadingScreen } from "@/features/auth/signup/ui/SignupLoadingScreen";
+import { LoadingScreen } from "@/shared/ui/loading";
 
 const initialAccountForm: OwnerAccountFormValues = {
   id: "",
@@ -37,7 +37,7 @@ const SignupTermsPage = () => {
   const [shopForm, setShopForm] = useState<OwnerShopFormValues>(initialShopForm);
 
   if (isLoading) {
-    return <SignupLoadingScreen onComplete={() => navigate("/login")} />;
+    return <LoadingScreen onComplete={() => navigate("/login")} />;
   }
 
   return (
@@ -53,11 +53,7 @@ const SignupTermsPage = () => {
       )}
 
       {step === "shop" && (
-        <OwnerShopForm
-          form={shopForm}
-          onChange={setShopForm}
-          onNext={() => setIsLoading(true)}
-        />
+        <OwnerShopForm form={shopForm} onChange={setShopForm} onNext={() => setIsLoading(true)} />
       )}
     </SignupLayout>
   );
