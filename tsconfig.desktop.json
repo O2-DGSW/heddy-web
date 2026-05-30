@@ -8,5 +8,5 @@
       "@/*": ["src/renderer/desktop/src/*"]
     }
   },
-  "include": ["src/renderer/desktop/src", "src/renderer/shared", "src/vite-env.d.ts"]
+  "include": ["src/renderer/desktop", "src/renderer/shared", "src/vite-env.d.ts"]
 }

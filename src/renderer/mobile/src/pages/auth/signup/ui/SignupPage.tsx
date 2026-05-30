@@ -1,4 +1,5 @@
-import { font, lightTheme } from '@design-tokens';
+import { font, lightTheme } from "@design-tokens";
+import { useNavigate } from "react-router-dom";
 import {
   useSignup,
   SignupTypeSelect,
@@ -6,10 +7,12 @@ import {
   CustomerAccountForm,
   OwnerAccountForm,
   ShopForm,
-} from '@/features/auth/signup';
-import { STEP_TITLE } from '@/features/auth/signup/constants/signup';
+} from "@/features/auth/signup";
+import { STEP_TITLE } from "@/features/auth/signup/constants/signup";
+import { LoadingScreen } from "@/shared/ui/loading";
 
 export const SignupPage = () => {
+  const navigate = useNavigate();
   const {
     step,
     memberType,
@@ -22,7 +25,12 @@ export const SignupPage = () => {
     selectMemberType,
     nextStep,
     submitSignup,
+    isLoading,
   } = useSignup();
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={() => navigate("/login")} />;
+  }
 
   return (
     <div
@@ -36,25 +44,19 @@ export const SignupPage = () => {
         </p>
       </div>
 
-      {step === 'type-select' && (
-        <SignupTypeSelect onSelect={selectMemberType} />
-      )}
+      {step === "type-select" && <SignupTypeSelect onSelect={selectMemberType} />}
 
-      {step === 'terms' && (
-        <TermsAgreement onSignup={submitSignup} />
-      )}
+      {step === "terms" && <TermsAgreement onSignup={submitSignup} />}
 
-      {step === 'account' && memberType === 'customer' && (
+      {step === "account" && memberType === "customer" && (
         <CustomerAccountForm form={customerForm} onChange={setCustomerForm} onNext={nextStep} />
       )}
 
-      {step === 'account' && memberType === 'owner' && (
+      {step === "account" && memberType === "owner" && (
         <OwnerAccountForm form={ownerForm} onChange={setOwnerForm} onNext={nextStep} />
       )}
 
-      {step === 'shop' && (
-        <ShopForm form={shopForm} onChange={setShopForm} onNext={nextStep} />
-      )}
+      {step === "shop" && <ShopForm form={shopForm} onChange={setShopForm} onNext={nextStep} />}
     </div>
   );
 };
