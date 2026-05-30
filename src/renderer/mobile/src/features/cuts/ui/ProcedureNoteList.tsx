@@ -1,16 +1,28 @@
-// 시술기록 목록 UI
+import { useNavigate } from "react-router-dom";
 import { font, lightTheme } from "@design-tokens";
 
 import { useAddProcedureNote } from "@/features/cuts/model/useAddProcedureNote";
 import { ProcedureNoteItem } from "./ProcedureNoteItem";
 import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
+
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 
-/** 시술기록 목록 컴포넌트 */
 export const ProcedureNoteList = () => {
-  const { notes, isOpen, onOpen, onClose, form, onChangeTitle, onChangeDescription, onChangeDate, onChangeTags, onChangeImage, onSubmit } =
-    useAddProcedureNote();
+  const navigate = useNavigate();
+  const {
+    notes,
+    isOpen,
+    onOpen,
+    onClose,
+    form,
+    onChangeTitle,
+    onChangeDescription,
+    onChangeDate,
+    onChangeTags,
+    onChangeImage,
+    onSubmit,
+  } = useAddProcedureNote();
 
   return (
     <div
@@ -18,7 +30,6 @@ export const ProcedureNoteList = () => {
       style={{ backgroundColor: lightTheme.fill.normal }}
     >
       {notes.length === 0 ? (
-        /* 빈 상태 */
         <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <img src={agerSadSvg} alt="시술기록 없음" className="w-32 h-32" />
@@ -33,15 +44,19 @@ export const ProcedureNoteList = () => {
           </div>
         </div>
       ) : (
-        /* 시술기록 리스트 */
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
-          {notes.map((note) => (
-            <ProcedureNoteItem key={note.id} note={note} />
+          {notes.map(note => (
+            <div
+              key={note.id}
+              onClick={() => navigate(`/cuts/qr-code/${encodeURIComponent(note.description)}`)}
+              className="cursor-pointer"
+            >
+              <ProcedureNoteItem note={note} />
+            </div>
           ))}
         </div>
       )}
 
-      {/* 시술기록 추가 FAB 버튼 */}
       <button
         className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
         style={{
