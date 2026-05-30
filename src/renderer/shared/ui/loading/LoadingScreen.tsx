@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { lightTheme } from "@design-tokens";
 
-import loadingCloud from "@/features/auth/signup/assets/images/loading-cloud.png";
-import loadingCharacter from "@/features/auth/signup/assets/images/loading-character.png";
-import "@/features/auth/signup/styles/signup-loading.css";
+import loadingCloud from "./assets/images/loading-cloud.png";
+import loadingCharacter from "./assets/images/loading-character.png";
+import "./loading.css";
 
-interface SignupLoadingScreenProps {
+interface LoadingScreenProps {
   onComplete: () => void;
 }
 
@@ -22,7 +22,7 @@ const CLOUD_CLASS_NAMES = [
   "heddy-loading-cloud-nine",
 ];
 
-const SignupLoadingScreen = ({ onComplete }: SignupLoadingScreenProps) => {
+const LoadingScreen = ({ onComplete }: LoadingScreenProps) => {
   const savedOnComplete = useRef(onComplete);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const SignupLoadingScreen = ({ onComplete }: SignupLoadingScreenProps) => {
   return (
     <section className="relative flex min-h-[calc(100vh-72px)] w-full items-center justify-center overflow-hidden bg-white px-5">
       <div className="heddy-loading-clouds" aria-hidden="true">
-        {CLOUD_CLASS_NAMES.map((className) => (
+        {CLOUD_CLASS_NAMES.map(className => (
           <img
             key={className}
             src={loadingCloud}
@@ -73,4 +73,4 @@ const SignupLoadingScreen = ({ onComplete }: SignupLoadingScreenProps) => {
   );
 };
 
-export { SignupLoadingScreen };
+export { LoadingScreen };
