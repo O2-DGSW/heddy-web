@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
+import { QRresult } from "./QRresult";
 
 export const QrReading = () => {
   // QR 스캔 결과 저장 state
@@ -81,33 +82,7 @@ export const QrReading = () => {
         </div>
       </div>
 
-      {/* QR 스캔 결과 출력 영역 */}
-      {result && (
-        <div
-          className="mt-6 w-full max-w-[400px] rounded-xl p-5 text-center"
-          style={{ backgroundColor: lightTheme.fill.normal }}
-        >
-          {/* 결과 라벨 */}
-          <p className="m-0 text-sm text-[#666]">스캔 결과:</p>
-
-          {/* 실제 QR 데이터 출력 */}
-          <p
-            className="mt-2 break-all text-base font-medium"
-            style={{ color: lightTheme.label.normal }}
-          >
-            {result}
-          </p>
-
-          {/* 다시 스캔 버튼 */}
-          <button
-            className="mt-4 cursor-pointer rounded-lg border-none px-5 py-2.5 text-sm font-medium"
-            style={{ backgroundColor: lightTheme.status.info, color: lightTheme.fill.normal }}
-            onClick={() => setResult(null)}
-          >
-            다시 스캔
-          </button>
-        </div>
-      )}
+      <QRresult result={result} onReset={() => setResult(null)} />
 
       {/* 에러 메시지 출력 영역 */}
       {error && (
