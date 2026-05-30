@@ -1,20 +1,18 @@
-import { useState } from 'react';
-import { font, lightTheme } from '@design-tokens';
-import { Link, useNavigate } from 'react-router-dom';
-import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
+import { useState } from "react";
+import { font, lightTheme } from "@design-tokens";
+import { Link } from "react-router-dom";
+import { RadioButton } from "@/private/shared/ui/radio/RadioButton";
 
 interface TermsAgreementProps {
   onSignup?: () => Promise<void>;
 }
 
 export const TermsAgreement = ({ onSignup }: TermsAgreementProps) => {
-  const navigate = useNavigate();
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
 
   const handleSignup = async () => {
     await onSignup?.();
-    navigate('/login');
   };
 
   const allAgreed = agreedTerms && agreedPrivacy;
