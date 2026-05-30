@@ -3,7 +3,6 @@ import { font, lightTheme } from "@design-tokens";
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
-import rightArrowSvg from "@/features/cuts/assets/procedute-note/rightArrow.svg";
 
 interface ProcedureNoteItemProps {
   note: ProcedureNote;
@@ -74,9 +73,6 @@ export const ProcedureNoteItem = ({ note }: ProcedureNoteItemProps) => {
           </div>
         )}
       </div>
-
-      {/* 우측 화살표 */}
-      <img src={rightArrowSvg} alt="상세보기" className="w-4 h-4 shrink-0" />
     </div>
   );
 };

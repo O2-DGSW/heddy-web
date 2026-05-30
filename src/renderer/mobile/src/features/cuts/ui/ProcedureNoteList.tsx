@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { font, lightTheme } from "@design-tokens";
 
 import { useAddProcedureNote } from "@/features/cuts/model/useAddProcedureNote";
@@ -9,7 +8,6 @@ import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 
 export const ProcedureNoteList = () => {
-  const navigate = useNavigate();
   const {
     notes,
     isOpen,
@@ -46,13 +44,7 @@ export const ProcedureNoteList = () => {
       ) : (
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
           {notes.map(note => (
-            <div
-              key={note.id}
-              onClick={() => navigate(`/cuts/qr-code/${encodeURIComponent(note.description)}`)}
-              className="cursor-pointer"
-            >
-              <ProcedureNoteItem note={note} />
-            </div>
+            <ProcedureNoteItem key={note.id} note={note} />
           ))}
         </div>
       )}
