@@ -10,7 +10,7 @@ import CallIcon from "@/features/shop/assets/shop-info/Call.svg?react";
 import TimeIcon from "@/features/shop/assets/shop-info/Time.svg?react";
 import DgswImg from "@/features/shop/assets/shop-info/dgsw.png";
 
-import { ShopInfoTag } from "./ShopInfoTag";
+import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
 import { ShopInfoStatCard } from "./ShopInfoStatCard";
 import { ShopInfoRow } from "./ShopInfoRow";
 
@@ -41,7 +41,7 @@ export const ShopInfo = () => {
 
         <div className="flex gap-1.5 mt-1 shrink-0 flex-wrap justify-end">
           {SHOP_INFO.tags.map(tag => (
-            <ShopInfoTag key={tag} label={tag} />
+            <CutsTag key={tag} text={tag} />
           ))}
         </div>
       </div>
