@@ -15,7 +15,11 @@ const MobileLayout = () => {
         >
           <Outlet />
         </main>
-        {!hideBottomBar && <BottomBar />}
+        {!hideBottomBar && (
+          <div className="relative w-full [&>div]:!absolute [&>div]:!bottom-0">
+            <BottomBar />
+          </div>
+        )}
       </div>
     </div>
   );
