@@ -4,9 +4,19 @@ import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 import { QRresult } from "./QRresult";
 
+type QrSuccessData = {
+  name: string;
+  phone: string;
+  cutsCount: number;
+};
+
 export const QrReading = () => {
   // QR 스캔 결과 저장 state
-  const [result, setResult] = useState<string | null>("test");
+  const [result, setResult] = useState<QrSuccessData | null>({
+    name: "오용준",
+    phone: "010-9563-5423",
+    cutsCount: 12,
+  });
 
   // 카메라/스캔 에러 메시지 저장 state
   const [error, setError] = useState<string | null>(null);
@@ -14,7 +24,15 @@ export const QrReading = () => {
   // QR 코드 스캔 성공 시 실행되는 함수
   const handleScan = (detectedCodes: { rawValue: string }[]) => {
     if (detectedCodes.length > 0) {
-      setResult(detectedCodes[0].rawValue);
+      // QR 인식 성공
+      console.log("QR:", detectedCodes[0].rawValue);
+
+      // 서버 조회 결과라고 가정
+      setResult({
+        name: "오용준",
+        phone: "010-9563-5423",
+        cutsCount: 12,
+      });
     }
   };
 
@@ -43,7 +61,7 @@ export const QrReading = () => {
   };
 
   return result ? (
-    <QRresult result={result} onReset={() => setResult(null)} />
+    <QRresult result={result} />
   ) : (
     <div className="flex flex-col items-center p-6">
       <h2 className="mb-6 text-2xl">
