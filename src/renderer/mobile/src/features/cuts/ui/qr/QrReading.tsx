@@ -6,7 +6,7 @@ import { QRresult } from "./QRresult";
 
 export const QrReading = () => {
   // QR 스캔 결과 저장 state
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>("test");
 
   // 카메라/스캔 에러 메시지 저장 state
   const [error, setError] = useState<string | null>(null);
@@ -42,19 +42,17 @@ export const QrReading = () => {
     });
   };
 
-  return (
-    // 전체 화면 컨테이너
+  return result ? (
+    <QRresult result={result} onReset={() => setResult(null)} />
+  ) : (
     <div className="flex flex-col items-center p-6">
-      {/* 페이지 제목 영역 */}
       <h2 className="mb-6 text-2xl">
         <p className={font.headline2.bold} style={{ color: lightTheme.label.normal }}>
           QR 코드 스캐너
         </p>
       </h2>
 
-      {/* QR 스캐너 전체 영역 */}
       <div className="relative w-full max-w-[400px] overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-        {/* 실제 카메라 및 QR 인식 컴포넌트 */}
         <Scanner
           onScan={handleScan}
           onError={handleError}
@@ -65,9 +63,7 @@ export const QrReading = () => {
           }}
         />
 
-        {/* 스캔 가이드 오버레이 */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          {/* QR을 맞추는 중앙 가이드 박스 */}
           <div className="relative w-[60%]">
             <img
               src={PeekkomAgua}
@@ -82,9 +78,6 @@ export const QrReading = () => {
         </div>
       </div>
 
-      <QRresult result={result} onReset={() => setResult(null)} />
-
-      {/* 에러 메시지 출력 영역 */}
       {error && (
         <p className="mt-4 text-sm" style={{ color: lightTheme.status.error }}>
           {error}
