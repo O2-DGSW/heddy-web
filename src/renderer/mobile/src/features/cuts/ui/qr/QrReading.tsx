@@ -88,7 +88,7 @@ export const QrReading = () => {
               className="absolute w-[5rem] top-[-2.25rem] left-[30%]"
             />
             <div
-              className="aspect-square rounded-lg border-solid border-3 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
+              className="aspect-square rounded-lg border-solid border-[3px] shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]"
               style={{ borderColor: palette.main[70] }}
             />
           </div>
