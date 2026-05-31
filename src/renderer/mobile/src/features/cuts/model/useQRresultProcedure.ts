@@ -10,7 +10,7 @@ import type {
  * 시술기록 추가 모달의 상태 및 이벤트 핸들러를 관리하는 훅
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
-export const useQRresultProcedure = (): UseAddProcedureNoteReturn => {
+export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteReturn => {
   const [notes, setNotes] = useState<ProcedureNote[]>([
     {
       id: "1",
@@ -102,7 +102,7 @@ export const useQRresultProcedure = (): UseAddProcedureNoteReturn => {
   const onSubmit = () => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
-      customerName: "오용준",
+      customerName,
       title: form.title,
       description: form.description,
       date: form.date,

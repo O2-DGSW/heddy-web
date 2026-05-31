@@ -30,7 +30,7 @@ export const QRresult = ({ result }: QRresultProps) => {
     onChangeTags,
     onChangeImage,
     onSubmit,
-  } = useQRresultProcedure();
+  } = useQRresultProcedure(result.name);
 
   return (
     <div className="w-full h-full flex flex-col items-center">
