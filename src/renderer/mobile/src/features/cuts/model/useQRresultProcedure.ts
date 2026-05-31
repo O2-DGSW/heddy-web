@@ -98,11 +98,11 @@ export const useQRresultProcedure = (): UseAddProcedureNoteReturn => {
   /** @param file 업로드한 이미지 파일 */
   const onChangeImage = (file: File | null) => setForm(prev => ({ ...prev, image: file }));
 
-  /** 시술기록 추가 제출 - TODO: API 연동 */
+  /** 시술기록 추가 제출 */
   const onSubmit = () => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
-      customerName: "오용준", // TODO: 서버 연결 시 동적으로 처리
+      customerName: "오용준",
       title: form.title,
       description: form.description,
       date: form.date,
