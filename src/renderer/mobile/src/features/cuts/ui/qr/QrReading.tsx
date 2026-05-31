@@ -11,12 +11,15 @@ type QrSuccessData = {
 };
 
 export const QrReading = () => {
-  // QR 스캔 결과 저장 state
-  const [result, setResult] = useState<QrSuccessData | null>({
+  // API res
+  const responseData = {
     name: "오용준",
     phone: "010-9563-5423",
     cutsCount: 12,
-  });
+  };
+
+  // QR 스캔 결과 저장 state
+  const [result, setResult] = useState<QrSuccessData | null>(null);
 
   // 카메라/스캔 에러 메시지 저장 state
   const [error, setError] = useState<string | null>(null);
@@ -28,11 +31,7 @@ export const QrReading = () => {
       console.log("QR:", detectedCodes[0].rawValue);
 
       // 서버 조회 결과라고 가정
-      setResult({
-        name: "오용준",
-        phone: "010-9563-5423",
-        cutsCount: 12,
-      });
+      setResult(responseData);
     }
   };
 
