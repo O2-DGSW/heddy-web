@@ -20,7 +20,7 @@ export const AppRoutes = () => {
         <Route path="/find/:type" element={<FindPage />} />
         <Route path="/cuts/*" element={<ProcedureNotePage />} />
         <Route path="/reservation" element={<ReservationPage />} />
-        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop/*" element={<ShopPage />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Route>
     </Routes>
