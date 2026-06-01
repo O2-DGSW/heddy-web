@@ -10,7 +10,7 @@ import type {
  * 시술기록 추가 모달의 상태 및 이벤트 핸들러를 관리하는 훅
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
-export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
+export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteReturn => {
   const [notes, setNotes] = useState<ProcedureNote[]>([
     {
       id: "1",
@@ -54,7 +54,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     const objectUrls = objectUrlsRef.current;
 
     return () => {
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
       objectUrls.clear();
     };
   }, []);
@@ -84,45 +84,40 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
   };
 
   /** @param value 제목 */
-  const onChangeTitle = (value: string) =>
-    setForm((prev) => ({ ...prev, title: value }));
+  const onChangeTitle = (value: string) => setForm(prev => ({ ...prev, title: value }));
 
   /** @param value 부가설명 */
-  const onChangeDescription = (value: string) =>
-    setForm((prev) => ({ ...prev, description: value }));
+  const onChangeDescription = (value: string) => setForm(prev => ({ ...prev, description: value }));
 
   /** @param date 시술 날짜 */
-  const onChangeDate = (date: Date) =>
-    setForm((prev) => ({ ...prev, date }));
+  const onChangeDate = (date: Date) => setForm(prev => ({ ...prev, date }));
 
   /** @param value 시술 태그 */
-  const onChangeTags = (value: string) =>
-    setForm((prev) => ({ ...prev, tags: value }));
+  const onChangeTags = (value: string) => setForm(prev => ({ ...prev, tags: value }));
 
   /** @param file 업로드한 이미지 파일 */
-  const onChangeImage = (file: File | null) =>
-    setForm((prev) => ({ ...prev, image: file }));
+  const onChangeImage = (file: File | null) => setForm(prev => ({ ...prev, image: file }));
 
-  /** 시술기록 추가 제출 - TODO: API 연동 */
+  /** 시술기록 추가 제출 */
   const onSubmit = () => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
-      customerName: "오용준", // TODO: 서버 연결 시 동적으로 처리
+      customerName,
       title: form.title,
       description: form.description,
       date: form.date,
       tags: form.tags,
       imageUrl: createImageObjectUrl(form.image),
     };
-    setNotes((prev) => [newNote, ...prev]);
+    setNotes(prev => [newNote, ...prev]);
     onClose();
   };
 
   /** 시술기록 삭제 */
   const onRemoveNote = (noteId: string) => {
-    const noteToRemove = notes.find((note) => note.id === noteId);
+    const noteToRemove = notes.find(note => note.id === noteId);
     revokeImageObjectUrl(noteToRemove?.imageUrl ?? null);
-    setNotes((prev) => prev.filter((note) => note.id !== noteId));
+    setNotes(prev => prev.filter(note => note.id !== noteId));
   };
 
   return {

@@ -2,15 +2,15 @@
 
 import { Route, Routes } from "react-router-dom";
 
-import { CutsLayout, ProcedureNoteList, PublicSettings, QrCode, QrReading } from "@/features/cuts";
+import { CutsLayout, ProcedureNoteList, PublicSettings, QrReading, QrCode } from "@/features/cuts";
 
 export const ProcedureNotePage = () => {
   return (
     <CutsLayout>
       <Routes>
         <Route index element={<ProcedureNoteList />} />
-        <Route path="qr-code" element={<QrCode />} />
         <Route path="qr-reading" element={<QrReading />} />
+        <Route path="qr-code" element={<QrCode />} />
         <Route path="public" element={<PublicSettings />} />
       </Routes>
     </CutsLayout>
