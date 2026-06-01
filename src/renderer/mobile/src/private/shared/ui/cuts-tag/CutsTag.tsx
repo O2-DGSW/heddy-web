@@ -8,7 +8,7 @@ interface CutsTagProps {
 export const CutsTag = ({ text, selected = false }: CutsTagProps) => {
   return (
     <div
-      className="px-[0.325rem] py-[0.125rem] rounded-[0.325rem]"
+      className="px-2.5 py-1 rounded-[0.325rem]"
       style={{
         backgroundColor: selected ? lightTheme.primary.normal : lightTheme.fill.neutral,
       }}
