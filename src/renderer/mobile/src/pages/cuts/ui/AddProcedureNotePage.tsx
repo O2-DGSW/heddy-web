@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { font, lightTheme } from "@design-tokens";
 import { PROCEDURE_TAGS } from "@/features/cuts/constrants/procedure-tags";
@@ -12,6 +12,7 @@ import { ImageUploadArea } from "./ImageUploadArea";
 
 export const AddProcedureNotePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     title, setTitle,
     description, setDescription,
@@ -22,6 +23,14 @@ export const AddProcedureNotePage = () => {
   } = useAddProcedureNoteForm();
 
   const [beforeImage, setBeforeImage] = useState<File | null>(null);
+
+  useEffect(() => {
+    const selected = location.state?.selectedCustomer as string | undefined;
+    if (selected) {
+      setCustomer(selected);
+      navigate("/cuts/add", { replace: true, state: null });
+    }
+  }, []);
 
   const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImage });
 
@@ -91,13 +100,16 @@ export const AddProcedureNotePage = () => {
         {/* 고객 찾기 */}
         <div className="flex flex-col gap-1">
           <label className={labelClass} style={{ color: lightTheme.label.assistive }}>고객 찾기</label>
-          <input
-            className={inputClass}
+          <button
+            type="button"
+            className={`${inputClass} text-left`}
             style={inputStyle}
-            placeholder="고객 찾기"
-            value={customer}
-            onChange={(e) => setCustomer(e.target.value)}
-          />
+            onClick={() => navigate("/cuts/customer-search")}
+          >
+            {customer || (
+              <span style={{ color: lightTheme.label.assistive }}>고객 찾기</span>
+            )}
+          </button>
         </div>
 
         {/* 시술 태그 */}
