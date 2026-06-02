@@ -8,7 +8,7 @@ import { FindPage } from "@/pages/auth/find";
 import { ProcedureNotePage } from "@/pages/cuts";
 import { ReservationPage } from "@/pages/reservation";
 import { ShopPage } from "@/pages/shop";
-import { AddProcedureNotePage } from "@/pages/cuts";
+import { AddProcedureNotePage, CustomerSearchPage } from "@/pages/cuts";
 
 export const AppRoutes = () => {
   return (
@@ -20,6 +20,7 @@ export const AppRoutes = () => {
         <Route path="/profile/*" element={<ProfilePage />} />
         <Route path="/find/:type" element={<FindPage />} />
         <Route path="/cuts/add" element={<AddProcedureNotePage />} />
+        <Route path="/cuts/customer-search" element={<CustomerSearchPage />} />
         <Route path="/cuts/*" element={<ProcedureNotePage />} />
         <Route path="/reservation" element={<ReservationPage />} />
         <Route path="/shop/*" element={<ShopPage />} />
