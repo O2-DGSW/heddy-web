@@ -11,6 +11,7 @@ import type {
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
 export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
+  // 이후 리팩토링에서 2026,4,20과 같은 숫자 년/월/일 호출을 사용해서 유동적인 날짜조작 객체로 변환
   const [notes, setNotes] = useState<ProcedureNote[]>([
     {
       id: "1",
@@ -54,7 +55,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     const objectUrls = objectUrlsRef.current;
 
     return () => {
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
       objectUrls.clear();
     };
   }, []);
@@ -84,24 +85,19 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
   };
 
   /** @param value 제목 */
-  const onChangeTitle = (value: string) =>
-    setForm((prev) => ({ ...prev, title: value }));
+  const onChangeTitle = (value: string) => setForm(prev => ({ ...prev, title: value }));
 
   /** @param value 부가설명 */
-  const onChangeDescription = (value: string) =>
-    setForm((prev) => ({ ...prev, description: value }));
+  const onChangeDescription = (value: string) => setForm(prev => ({ ...prev, description: value }));
 
   /** @param date 시술 날짜 */
-  const onChangeDate = (date: Date) =>
-    setForm((prev) => ({ ...prev, date }));
+  const onChangeDate = (date: Date) => setForm(prev => ({ ...prev, date }));
 
   /** @param value 시술 태그 */
-  const onChangeTags = (value: string) =>
-    setForm((prev) => ({ ...prev, tags: value }));
+  const onChangeTags = (value: string) => setForm(prev => ({ ...prev, tags: value }));
 
   /** @param file 업로드한 이미지 파일 */
-  const onChangeImage = (file: File | null) =>
-    setForm((prev) => ({ ...prev, image: file }));
+  const onChangeImage = (file: File | null) => setForm(prev => ({ ...prev, image: file }));
 
   /** 시술기록 추가 제출 - TODO: API 연동 */
   const onSubmit = () => {
@@ -114,20 +110,20 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       tags: form.tags,
       imageUrl: createImageObjectUrl(form.image),
     };
-    setNotes((prev) => [newNote, ...prev]);
+    setNotes(prev => [newNote, ...prev]);
     onClose();
   };
 
   /** 시술기록 추가 (외부에서 생성된 노트를 목록에 추가) */
   const addNote = (note: ProcedureNote) => {
-    setNotes((prev) => [note, ...prev]);
+    setNotes(prev => [note, ...prev]);
   };
 
   /** 시술기록 삭제 */
   const onRemoveNote = (noteId: string) => {
-    const noteToRemove = notes.find((note) => note.id === noteId);
+    const noteToRemove = notes.find(note => note.id === noteId);
     revokeImageObjectUrl(noteToRemove?.imageUrl ?? null);
-    setNotes((prev) => prev.filter((note) => note.id !== noteId));
+    setNotes(prev => prev.filter(note => note.id !== noteId));
   };
 
   return {

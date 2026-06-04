@@ -11,6 +11,7 @@ import type {
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
 export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteReturn => {
+  // 이후 리팩토링에서 2026,4,20과 같은 숫자 년/월/일 호출을 사용해서 유동적인 날짜조작 객체로 변환
   const [notes, setNotes] = useState<ProcedureNote[]>([
     {
       id: "1",
