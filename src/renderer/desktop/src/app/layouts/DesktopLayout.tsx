@@ -8,11 +8,11 @@ const DesktopLayout = () => {
   const isAuthPage = pathname === "/login" || pathname === "/signup";
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="h-screen overflow-hidden bg-[#FAFAFA]">
       <TopBar />
-      <div className="flex min-h-[calc(100vh-68px)]">
+      <div className="flex h-[calc(100vh-4.25rem)] overflow-hidden">
         {!isAuthPage && <Sidebar />}
-        <main className="min-w-0 flex-1">
+        <main className="min-w-0 flex-1 overflow-hidden">
           <Outlet />
         </main>
       </div>
