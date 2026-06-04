@@ -46,4 +46,5 @@ export interface UseAddProcedureNoteReturn {
   onChangeImage: (file: File | null) => void;
   onSubmit: () => void;
   onRemoveNote: (noteId: string) => void;
+  addNote: (note: ProcedureNote) => void;
 }

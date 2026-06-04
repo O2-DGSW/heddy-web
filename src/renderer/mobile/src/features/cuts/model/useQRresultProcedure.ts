@@ -113,6 +113,12 @@ export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteR
     onClose();
   };
 
+  /** 시술기록 추가 (외부에서 생성된 노트를 목록에 추가) */
+  const addNote = (note: ProcedureNote) => {
+    if (note.imageUrl) objectUrlsRef.current.add(note.imageUrl);
+    setNotes(prev => [note, ...prev]);
+  };
+
   /** 시술기록 삭제 */
   const onRemoveNote = (noteId: string) => {
     const noteToRemove = notes.find(note => note.id === noteId);
@@ -133,5 +139,6 @@ export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteR
     onChangeImage,
     onSubmit,
     onRemoveNote,
+    addNote,
   };
 };

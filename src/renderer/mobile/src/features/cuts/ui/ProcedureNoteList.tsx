@@ -1,26 +1,26 @@
+import { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { font, lightTheme } from "@design-tokens";
 
-import { useAddProcedureNote } from "@/features/cuts/model/useAddProcedureNote";
+import { useProcedureNotes } from "@/features/cuts/model/useProcedureNotes";
+import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import { ProcedureNoteItem } from "./ProcedureNoteItem";
-import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
-
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 
 export const ProcedureNoteList = () => {
-  const {
-    notes,
-    isOpen,
-    onOpen,
-    onClose,
-    form,
-    onChangeTitle,
-    onChangeDescription,
-    onChangeDate,
-    onChangeTags,
-    onChangeImage,
-    onSubmit,
-  } = useAddProcedureNote();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { notes, addNote } = useProcedureNotes();
+
+  useEffect(() => {
+    const newNote = location.state?.newNote as ProcedureNote | undefined;
+    if (newNote) {
+      addNote(newNote);
+      navigate("/cuts", { replace: true, state: null });
+    }
+  }, []);
 
   return (
     <div
@@ -43,7 +43,7 @@ export const ProcedureNoteList = () => {
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
-          {notes.map(note => (
+          {notes.map((note) => (
             <ProcedureNoteItem key={note.id} note={note} />
           ))}
         </div>
@@ -55,22 +55,10 @@ export const ProcedureNoteList = () => {
           bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
           backgroundColor: lightTheme.primary.normal,
         }}
-        onClick={onOpen}
+        onClick={() => navigate("/cuts/add")}
       >
         <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
       </button>
-
-      <AddProcedureNoteModal
-        isOpen={isOpen}
-        onClose={onClose}
-        form={form}
-        onChangeTitle={onChangeTitle}
-        onChangeDescription={onChangeDescription}
-        onChangeDate={onChangeDate}
-        onChangeTags={onChangeTags}
-        onChangeImage={onChangeImage}
-        onSubmit={onSubmit}
-      />
     </div>
   );
 };
