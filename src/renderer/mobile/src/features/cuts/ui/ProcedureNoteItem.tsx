@@ -1,12 +1,12 @@
-import { font, lightTheme } from "@design-tokens";
+import { font, lightTheme, palette } from "@design-tokens";
 
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
-import rightArrowSvg from "@/features/cuts/assets/procedute-note/rightArrow.svg";
 
 interface ProcedureNoteItemProps {
   note: ProcedureNote;
+  bgColorGreen?: boolean;
 }
 
 /**
@@ -23,11 +23,13 @@ const formatShortDate = (date: Date | string) => {
  * 시술기록 목록 아이템 컴포넌트
  * @param props {@link ProcedureNoteItemProps}
  */
-export const ProcedureNoteItem = ({ note }: ProcedureNoteItemProps) => {
+export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps) => {
   return (
     <div
       className="flex items-center gap-3 px-4 py-4 rounded-2xl"
-      style={{ backgroundColor: lightTheme.background.normal }}
+      style={{
+        backgroundColor: bgColorGreen ? palette.main[97] : lightTheme.background.normal,
+      }}
     >
       {/* 썸네일 이미지 */}
       <div
@@ -77,9 +79,6 @@ export const ProcedureNoteItem = ({ note }: ProcedureNoteItemProps) => {
           </div>
         )}
       </div>
-
-      {/* 우측 화살표 */}
-      <img src={rightArrowSvg} alt="상세보기" className="w-4 h-4 shrink-0" />
     </div>
   );
 };

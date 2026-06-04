@@ -10,7 +10,7 @@ import type {
  * 시술기록 추가 모달의 상태 및 이벤트 핸들러를 관리하는 훅
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
-export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
+export const useQRresultProcedure = (customerName: string): UseAddProcedureNoteReturn => {
   // 이후 리팩토링에서 2026,4,20과 같은 숫자 년/월/일 호출을 사용해서 유동적인 날짜조작 객체로 변환
   const [notes, setNotes] = useState<ProcedureNote[]>([
     {
@@ -99,11 +99,11 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
   /** @param file 업로드한 이미지 파일 */
   const onChangeImage = (file: File | null) => setForm(prev => ({ ...prev, image: file }));
 
-  /** 시술기록 추가 제출 - TODO: API 연동 */
+  /** 시술기록 추가 제출 */
   const onSubmit = () => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
-      customerName: "오용준", // TODO: 서버 연결 시 동적으로 처리
+      customerName,
       title: form.title,
       description: form.description,
       date: form.date,
@@ -116,6 +116,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
 
   /** 시술기록 추가 (외부에서 생성된 노트를 목록에 추가) */
   const addNote = (note: ProcedureNote) => {
+    if (note.imageUrl) objectUrlsRef.current.add(note.imageUrl);
     setNotes(prev => [note, ...prev]);
   };
 
