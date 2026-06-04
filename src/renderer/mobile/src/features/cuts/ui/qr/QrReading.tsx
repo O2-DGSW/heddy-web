@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
@@ -44,12 +44,11 @@ export const QrReading = () => {
     }
   };
 
-  const tracker: TrackFunction = (detectedCodes, ctx) => {
+  const tracker: TrackFunction = useCallback((detectedCodes, ctx) => {
     detectedCodes.forEach(({ boundingBox, cornerPoints }) => {
       ctx.strokeStyle = "#00FF00";
       ctx.lineWidth = 4;
       ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-
       ctx.fillStyle = lightTheme.primary.normal;
       cornerPoints.forEach(({ x, y }) => {
         ctx.beginPath();
@@ -57,7 +56,7 @@ export const QrReading = () => {
         ctx.fill();
       });
     });
-  };
+  }, []);
 
   return result ? (
     <QRresult result={result} />
