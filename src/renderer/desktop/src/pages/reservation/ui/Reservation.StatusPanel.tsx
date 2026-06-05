@@ -7,8 +7,8 @@ import type { ReservationStatusPanelProps } from "@/pages/reservation/model/Rese
 const ReservationStatusPanel = ({ filterTabs, rows }: ReservationStatusPanelProps) => {
   return (
     <section className="h-full min-w-0 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
-      <div className="mt-[1.9375rem] flex w-full flex-col gap-5">
-        <div className="flex w-full items-center justify-between px-[1.875rem]">
+      <div className="mt-7.75 flex w-full flex-col gap-5">
+        <div className="flex w-full items-center justify-between px-5">
           <h2
             className="font-['Pretendard'] text-xl font-bold leading-[1.3]"
             style={{ color: lightTheme.label.neutral }}

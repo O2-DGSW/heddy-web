@@ -7,7 +7,7 @@ import type { ReservationCalendarProps } from "@/pages/reservation/model/Reserva
 const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProps) => {
   return (
     <div className="w-full">
-      <button type="button" className="flex h-[2rem] items-start gap-[0.5rem]" aria-label="월 선택">
+      <button type="button" className="flex h-8 items-start gap-2" aria-label="월 선택">
         <span
           className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
           style={{ color: lightTheme.label.alternative }}
@@ -17,14 +17,14 @@ const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProp
         <img
           src={dropdownIcon}
           alt=""
-          className="size-[2rem]"
+          className="size-8"
           style={{ filter: DROPDOWN_FILTER }}
           aria-hidden="true"
         />
       </button>
 
-      <div className="mt-9 flex w-full flex-col gap-[1.625rem]">
-        <div className="grid h-[1.5rem] grid-cols-7 justify-items-center text-center font-['Pretendard'] text-xl font-medium leading-[1.3]">
+      <div className="mt-9 flex w-full flex-col gap-6.5">
+        <div className="grid h-6 grid-cols-7 justify-items-center text-center font-['Pretendard'] text-xl font-medium leading-[1.3]">
           {weekDays.map((day, index) => (
             <span
               key={day}
@@ -40,13 +40,13 @@ const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProp
         {calendarRows.map((row, rowIndex) => (
           <div
             key={rowIndex}
-            className="grid h-[1.875rem] grid-cols-7 items-center justify-items-center text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3]"
+            className="grid h-7.5 grid-cols-7 items-center justify-items-center text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3]"
           >
             {row.map(date =>
               date.selected ? (
                 <span
                   key={date.day}
-                  className="flex size-[3rem] items-center justify-center rounded-full text-[#F5F5F5]"
+                  className="flex size-12 items-center justify-center rounded-full text-[#F5F5F5]"
                   style={{ backgroundColor: lightTheme.primary.normal }}
                 >
                   {date.day}
