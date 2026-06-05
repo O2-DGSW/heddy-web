@@ -1,11 +1,11 @@
 import { lightTheme, palette } from "@design-tokens";
 
-import customerCountImage from "@/pages/home/assets/customer-count.png";
-import monthlySalesImage from "@/pages/home/assets/monthly-sales.png";
-import newRegularImage from "@/pages/home/assets/new-regular.png";
-import riskCustomerImage from "@/pages/home/assets/risk-customer.png";
-import todayReservationImage from "@/pages/home/assets/today-reservation.png";
-import todayVisitImage from "@/pages/home/assets/today-visit.png";
+import customerCountImage from "@/pages/home/assets/images/customer-count.png";
+import monthlySalesImage from "@/pages/home/assets/images/monthly-sales.png";
+import newRegularImage from "@/pages/home/assets/images/new-regular.png";
+import riskCustomerImage from "@/pages/home/assets/images/risk-customer.png";
+import todayReservationImage from "@/pages/home/assets/images/today-reservation.png";
+import todayVisitImage from "@/pages/home/assets/images/today-visit.png";
 
 const summaryTintColor = palette.main[97];
 

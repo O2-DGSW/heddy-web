@@ -1,8 +1,8 @@
 import type { CSSProperties, ReactNode } from "react";
 import { lightTheme } from "@design-tokens";
 
-import ArrowIcon from "@/pages/home/assets/arrow.svg?react";
-import DropdownIconAsset from "@/pages/home/assets/dropdown.svg?react";
+import ArrowIcon from "@/pages/home/assets/svg/arrow.svg?react";
+import DropdownIconAsset from "@/pages/home/assets/svg/dropdown.svg?react";
 
 const CARD_SHADOW = `0 0 4px color-mix(in srgb, ${lightTheme.label.strong} 8%, transparent)`;
 const AXIS_TEXT_COLOR = `color-mix(in srgb, ${lightTheme.label.strong} 70%, transparent)`;
