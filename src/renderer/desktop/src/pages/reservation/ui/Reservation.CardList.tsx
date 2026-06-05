@@ -7,37 +7,37 @@ import type { ReservationCardListProps } from "@/pages/reservation/model/Reserva
 
 const ReservationCardList = ({ reservations }: ReservationCardListProps) => {
   return (
-    <div className="flex h-[11.5rem] w-full flex-col gap-[1rem]">
+    <div className="flex h-46 w-full flex-col gap-4">
       {reservations.map(reservation => (
         <article
           key={reservation.id}
-          className="h-[5.25rem] w-full shrink-0 overflow-hidden rounded-xl bg-[#F7F7F7] shadow-[0_0_0.375rem_rgba(0,0,0,0.02)]"
+          className="h-21 w-full shrink-0 overflow-hidden rounded-xl bg-[#F7F7F7] shadow-[0_0_0.375rem_rgba(0,0,0,0.02)]"
         >
-          <div className="flex w-full items-center gap-[2rem] px-[1.75rem] pt-[1rem]">
-            <div className="relative size-[3.25rem] shrink-0 overflow-hidden rounded-full bg-white">
+          <div className="flex w-full items-center gap-8 px-7 pt-4">
+            <div className="relative size-13 shrink-0 overflow-hidden rounded-full bg-white">
               <img
                 src={customerImage}
                 alt=""
-                className="absolute left-1/2 top-1/2 h-[2.125rem] w-[2.25rem] -translate-x-1/2 -translate-y-1/2 object-cover"
+                className="absolute left-1/2 top-1/2 h-8.5 w-9 -translate-x-1/2 -translate-y-1/2 object-cover"
                 aria-hidden="true"
               />
             </div>
 
-            <div className="flex min-w-0 flex-1 flex-col gap-[0.125rem]">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <div className="flex w-full items-center justify-between">
                 <div
-                  className="flex w-[4.125rem] items-center gap-[0.25rem] font-['Pretendard'] text-lg leading-[1.3]"
+                  className="flex w-16.5 items-center gap-1 font-['Pretendard'] text-lg leading-[1.3]"
                   style={{ color: lightTheme.label.neutral }}
                 >
                   <span className="font-bold whitespace-nowrap">{reservation.name}</span>
-                  <span className="w-[1.125rem] font-semibold">님</span>
+                  <span className="w-4.5 font-semibold">님</span>
                 </div>
 
-                <div className="flex min-w-0 items-center gap-[0.25rem]">
+                <div className="flex min-w-0 items-center gap-1">
                   {reservation.tags.map(tag => (
                     <span
                       key={tag}
-                      className="shrink-0 rounded-[0.25rem] bg-[#E6E6E7] px-[0.5rem] py-[0.25rem] font-['Pretendard'] text-xs font-medium leading-[1.3]"
+                      className="shrink-0 rounded-sm bg-[#E6E6E7] px-2 py-1 font-['Pretendard'] text-xs font-medium leading-[1.3]"
                       style={{ color: lightTheme.label.alternative }}
                     >
                       {tag}
@@ -46,9 +46,9 @@ const ReservationCardList = ({ reservations }: ReservationCardListProps) => {
                 </div>
               </div>
 
-              <div className="flex h-[1.25rem] items-center gap-[0.625rem]">
-                <span className="flex items-center gap-[0.25rem]">
-                  <img src={dateIcon} alt="" className="size-[1rem]" aria-hidden="true" />
+              <div className="flex h-5 items-center gap-2.5">
+                <span className="flex items-center gap-1">
+                  <img src={dateIcon} alt="" className="size-4" aria-hidden="true" />
                   <span
                     className="font-['Pretendard'] text-sm font-normal leading-[1.3]"
                     style={{ color: lightTheme.label.alternative }}
@@ -62,8 +62,8 @@ const ReservationCardList = ({ reservations }: ReservationCardListProps) => {
                 >
                   ·
                 </span>
-                <span className="flex items-center gap-[0.25rem]">
-                  <img src={timeIcon} alt="" className="size-[1rem]" aria-hidden="true" />
+                <span className="flex items-center gap-1">
+                  <img src={timeIcon} alt="" className="size-4" aria-hidden="true" />
                   <span
                     className="font-['Pretendard'] text-sm font-normal leading-[1.3]"
                     style={{ color: lightTheme.label.alternative }}
