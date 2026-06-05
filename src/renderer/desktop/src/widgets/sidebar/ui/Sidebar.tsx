@@ -29,12 +29,10 @@ const Sidebar = () => {
   const [activeLabel, setActiveLabel] = useState("예약");
 
   return (
-    <aside
-      className="w-[68px] shrink-0 bg-white pt-4 shadow-[0_1px_4px_rgba(0,0,0,0.09)]"
-    >
+    <aside className="w-[4.25rem] shrink-0 bg-white pt-4 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
       <nav aria-label="대시보드 사이드 메뉴">
         <ul className="flex flex-col items-center gap-5">
-          {sidebarItems.map((item) => {
+          {sidebarItems.map(item => {
             const isActive = activeLabel === item.label;
 
             return (
@@ -43,11 +41,11 @@ const Sidebar = () => {
                   type="button"
                   aria-label={item.label}
                   aria-current={isActive ? "page" : undefined}
-                  className="flex w-[35px] flex-col items-center gap-1"
+                  className="flex w-[2.1875rem] flex-col items-center gap-1"
                   onClick={() => setActiveLabel(item.label)}
                 >
                   <span
-                    className="flex h-[34px] w-[35px] items-center justify-center rounded-lg"
+                    className="flex h-[2.125rem] w-[2.1875rem] items-center justify-center rounded-lg"
                     style={{
                       backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
                     }}

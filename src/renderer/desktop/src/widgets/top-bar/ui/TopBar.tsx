@@ -7,9 +7,9 @@ import profileIcon from "@/widgets/top-bar/assets/svg/profile.svg";
 
 const AuthTopBar = () => {
   return (
-    <header className="flex h-[72px] items-start px-5 pt-5 sm:px-10 lg:px-20">
+    <header className="flex h-[4.5rem] items-start px-[1.25rem] pt-[1.25rem] sm:px-[2.5rem] lg:px-[5rem]">
       <Link to="/" aria-label="Heddy home">
-        <img src={heddyLogo} alt="heddy" className="h-8 w-[98px]" />
+        <img src={heddyLogo} alt="heddy" className="h-[2rem] w-[6.125rem]" />
       </Link>
     </header>
   );
@@ -17,28 +17,26 @@ const AuthTopBar = () => {
 
 const DashboardTopBar = () => {
   return (
-    <header
-      className="flex h-[68px] w-full items-center justify-between bg-white px-[15px] shadow-[0_1px_4px_rgba(0,0,0,0.09)]"
-    >
+    <header className="flex h-[4.25rem] w-full items-center justify-between bg-white px-[1rem] shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
       <Link to="/" aria-label="Heddy dashboard" className="shrink-0">
-        <img src={dashboardLogo} alt="heddy" className="h-[26px] w-[78px]" />
+        <img src={dashboardLogo} alt="heddy" className="h-[1.625rem] w-[4.875rem]" />
       </Link>
 
-      <div className="flex shrink-0 items-center gap-4">
+      <div className="flex shrink-0 items-center gap-[1rem]">
         <button
           type="button"
           aria-label="알림"
-          className="flex size-[30px] items-center justify-center"
+          className="flex size-[1.875rem] items-center justify-center"
         >
-          <img src={alarmIcon} alt="" className="size-[30px]" aria-hidden="true" />
+          <img src={alarmIcon} alt="" className="size-[1.875rem]" aria-hidden="true" />
         </button>
 
         <button
           type="button"
           aria-label="프로필 메뉴"
-          className="flex size-10 items-center justify-center"
+          className="flex size-[2.5rem] items-center justify-center"
         >
-          <img src={profileIcon} alt="" className="size-10" aria-hidden="true" />
+          <img src={profileIcon} alt="" className="size-[2.5rem]" aria-hidden="true" />
         </button>
       </div>
     </header>
