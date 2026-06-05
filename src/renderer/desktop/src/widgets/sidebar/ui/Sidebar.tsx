@@ -28,55 +28,51 @@ const INACTIVE_ITEM_COLOR = "#999999";
 
 const Sidebar = () => {
   return (
-    <aside
-      className="w-[68px] shrink-0 bg-white pt-4 shadow-[0_1px_4px_rgba(0,0,0,0.09)]"
-    >
+    <aside className="w-[4.25rem] shrink-0 bg-white pt-4 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
       <nav aria-label="대시보드 사이드 메뉴">
         <ul className="flex flex-col items-center gap-5">
-          {sidebarItems.map((item) => {
-            return (
-              <li key={item.label}>
-                <NavLink
-                  to={item.to}
-                  aria-label={item.label}
-                  className="group flex w-[35px] flex-col items-center gap-1 rounded-lg outline-none transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[#49D2C6]/40"
-                >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className="flex h-[34px] w-[35px] items-center justify-center rounded-lg transition-all duration-150 ease-out"
+          {sidebarItems.map((item) => (
+            <li key={item.label}>
+              <NavLink
+                to={item.to}
+                aria-label={item.label}
+                className="group flex w-[2.25rem] flex-col items-center gap-1 rounded-lg outline-none transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[#49D2C6]/40"
+              >
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className="flex h-[2.125rem] w-[2.25rem] items-center justify-center rounded-lg transition-all duration-150 ease-out"
+                      style={{
+                        backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
+                        transform: isActive ? "scale(1)" : "scale(0.94)",
+                      }}
+                    >
+                      <img
+                        src={item.icon}
+                        alt=""
+                        aria-hidden="true"
+                        className="size-6 shrink-0 transition-all duration-150 ease-out"
                         style={{
-                          backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
-                          transform: isActive ? "scale(1)" : "scale(0.94)",
+                          filter: isActive ? ACTIVE_ICON_FILTER : undefined,
+                          opacity: isActive ? 1 : 0.72,
+                          transform: isActive ? "scale(1)" : "scale(0.92)",
                         }}
-                      >
-                        <img
-                          src={item.icon}
-                          alt=""
-                          aria-hidden="true"
-                          className="size-6 shrink-0 transition-all duration-150 ease-out"
-                          style={{
-                            filter: isActive ? ACTIVE_ICON_FILTER : undefined,
-                            opacity: isActive ? 1 : 0.72,
-                            transform: isActive ? "scale(1)" : "scale(0.92)",
-                          }}
-                        />
-                      </span>
+                      />
+                    </span>
 
-                      <span
-                        className={`font-['Pretendard'] transition-colors duration-150 ease-out ${font.caption.medium}`}
-                        style={{
-                          color: isActive ? lightTheme.primary.normal : INACTIVE_ITEM_COLOR,
-                        }}
-                      >
-                        {item.label}
-                      </span>
-                    </>
-                  )}
-                </NavLink>
-              </li>
-            );
-          })}
+                    <span
+                      className={`font-['Pretendard'] transition-colors duration-150 ease-out ${font.caption.medium}`}
+                      style={{
+                        color: isActive ? lightTheme.primary.normal : INACTIVE_ITEM_COLOR,
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </aside>

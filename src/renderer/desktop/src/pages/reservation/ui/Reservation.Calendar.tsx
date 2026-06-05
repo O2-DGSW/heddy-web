@@ -1,19 +1,15 @@
 import { lightTheme } from "@design-tokens";
 
-import dropdownIcon from "@/pages/featureName/assets/dropdown.svg";
-import { DROPDOWN_FILTER } from "@/pages/featureName/model/Reservation.constant";
-import type { ReservationCalendarProps } from "@/pages/featureName/model/Reservation.types";
+import dropdownIcon from "@/pages/reservation/assets/dropdown.svg";
+import { DROPDOWN_FILTER } from "@/pages/reservation/model/Reservation.constant";
+import type { ReservationCalendarProps } from "@/pages/reservation/model/Reservation.types";
 
 const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProps) => {
   return (
-    <div className="w-[30.25rem]">
-      <button
-        type="button"
-        className="flex h-[1.9375rem] items-start gap-[0.4375rem]"
-        aria-label="월 선택"
-      >
+    <div className="w-full">
+      <button type="button" className="flex h-8 items-start gap-2" aria-label="월 선택">
         <span
-          className="font-['Pretendard'] text-2xl font-bold leading-[1.3] tracking-[-0.03rem]"
+          className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
           style={{ color: lightTheme.label.alternative }}
         >
           2026. 5
@@ -21,14 +17,14 @@ const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProp
         <img
           src={dropdownIcon}
           alt=""
-          className="size-[1.9375rem]"
+          className="size-8"
           style={{ filter: DROPDOWN_FILTER }}
           aria-hidden="true"
         />
       </button>
 
-      <div className="mt-9 flex w-full flex-col gap-[1.625rem]">
-        <div className="grid h-[1.4375rem] grid-cols-[repeat(7,2.9375rem)] justify-center gap-x-[1.375rem] text-center font-['Pretendard'] text-xl font-medium leading-[1.3] tracking-[-0.025rem]">
+      <div className="mt-9 flex w-full flex-col gap-6.5">
+        <div className="grid h-6 grid-cols-7 justify-items-center text-center font-['Pretendard'] text-xl font-medium leading-[1.3]">
           {weekDays.map((day, index) => (
             <span
               key={day}
@@ -44,13 +40,13 @@ const ReservationCalendar = ({ weekDays, calendarRows }: ReservationCalendarProp
         {calendarRows.map((row, rowIndex) => (
           <div
             key={rowIndex}
-            className="grid h-[1.875rem] grid-cols-[repeat(7,2.9375rem)] items-center justify-center gap-x-[1.375rem] text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3] tracking-[-0.03rem]"
+            className="grid h-7.5 grid-cols-7 items-center justify-items-center text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3]"
           >
             {row.map(date =>
               date.selected ? (
                 <span
                   key={date.day}
-                  className="flex size-[2.9375rem] items-center justify-center rounded-full text-[#F5F5F5]"
+                  className="flex size-12 items-center justify-center rounded-full text-[#F5F5F5]"
                   style={{ backgroundColor: lightTheme.primary.normal }}
                 >
                   {date.day}
