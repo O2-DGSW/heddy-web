@@ -39,29 +39,32 @@ const Sidebar = () => {
                 <NavLink
                   to={item.to}
                   aria-label={item.label}
-                  className="flex w-[35px] flex-col items-center gap-1"
+                  className="group flex w-[35px] flex-col items-center gap-1 rounded-lg outline-none transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[#49D2C6]/40"
                 >
                   {({ isActive }) => (
                     <>
                       <span
-                        className="flex h-[34px] w-[35px] items-center justify-center rounded-lg"
+                        className="flex h-[34px] w-[35px] items-center justify-center rounded-lg transition-all duration-150 ease-out"
                         style={{
                           backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
+                          transform: isActive ? "scale(1)" : "scale(0.94)",
                         }}
                       >
                         <img
                           src={item.icon}
                           alt=""
                           aria-hidden="true"
-                          className="size-6 shrink-0"
+                          className="size-6 shrink-0 transition-all duration-150 ease-out"
                           style={{
                             filter: isActive ? ACTIVE_ICON_FILTER : undefined,
+                            opacity: isActive ? 1 : 0.72,
+                            transform: isActive ? "scale(1)" : "scale(0.92)",
                           }}
                         />
                       </span>
 
                       <span
-                        className={`font-['Pretendard'] ${font.caption.medium}`}
+                        className={`font-['Pretendard'] transition-colors duration-150 ease-out ${font.caption.medium}`}
                         style={{
                           color: isActive ? lightTheme.primary.normal : INACTIVE_ITEM_COLOR,
                         }}
