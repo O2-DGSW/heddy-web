@@ -21,7 +21,7 @@ const CustomerTable = ({ filters, rows }: CustomerTableProps) => {
         className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
         style={{ color: lightTheme.label.alternative }}
       >
-        예약 현황
+        고객 현황
       </h2>
 
       <div className="h-[35.625rem] overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
@@ -80,21 +80,21 @@ const CustomerTable = ({ filters, rows }: CustomerTableProps) => {
         </div>
 
         <div
-          className="grid h-[2.25rem] items-center gap-[3.25rem] px-[4.4375rem] text-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
+          className="grid h-[2.25rem] items-center gap-[3.25rem] px-[4.4375rem] font-['Pretendard'] text-lg font-medium leading-[1.3]"
           style={{
             gridTemplateColumns: CUSTOMER_GRID_COLUMNS,
             backgroundColor: lightTheme.label.disable,
             color: lightTheme.label.assistive,
           }}
         >
-          <span className="col-start-1 whitespace-nowrap">고객명</span>
-          <span className="col-start-2 whitespace-nowrap">연락처</span>
-          <span className="col-start-3 whitespace-nowrap">최근 방문일</span>
-          <span className="col-start-4 whitespace-nowrap">방문 주기</span>
-          <span className="col-start-5 whitespace-nowrap">이탈 위험도</span>
-          <span className="col-start-6 whitespace-nowrap">시술 태그</span>
-          <span className="col-start-7 whitespace-nowrap">총 방문</span>
-          <span className="col-start-8 whitespace-nowrap">담당 디자이너</span>
+          <span className="col-start-1 whitespace-nowrap text-left">고객명</span>
+          <span className="col-start-2 whitespace-nowrap text-center">연락처</span>
+          <span className="col-start-3 whitespace-nowrap text-center">최근 방문일</span>
+          <span className="col-start-4 whitespace-nowrap text-center">방문 주기</span>
+          <span className="col-start-5 whitespace-nowrap text-left">이탈 위험도</span>
+          <span className="col-start-6 whitespace-nowrap text-center">시술 태그</span>
+          <span className="col-start-7 whitespace-nowrap text-center">총 방문</span>
+          <span className="col-start-8 whitespace-nowrap text-center">담당 디자이너</span>
         </div>
 
         <div className="flex flex-col">
