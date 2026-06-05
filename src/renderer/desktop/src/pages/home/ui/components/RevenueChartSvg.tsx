@@ -9,10 +9,13 @@ import {
 const horizontalGridLines = [6, 47, 88, 129, 170, 211];
 
 const RevenueChartSvg = () => {
+  const firstPoint = chartPoints[0];
+  const lastPoint = chartPoints.at(-1);
   const linePath = chartPoints
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
-  const areaPath = `${linePath} L ${chartPoints.at(-1)?.x ?? 0} 211 L ${chartPoints[0].x} 211 Z`;
+  const areaPath =
+    firstPoint && lastPoint ? `${linePath} L ${lastPoint.x} 211 L ${firstPoint.x} 211 Z` : null;
 
   return (
     <svg
@@ -61,15 +64,17 @@ const RevenueChartSvg = () => {
           strokeDasharray="2 2"
         />
       ))}
-      <path d={areaPath} fill="url(#revenue-area-fill)" />
-      <path
-        d={linePath}
-        fill="none"
-        stroke={lightTheme.primary.normal}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1"
-      />
+      {areaPath && <path d={areaPath} fill="url(#revenue-area-fill)" />}
+      {linePath && (
+        <path
+          d={linePath}
+          fill="none"
+          stroke={lightTheme.primary.normal}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1"
+        />
+      )}
       {chartPoints.map(point => (
         <circle
           key={`${point.x}-${point.y}`}
