@@ -1,12 +1,11 @@
 import { QRCodeSVG } from "qrcode.react";
 import { font, lightTheme } from "@design-tokens";
+import { MY_QR_CODE_VALUE } from "@/features/cuts/constrants/qrCode.ts";
 
 interface QrCodeProps {
   value?: string;
   size?: number;
 }
-
-const MY_QR_CODE_VALUE = "내 QR코드";
 
 export const QrCode = ({ value: valueProp, size = 200 }: QrCodeProps) => {
   const value = valueProp ?? MY_QR_CODE_VALUE;
