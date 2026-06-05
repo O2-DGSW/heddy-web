@@ -46,7 +46,7 @@ const ReservationCardList = ({ reservations }: ReservationCardListProps) => {
                 </div>
               </div>
 
-              <div className="flex h-[1.3125rem] items-center gap-[0.625rem]">
+              <div className="flex h-[1.25rem] items-center gap-[0.625rem]">
                 <span className="flex items-center gap-[0.25rem]">
                   <img src={dateIcon} alt="" className="size-[1rem]" aria-hidden="true" />
                   <span
