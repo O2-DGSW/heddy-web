@@ -31,6 +31,8 @@ export const QrReading = () => {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
+    let isMounted = true;
+
     const requestCameraPermission = async () => {
       try {
         const currentPermission = await Camera.checkPermissions();
@@ -38,6 +40,8 @@ export const QrReading = () => {
           currentPermission.camera === "granted"
             ? currentPermission
             : await Camera.requestPermissions({ permissions: ["camera"] });
+
+        if (!isMounted) return;
 
         if (permission.camera === "granted") {
           setCameraReady(true);
@@ -48,12 +52,17 @@ export const QrReading = () => {
         setCameraReady(false);
         setError("카메라 권한을 허용해야 QR 코드를 스캔할 수 있습니다.");
       } catch {
+        if (!isMounted) return;
         setCameraReady(false);
         setError("카메라 권한 요청에 실패했습니다.");
       }
     };
 
     void requestCameraPermission();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // QR 코드 스캔 성공 시 실행되는 함수
