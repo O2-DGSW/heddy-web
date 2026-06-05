@@ -53,7 +53,7 @@ const ReservationStatusCard = () => (
       <div className="w-full min-w-[772px]">
         <div className="h-9" style={{ backgroundColor: lightTheme.fill.neutral }}>
           <div
-            className="mx-[26.5px] grid h-full items-center text-center font-['Pretendard'] text-[18px] font-medium leading-[1.3] tracking-normal"
+            className="mx-[27px] grid h-full items-center text-center font-['Pretendard'] text-[18px] font-medium leading-[1.3] tracking-normal"
             style={{
               color: lightTheme.label.assistive,
               columnGap: "60px",
