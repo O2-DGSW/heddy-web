@@ -1,25 +1,26 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import svgr from "vite-plugin-svgr";
+import { resolve } from "path";
 
 export default defineConfig({
-  root: resolve(__dirname, 'src/renderer/desktop'),
-  publicDir: resolve(__dirname, 'public'),
-  plugins: [react(), tailwindcss()],
+  root: resolve(__dirname, "src/renderer/desktop"),
+  publicDir: resolve(__dirname, "public"),
+  plugins: [react(), tailwindcss(), svgr()],
   resolve: {
     alias: [
       {
-        find: '@design-tokens',
-        replacement: resolve(__dirname, 'pakages/design-tokens'),
+        find: "@design-tokens",
+        replacement: resolve(__dirname, "pakages/design-tokens"),
       },
       {
-        find: '@/shared',
-        replacement: resolve(__dirname, 'src/renderer/shared'),
+        find: "@/shared",
+        replacement: resolve(__dirname, "src/renderer/shared"),
       },
       {
-        find: '@',
-        replacement: resolve(__dirname, 'src/renderer/desktop/src'),
+        find: "@",
+        replacement: resolve(__dirname, "src/renderer/desktop/src"),
       },
     ],
   },
@@ -27,7 +28,7 @@ export default defineConfig({
     port: 5173,
   },
   build: {
-    outDir: resolve(__dirname, 'dist/desktop'),
+    outDir: resolve(__dirname, "dist/desktop"),
     emptyOutDir: true,
   },
-})
+});
