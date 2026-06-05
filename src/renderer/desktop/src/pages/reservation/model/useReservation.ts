@@ -13,8 +13,13 @@ import {
   RESERVATION_WEEK_DAYS,
 } from "./Reservation.constant";
 
-const getRootFontSize = () =>
-  Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+const getRootFontSize = () => {
+  if (typeof window === "undefined") {
+    return 16;
+  }
+
+  return Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+};
 
 interface ReservationContainerSize {
   width: number;
@@ -81,11 +86,8 @@ export const useReservation = () => {
       resizeObserver.observe(pageRef.current);
     }
 
-    window.addEventListener("resize", updateLayout);
-
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("resize", updateLayout);
     };
   }, []);
 

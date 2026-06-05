@@ -13,7 +13,7 @@ export const RESERVATION_CONTENT_TOP_OFFSET_REM = 2.625;
 export const RESERVATION_PAGE_HORIZONTAL_PADDING_REM = 2.5;
 export const DESKTOP_BAR_WIDTH_REM = 4.25;
 export const TOP_BAR_HEIGHT_REM = 4.25;
-export const MIN_RESERVATION_SCALE = 0.01;
+export const MIN_RESERVATION_SCALE = 0.32;
 
 export const DROPDOWN_FILTER =
   "brightness(0) saturate(100%) invert(36%) sepia(7%) saturate(235%) hue-rotate(169deg) brightness(94%) contrast(88%)";
