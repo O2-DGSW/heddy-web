@@ -7,10 +7,13 @@ import type {
   ReservationStatusRow,
 } from "./Reservation.types";
 
-export const DESIGN_MAIN_WIDTH_PX = 1442;
-export const DESIGN_MAIN_HEIGHT_REM = 57.0625;
-export const DESIGN_MAIN_WIDTH_REM = 90.125;
-export const DESKTOP_BAR_WIDTH_PX = 68;
+export const RESERVATION_CONTENT_WIDTH_REM = 85.0625;
+export const RESERVATION_CONTENT_HEIGHT_REM = 51.875;
+export const RESERVATION_CONTENT_TOP_OFFSET_REM = 2.625;
+export const RESERVATION_PAGE_HORIZONTAL_PADDING_REM = 2.5;
+export const DESKTOP_BAR_WIDTH_REM = 4.25;
+export const TOP_BAR_HEIGHT_REM = 4.25;
+export const MIN_RESERVATION_SCALE = 0.32;
 
 export const DROPDOWN_FILTER =
   "brightness(0) saturate(100%) invert(36%) sepia(7%) saturate(235%) hue-rotate(169deg) brightness(94%) contrast(88%)";

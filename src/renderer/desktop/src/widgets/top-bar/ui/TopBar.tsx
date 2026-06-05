@@ -7,9 +7,9 @@ import profileIcon from "@/widgets/top-bar/assets/svg/profile.svg";
 
 const AuthTopBar = () => {
   return (
-    <header className="flex h-[72px] items-start px-5 pt-5 sm:px-10 lg:px-20">
+    <header className="flex h-18 items-start px-5 pt-5 sm:px-10 lg:px-20">
       <Link to="/" aria-label="Heddy home">
-        <img src={heddyLogo} alt="heddy" className="h-8 w-[98px]" />
+        <img src={heddyLogo} alt="heddy" className="h-8 w-24.5" />
       </Link>
     </header>
   );
@@ -17,20 +17,18 @@ const AuthTopBar = () => {
 
 const DashboardTopBar = () => {
   return (
-    <header
-      className="flex h-[68px] w-full items-center justify-between bg-white px-[15px] shadow-[0_1px_4px_rgba(0,0,0,0.09)]"
-    >
+    <header className="flex h-17 w-full items-center justify-between bg-white px-4 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
       <Link to="/" aria-label="Heddy dashboard" className="shrink-0">
-        <img src={dashboardLogo} alt="heddy" className="h-[26px] w-[78px]" />
+        <img src={dashboardLogo} alt="heddy" className="h-6.5 w-19.5" />
       </Link>
 
       <div className="flex shrink-0 items-center gap-4">
         <button
           type="button"
           aria-label="알림"
-          className="flex size-[30px] items-center justify-center"
+          className="flex size-7.5 items-center justify-center"
         >
-          <img src={alarmIcon} alt="" className="size-[30px]" aria-hidden="true" />
+          <img src={alarmIcon} alt="" className="size-7.5" aria-hidden="true" />
         </button>
 
         <button
