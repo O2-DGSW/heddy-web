@@ -21,7 +21,7 @@ const ReservationStatusPanel = ({ filterTabs, rows }: ReservationStatusPanelProp
               <button
                 key={tab.label}
                 type="button"
-                className="flex h-[1.625rem] items-center justify-center rounded-[1rem] px-[0.75rem] py-[0.25rem] font-['Pretendard'] text-xs font-medium leading-[1.3]"
+                className="flex h-6.5 items-center justify-center rounded-2xl px-3 py-1 font-['Pretendard'] text-xs font-medium leading-[1.3]"
                 style={{
                   backgroundColor: tab.active ? lightTheme.primary.normal : lightTheme.fill.neutral,
                   color: tab.active ? lightTheme.label.buttonText : lightTheme.label.alternative,
@@ -35,13 +35,13 @@ const ReservationStatusPanel = ({ filterTabs, rows }: ReservationStatusPanelProp
 
         <div className="w-full">
           <div
-            className="flex h-[2.25rem] items-center justify-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
+            className="flex h-9 items-center justify-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
             style={{
               backgroundColor: lightTheme.label.disable,
               color: lightTheme.label.assistive,
             }}
           >
-            <div className="grid w-full grid-cols-[4.5rem_3rem_3rem_1.5rem_minmax(6rem,1fr)_2.5rem_minmax(10rem,1.4fr)_2.5rem_5.25rem] px-[2.625rem] text-center">
+            <div className="grid w-full grid-cols-[4.5rem_3rem_3rem_1.5rem_minmax(6rem,1fr)_2.5rem_minmax(10rem,1.4fr)_2.5rem_5.25rem] px-10.5 text-center">
               <span className="col-start-1">시간</span>
               <span className="col-start-3">고객명</span>
               <span className="col-start-5">시술</span>
@@ -57,36 +57,36 @@ const ReservationStatusPanel = ({ filterTabs, rows }: ReservationStatusPanelProp
                 className="flex h-16 items-center justify-center border-b border-[#F7F7F7]"
               >
                 <div
-                  className="grid w-full grid-cols-[4.5rem_3rem_3rem_1.5rem_minmax(6rem,1fr)_2.5rem_minmax(10rem,1.4fr)_2.5rem_5.25rem] items-center px-[2.625rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                  className="grid w-full grid-cols-[4.5rem_3rem_3rem_1.5rem_minmax(6rem,1fr)_2.5rem_minmax(10rem,1.4fr)_2.5rem_5.25rem] items-center px-10.5 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                   style={{ color: lightTheme.label.assistive }}
                 >
-                  <div className="col-start-1 flex min-w-0 items-center gap-[0.625rem]">
+                  <div className="col-start-1 flex min-w-0 items-center gap-2.5">
                     <img
                       src={radioButtonIcon}
                       alt=""
-                      className="size-[0.875rem]"
+                      className="size-3.5"
                       aria-hidden="true"
                     />
                     <span>10:00</span>
                   </div>
                   <span className="col-start-3 min-w-0 truncate">오용준</span>
                   <span className="col-start-5 min-w-0 truncate text-center">다운펌</span>
-                  <span className="col-start-7 flex h-[1.875rem] w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border border-[#E8E8E9] bg-white px-[1rem] py-[0.25rem] text-center font-['Pretendard'] text-sm font-medium leading-[1.3]">
+                  <span className="col-start-7 flex h-7.5 w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border border-[#E8E8E9] bg-white px-4 py-1 text-center font-['Pretendard'] text-sm font-medium leading-[1.3]">
                     <span className="block w-full truncate">{row.request}</span>
                   </span>
                   <button
                     type="button"
-                    className="col-start-9 flex h-[1.625rem] w-[5.25rem] items-center justify-center overflow-hidden rounded-[1rem] pl-[0.625rem] pr-[0.125rem] font-['Pretendard'] text-sm font-medium leading-[1.3]"
+                    className="col-start-9 flex h-6.5 w-21 items-center justify-center overflow-hidden rounded-2xl pl-2.5 pr-0.5 font-['Pretendard'] text-sm font-medium leading-[1.3]"
                     style={{
                       backgroundColor: row.statusColor,
                       color: lightTheme.label.buttonText,
                     }}
                   >
-                    <span className="-mr-[0.125rem] whitespace-nowrap">{row.status}</span>
+                    <span className="-mr-0.5 whitespace-nowrap">{row.status}</span>
                     <img
                       src={dropdownIcon}
                       alt=""
-                      className="size-[1.25rem] shrink-0"
+                      className="size-5 shrink-0"
                       aria-hidden="true"
                     />
                   </button>
