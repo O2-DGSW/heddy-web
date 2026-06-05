@@ -1,103 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import { Camera } from "@capacitor/camera";
-import { Capacitor } from "@capacitor/core";
-import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
+import { Scanner } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 import { QRresult } from "./QRresult";
-
-type QrSuccessData = {
-  name: string;
-  phone: string;
-  cutsCount: number;
-};
+import { useQRreading } from "@/features/cuts/model/useQRreading";
 
 export const QrReading = () => {
-  // API res
-  const responseData = {
-    name: "오용준",
-    phone: "010-9563-5423",
-    cutsCount: 12,
-  };
-
-  // QR 스캔 결과 저장 state
-  const [result, setResult] = useState<QrSuccessData | null>(null);
-
-  const [cameraReady, setCameraReady] = useState(!Capacitor.isNativePlatform());
-
-  // 카메라/스캔 에러 메시지 저장 state
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return;
-
-    let isMounted = true;
-
-    const requestCameraPermission = async () => {
-      try {
-        const currentPermission = await Camera.checkPermissions();
-        const permission =
-          currentPermission.camera === "granted"
-            ? currentPermission
-            : await Camera.requestPermissions({ permissions: ["camera"] });
-
-        if (!isMounted) return;
-
-        if (permission.camera === "granted") {
-          setCameraReady(true);
-          setError(null);
-          return;
-        }
-
-        setCameraReady(false);
-        setError("카메라 권한을 허용해야 QR 코드를 스캔할 수 있습니다.");
-      } catch {
-        if (!isMounted) return;
-        setCameraReady(false);
-        setError("카메라 권한 요청에 실패했습니다.");
-      }
-    };
-
-    void requestCameraPermission();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  // QR 코드 스캔 성공 시 실행되는 함수
-  const handleScan = (detectedCodes: { rawValue: string }[]) => {
-    if (detectedCodes.length > 0) {
-      // QR 인식 성공
-      console.log("QR:", detectedCodes[0].rawValue);
-
-      // 서버 조회 결과라고 가정
-      setResult(responseData);
-    }
-  };
-
-  // 카메라 접근 실패 또는 스캔 에러 처리 함수
-  const handleError = (err: unknown) => {
-    if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("카메라 접근에 실패했습니다.");
-    }
-  };
-
-  const tracker: TrackFunction = useCallback((detectedCodes, ctx) => {
-    detectedCodes.forEach(({ boundingBox, cornerPoints }) => {
-      ctx.strokeStyle = "#00FF00";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-      ctx.fillStyle = lightTheme.primary.normal;
-      cornerPoints.forEach(({ x, y }) => {
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-      });
-    });
-  }, []);
+  const { result, cameraReady, error, handleScan, handleError, tracker } = useQRreading();
 
   return result ? (
     <QRresult result={result} />
