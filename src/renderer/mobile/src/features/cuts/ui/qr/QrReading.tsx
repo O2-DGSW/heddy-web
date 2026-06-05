@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { Camera } from "@capacitor/camera";
+import { Capacitor } from "@capacitor/core";
 import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
@@ -21,8 +23,38 @@ export const QrReading = () => {
   // QR 스캔 결과 저장 state
   const [result, setResult] = useState<QrSuccessData | null>(null);
 
+  const [cameraReady, setCameraReady] = useState(!Capacitor.isNativePlatform());
+
   // 카메라/스캔 에러 메시지 저장 state
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const requestCameraPermission = async () => {
+      try {
+        const currentPermission = await Camera.checkPermissions();
+        const permission =
+          currentPermission.camera === "granted"
+            ? currentPermission
+            : await Camera.requestPermissions({ permissions: ["camera"] });
+
+        if (permission.camera === "granted") {
+          setCameraReady(true);
+          setError(null);
+          return;
+        }
+
+        setCameraReady(false);
+        setError("카메라 권한을 허용해야 QR 코드를 스캔할 수 있습니다.");
+      } catch {
+        setCameraReady(false);
+        setError("카메라 권한 요청에 실패했습니다.");
+      }
+    };
+
+    void requestCameraPermission();
+  }, []);
 
   // QR 코드 스캔 성공 시 실행되는 함수
   const handleScan = (detectedCodes: { rawValue: string }[]) => {
@@ -69,15 +101,17 @@ export const QrReading = () => {
       </h2>
 
       <div className="relative w-full max-w-[400px] overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-        <Scanner
-          onScan={handleScan}
-          onError={handleError}
-          constraints={{ facingMode: "environment" }}
-          components={{
-            tracker,
-            finder: false,
-          }}
-        />
+        {cameraReady && (
+          <Scanner
+            onScan={handleScan}
+            onError={handleError}
+            constraints={{ facingMode: "environment" }}
+            components={{
+              tracker,
+              finder: false,
+            }}
+          />
+        )}
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="relative w-[60%]">
