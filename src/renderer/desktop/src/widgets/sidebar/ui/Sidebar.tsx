@@ -41,11 +41,11 @@ const Sidebar = () => {
                   type="button"
                   aria-label={item.label}
                   aria-current={isActive ? "page" : undefined}
-                  className="flex w-[2.1875rem] flex-col items-center gap-1"
+                  className="flex w-[2.25rem] flex-col items-center gap-1"
                   onClick={() => setActiveLabel(item.label)}
                 >
                   <span
-                    className="flex h-[2.125rem] w-[2.1875rem] items-center justify-center rounded-lg"
+                    className="flex h-[2.125rem] w-[2.25rem] items-center justify-center rounded-lg"
                     style={{
                       backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
                     }}
