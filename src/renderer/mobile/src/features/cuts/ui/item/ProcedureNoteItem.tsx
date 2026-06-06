@@ -1,7 +1,7 @@
 import { font, lightTheme, palette } from "@design-tokens";
 
-import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
-import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
+import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
+import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types.ts";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
 
 interface ProcedureNoteItemProps {
