@@ -13,9 +13,6 @@ export const EMPLOYEE_PAGE_LEFT_PADDING_REM = 2.5625;
 export const EMPLOYEE_PAGE_RIGHT_PADDING_REM = 2.5;
 export const MIN_EMPLOYEE_SCALE = 0.32;
 
-export const DROPDOWN_FILTER =
-  "brightness(0) saturate(100%) invert(36%) sepia(7%) saturate(235%) hue-rotate(169deg) brightness(94%) contrast(88%)";
-
 export const EMPLOYEE_ROWS: EmployeeRow[] = [
   {
     id: 1,
@@ -87,15 +84,15 @@ export const roleMeta = {
     label: "디자이너",
     backgroundColor: "#B3E5D2",
     color: lightTheme.primary.normal,
-    dropdownFilter: DROPDOWN_FILTER,
+    dropdownColor: lightTheme.primary.normal,
   },
   director: {
     label: "원장",
     backgroundColor: lightTheme.primary.normal,
     color: lightTheme.label.buttonText,
-    dropdownFilter: "brightness(0) invert(1)",
+    dropdownColor: lightTheme.primary.normal,
   },
 } satisfies Record<
   EmployeeRow["role"],
-  { label: string; backgroundColor: string; color: string; dropdownFilter: string }
+  { label: string; backgroundColor: string; color: string; dropdownColor: string }
 >;
