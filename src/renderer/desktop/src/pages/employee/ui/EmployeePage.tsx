@@ -1,9 +1,9 @@
 import { lightTheme } from "@design-tokens";
 
-import dateIcon from "@/pages/employee/assets/date.svg";
-import editIcon from "@/pages/employee/assets/edit.svg";
-import searchIcon from "@/pages/employee/assets/search.svg";
-import trashIcon from "@/pages/employee/assets/trash.svg";
+import dateIcon from "@/pages/employee/assets/svg/date.svg";
+import editIcon from "@/pages/employee/assets/svg/edit.svg";
+import searchIcon from "@/pages/employee/assets/svg/search.svg";
+import trashIcon from "@/pages/employee/assets/svg/trash.svg";
 import {
   EMPLOYEE_CONTENT_BOTTOM_OFFSET_REM,
   EMPLOYEE_CONTENT_TOP_OFFSET_REM,
@@ -228,7 +228,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                         />
                       )}
                     </span>
-                    <span className="grid w-full grid-cols-[7.875rem_1fr] items-center">
+                    <span className="grid w-full grid-cols-[10.2rem_0.7fr] items-center">
                       <span className="flex justify-center">
                         <img
                           src={option.image}
@@ -237,8 +237,8 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                         />
                       </span>
                       <span
-                        className="font-['Pretendard'] text-xl font-bold leading-[1.3]"
-                        style={{ color: lightTheme.label.neutral }}
+                        className="font-['Pretendard'] text-xl font-semibold leading-[1.3]"
+                        style={{ color: lightTheme.label.alternative }}
                       >
                         {option.label}
                       </span>

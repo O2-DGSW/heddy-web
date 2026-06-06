@@ -1,7 +1,7 @@
-import { lightTheme } from "@design-tokens";
+import { lightTheme, palette } from "@design-tokens";
 
-import designerImage from "@/pages/employee/assets/designer-dinosaur.png";
-import directorImage from "@/pages/employee/assets/director-dinosaur.png";
+import designerImage from "@/pages/employee/assets/png/designer-dinosaur.png";
+import directorImage from "@/pages/employee/assets/png/director-dinosaur.png";
 
 import type { EmployeeRow, PermissionOption } from "./Employee.types";
 
@@ -82,7 +82,7 @@ export const PERMISSION_OPTIONS: PermissionOption[] = [
 export const roleMeta = {
   designer: {
     label: "디자이너",
-    backgroundColor: "#B3E5D2",
+    backgroundColor: palette.main[80],
     color: lightTheme.primary.normal,
     dropdownColor: lightTheme.primary.normal,
   },
@@ -90,7 +90,7 @@ export const roleMeta = {
     label: "원장",
     backgroundColor: lightTheme.primary.normal,
     color: lightTheme.label.buttonText,
-    dropdownColor: lightTheme.primary.normal,
+    dropdownColor: lightTheme.label.buttonText,
   },
 } satisfies Record<
   EmployeeRow["role"],
