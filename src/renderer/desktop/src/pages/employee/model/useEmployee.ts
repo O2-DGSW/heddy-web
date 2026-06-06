@@ -17,21 +17,12 @@ interface EmployeeContainerSize {
   height: number;
 }
 
-let cachedRootFontSize: number | null = null;
-
 const getRootFontSize = () => {
-  if (cachedRootFontSize) {
-    return cachedRootFontSize;
-  }
-
   if (typeof window === "undefined") {
     return 16;
   }
 
-  cachedRootFontSize =
-    Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
-
-  return cachedRootFontSize;
+  return Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
 };
 
 const getFallbackContainerSize = (): EmployeeContainerSize => {
