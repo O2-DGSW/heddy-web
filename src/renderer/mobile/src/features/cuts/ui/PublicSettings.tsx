@@ -5,7 +5,7 @@ import { usePublicSettings } from "@/features/cuts/model/usePublicSettings.ts";
 import { PublicSettingsCutsItem } from "@/features/cuts/ui/item/PublicSettigsCutsItem.tsx";
 
 export const PublicSettings = () => {
-  const { notes } = usePublicSettings();
+  const { notes, handleTogglePublicSettings } = usePublicSettings();
 
   return (
     <div
@@ -29,7 +29,11 @@ export const PublicSettings = () => {
       ) : (
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
           {notes.map(note => (
-            <PublicSettingsCutsItem key={note.id} note={note} />
+            <PublicSettingsCutsItem
+              key={note.id}
+              note={note}
+              toggleFunc={newValue => handleTogglePublicSettings(note.id, newValue)}
+            />
           ))}
         </div>
       )}

@@ -1,12 +1,13 @@
 import { font, lightTheme, palette } from "@design-tokens";
 
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
-import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import { Toggle } from "@/private/shared/ui/toggle/Toggle.tsx";
+import type { PublicSettingsCutsResponse } from "@/features/cuts/model/types/PublicSettings.types.ts";
 // import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
 
-interface ProcedureNoteItemProps {
-  note: ProcedureNote;
+interface PublicSettingsProps {
+  note: PublicSettingsCutsResponse;
+  toggleFunc: (publicSettings: boolean) => void;
   bgColorGreen?: boolean;
 }
 
@@ -24,7 +25,7 @@ interface ProcedureNoteItemProps {
  * 시술기록 목록 아이템 컴포넌트
  * @param props {@link ProcedureNoteItemProps}
  */
-export const PublicSettingsCutsItem = ({ note, bgColorGreen }: ProcedureNoteItemProps) => {
+export const PublicSettingsCutsItem = ({ note, toggleFunc, bgColorGreen }: PublicSettingsProps) => {
   return (
     <div
       className="flex items-center gap-3 px-4 py-4 rounded-2xl"
@@ -70,7 +71,7 @@ export const PublicSettingsCutsItem = ({ note, bgColorGreen }: ProcedureNoteItem
           </span>
 
           <div className="shrink-0">
-            <Toggle />
+            <Toggle checked={note.publicSettings} onChange={toggleFunc} />
           </div>
         </div>
 
