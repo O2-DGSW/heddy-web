@@ -22,7 +22,9 @@ const getRootFontSize = () => {
     return 16;
   }
 
-  return Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16;
+  const rootFontSize = window.getComputedStyle(document.documentElement)?.fontSize;
+
+  return Number.parseFloat(rootFontSize ?? "") || 16;
 };
 
 const getFallbackContainerSize = (): EmployeeContainerSize => {
