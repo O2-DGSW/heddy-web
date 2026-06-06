@@ -1,6 +1,6 @@
 import { font, lightTheme } from "@design-tokens";
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
-import { ProcedureNoteItem } from "@/features/cuts/ui/ProcedureNoteItem.tsx";
+import { ProcedureNoteItem } from "@/features/cuts/ui/item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
 import { useQRresultProcedure } from "@/features/cuts/model/useQRresultProcedure.ts";
@@ -41,7 +41,7 @@ export const QRresult = ({ result }: QRresultProps) => {
       >
         <div className="flex items-center gap-4">
           <div
-            className="w-[full] h-[full] rounded-full flex items-center justify-center"
+            className="rounded-full flex items-center justify-center"
             style={{ backgroundColor: lightTheme.primary.normal }}
           >
             <img src="" alt="아거" className="w-[3.5rem] h-[3.5rem]" />

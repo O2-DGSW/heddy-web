@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { font, lightTheme } from "@design-tokens";
+import { lightTheme } from "@design-tokens";
 
 import { useProcedureNotes } from "@/features/cuts/model/useProcedureNotes";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
-import { ProcedureNoteItem } from "./ProcedureNoteItem";
-import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
+import { ProcedureNoteItem } from "./item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
+import { NotfoundCutsList } from "@/features/cuts/ui/NotfoundCutsList.tsx";
 
 export const ProcedureNoteList = () => {
   const navigate = useNavigate();
@@ -28,22 +28,10 @@ export const ProcedureNoteList = () => {
       style={{ backgroundColor: lightTheme.fill.normal }}
     >
       {notes.length === 0 ? (
-        <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <img src={agerSadSvg} alt="시술기록 없음" className="w-32 h-32" />
-            <p
-              className={`text-center ${font.body.regular}`}
-              style={{ color: lightTheme.label.assistive }}
-            >
-              시술기록이
-              <br />
-              존재하지 않아요..
-            </p>
-          </div>
-        </div>
+        <NotfoundCutsList />
       ) : (
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">
-          {notes.map((note) => (
+          {notes.map(note => (
             <ProcedureNoteItem key={note.id} note={note} />
           ))}
         </div>
