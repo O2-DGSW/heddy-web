@@ -41,7 +41,7 @@ export const QRresult = ({ result }: QRresultProps) => {
       >
         <div className="flex items-center gap-4">
           <div
-            className="w-[full] h-[full] rounded-full flex items-center justify-center"
+            className="rounded-full flex items-center justify-center"
             style={{ backgroundColor: lightTheme.primary.normal }}
           >
             <img src="" alt="아거" className="w-[3.5rem] h-[3.5rem]" />
