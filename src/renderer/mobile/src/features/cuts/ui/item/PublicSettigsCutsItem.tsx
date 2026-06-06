@@ -60,7 +60,6 @@ export const PublicSettingsCutsItem = ({ note, toggleFunc, bgColorGreen }: Publi
             {note.customerName}
           </span>
         </div>
-
         {/* 부가설명 */}
         <div className="flex items-center gap-2">
           <span
@@ -74,7 +73,7 @@ export const PublicSettingsCutsItem = ({ note, toggleFunc, bgColorGreen }: Publi
             <Toggle checked={note.publicSettings} onChange={toggleFunc} />
           </div>
         </div>
-
+        // TODO 혹시 모를 서버 데이터 변동으로 인한 ui 코드 보존
         {/* 날짜 */}
         {/*<div className="flex items-center gap-1">*/}
         {/*  <img src={dateSvg} alt="날짜" className="w-3.5 h-3.5" />*/}
@@ -82,7 +81,6 @@ export const PublicSettingsCutsItem = ({ note, toggleFunc, bgColorGreen }: Publi
         {/*    {formatShortDate(note.date)}*/}
         {/*  </span>*/}
         {/*</div>*/}
-
         {/* 태그 */}
         {note.tags && (
           <div className="flex flex-wrap gap-1">
