@@ -27,14 +27,14 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
   return (
     <button
       type="button"
-      className="flex h-[1.75rem] w-full min-w-[5.75rem] items-center justify-center rounded-[0.9375rem] pl-[0.625rem] pr-[0.125rem] font-['Pretendard'] text-base font-medium leading-[1.3] whitespace-nowrap"
+      className="flex h-7 w-full min-w-23 items-center justify-center rounded-[0.9375rem] pl-2.5 pr-0.5 font-['Pretendard'] text-base font-medium leading-[1.3] whitespace-nowrap"
       style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
     >
       {meta.label}
       <img
         src={dropdownIcon}
         alt=""
-        className="size-[1.25rem] shrink-0"
+        className="size-5 shrink-0"
         style={{ filter: meta.dropdownFilter }}
         aria-hidden="true"
       />
@@ -44,9 +44,9 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
 
 const EmployeeTable = ({ employees }: EmployeeTableProps) => {
   return (
-    <section className="h-[47.625rem] rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
-      <div className="flex h-full flex-col items-center pt-[1.4375rem]">
-        <div className="flex w-[93.25%] flex-col gap-[0.75rem]">
+    <section className="h-190.5 rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
+      <div className="flex h-full flex-col items-center pt-5.75">
+        <div className="flex w-[93.25%] flex-col gap-3">
           <h2
             className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
             style={{ color: lightTheme.label.alternative }}
@@ -54,20 +54,20 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
             등록 직원
           </h2>
           <div
-            className="h-[0.0625rem] w-full"
+            className="h-px w-full"
             style={{ backgroundColor: lightTheme.line.alternative }}
           />
         </div>
 
-        <div className="mt-[2rem] flex w-full flex-col items-center gap-[1.25rem]">
+        <div className="mt-8 flex w-full flex-col items-center gap-5">
           <div className="w-[91.625%]">
             <label
-              className="flex h-[2.0625rem] w-[20.8125rem] items-center rounded-[1.25rem] border bg-white px-[0.9375rem]"
+              className="flex h-8.25 w-83.25 items-center rounded-[1.25rem] border bg-white px-3.75"
               style={{ borderColor: lightTheme.line.alternative }}
             >
-              <img src={searchIcon} alt="" className="size-[1.25rem] shrink-0" aria-hidden="true" />
+              <img src={searchIcon} alt="" className="size-5 shrink-0" aria-hidden="true" />
               <input
-                className="ml-[0.75rem] min-w-0 flex-1 bg-transparent font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                className="ml-3 min-w-0 flex-1 bg-transparent font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
                 placeholder="검색"
                 style={{ color: lightTheme.label.neutral }}
               />
@@ -76,7 +76,7 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
 
           <div className="w-full overflow-hidden">
             <div
-              className="grid h-[2.25rem] items-center gap-[3rem] px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
+              className="grid h-9 items-center gap-12 px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
               style={{
                 gridTemplateColumns: EMPLOYEE_TABLE_COLUMNS,
                 backgroundColor: lightTheme.label.disable,
@@ -95,11 +95,11 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
               {employees.map(employee => (
                 <div
                   key={employee.id}
-                  className="h-[4rem] border-b"
+                  className="h-16 border-b"
                   style={{ borderColor: lightTheme.background.neutral }}
                 >
                   <div
-                    className="grid h-full items-center gap-[3rem] px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
+                    className="grid h-full items-center gap-12 px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
                     style={{
                       gridTemplateColumns: EMPLOYEE_TABLE_COLUMNS,
                       color: lightTheme.label.assistive,
@@ -113,16 +113,16 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
                     </span>
                     <span className="min-w-0 truncate text-center">{employee.phone}</span>
                     <span className="min-w-0 truncate text-center">{employee.accountId}</span>
-                    <span className="flex min-w-0 items-center justify-center gap-[0.5rem] whitespace-nowrap">
-                      <img src={dateIcon} alt="" className="size-[1.375rem]" aria-hidden="true" />
+                    <span className="flex min-w-0 items-center justify-center gap-2 whitespace-nowrap">
+                      <img src={dateIcon} alt="" className="size-5.5" aria-hidden="true" />
                       {employee.registeredAt}
                     </span>
                     <RoleBadge role={employee.role} />
-                    <span className="flex min-w-0 items-center justify-center gap-[0.375rem]">
-                      <button type="button" aria-label="직원 삭제" className="size-[1.5rem]">
+                    <span className="flex min-w-0 items-center justify-center gap-1.5">
+                      <button type="button" aria-label="직원 삭제" className="size-6">
                         <img src={trashIcon} alt="" className="size-full" aria-hidden="true" />
                       </button>
-                      <button type="button" aria-label="직원 수정" className="size-[1.5rem]">
+                      <button type="button" aria-label="직원 수정" className="size-6">
                         <img src={editIcon} alt="" className="size-full" aria-hidden="true" />
                       </button>
                     </span>
@@ -139,9 +139,9 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
 
 const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
   return (
-    <aside className="h-[47.625rem] rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
-      <div className="flex h-full flex-col px-[1.8125rem] pt-[1.625rem]">
-        <div className="flex flex-col gap-[0.75rem]">
+    <aside className="h-190.5 rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
+      <div className="flex h-full flex-col px-7.25 pt-6.5">
+        <div className="flex flex-col gap-3">
           <h2
             className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
             style={{ color: lightTheme.label.alternative }}
@@ -149,7 +149,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
             권한 등록
           </h2>
           <div
-            className="h-[0.0625rem] w-full"
+            className="h-px w-full"
             style={{ backgroundColor: lightTheme.line.alternative }}
           />
           <p
@@ -162,18 +162,18 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
           </p>
         </div>
 
-        <div className="mt-[3.75rem] flex flex-col">
-          <div className="flex flex-col gap-[3.3125rem]">
-            <div className="flex flex-col gap-[1.25rem]">
+        <div className="mt-15 flex flex-col">
+          <div className="flex flex-col gap-13.25">
+            <div className="flex flex-col gap-5">
               <label
-                className="pl-[0.6875rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
               >
                 계정 ID
               </label>
-              <div className="flex h-[2.75rem] gap-[0.5rem]">
+              <div className="flex h-11 gap-2">
                 <input
-                  className="min-w-0 flex-1 rounded-[0.625rem] border bg-white px-[1.3125rem] font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                  className="min-w-0 flex-1 rounded-[0.625rem] border bg-white px-5.25 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
                   placeholder="계정 ID 입력"
                   style={{
                     borderColor: lightTheme.line.alternative,
@@ -182,7 +182,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                 />
                 <button
                   type="button"
-                  className="w-[5.625rem] rounded-[0.625rem] font-['Pretendard'] text-base font-medium leading-[1.3]"
+                  className="w-22.5 rounded-[0.625rem] font-['Pretendard'] text-base font-medium leading-[1.3]"
                   style={{
                     backgroundColor: lightTheme.line.alternative,
                     color: lightTheme.line.normal,
@@ -193,19 +193,19 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[1.25rem]">
+            <div className="flex flex-col gap-5">
               <span
-                className="pl-[0.6875rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
               >
                 권한 선택
               </span>
-              <div className="flex flex-col gap-[1rem]">
+              <div className="flex flex-col gap-4">
                 {permissionOptions.map(option => (
                   <button
                     key={option.id}
                     type="button"
-                    className="relative flex h-[6.1875rem] w-full items-center justify-center rounded-[0.9375rem] border shadow-[0_0_0.25rem_currentColor]"
+                    className="relative flex h-24.75 w-full items-center justify-center rounded-[0.9375rem] border shadow-[0_0_0.25rem_currentColor]"
                     style={{
                       borderColor: option.selected
                         ? lightTheme.primary.normal
@@ -214,7 +214,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                     }}
                   >
                     <span
-                      className="absolute left-[0.6875rem] top-[0.6875rem] size-[1rem] rounded-full border-[0.125rem]"
+                      className="absolute left-2.75 top-2.75 size-4 rounded-full border-2"
                       style={{
                         borderColor: option.selected
                           ? lightTheme.primary.normal
@@ -223,7 +223,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                     >
                       {option.selected && (
                         <span
-                          className="absolute left-1/2 top-1/2 size-[0.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                          className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
                           style={{ backgroundColor: lightTheme.primary.normal }}
                         />
                       )}
@@ -233,7 +233,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                         <img
                           src={option.image}
                           alt=""
-                          className="h-[3.625rem] w-[3.75rem] object-contain object-center"
+                          className="h-14.5 w-15 object-contain object-center"
                         />
                       </span>
                       <span
@@ -249,10 +249,10 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
             </div>
           </div>
 
-          <div className="mt-[6.75rem] flex justify-end gap-[0.75rem]">
+          <div className="mt-27 flex justify-end gap-3">
             <button
               type="button"
-              className="h-[2rem] w-[5.625rem] rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+              className="h-8 w-22.5 rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
               style={{
                 backgroundColor: lightTheme.background.neutral,
                 color: lightTheme.line.normal,
@@ -262,7 +262,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
             </button>
             <button
               type="button"
-              className="h-[2rem] w-[5.625rem] rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+              className="h-8 w-22.5 rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
               style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
             >
               등록
@@ -309,7 +309,7 @@ const EmployeePage = () => {
           }}
         >
           <div
-            className="flex flex-col gap-[2rem]"
+            className="flex flex-col gap-8"
             style={{
               boxSizing: "border-box",
               width: `${layoutWidthRem}rem`,
@@ -318,7 +318,7 @@ const EmployeePage = () => {
               paddingBottom: `${EMPLOYEE_CONTENT_BOTTOM_OFFSET_REM}rem`,
             }}
           >
-            <div className="flex items-center gap-[0.75rem]">
+            <div className="flex items-center gap-3">
               <h1
                 className="font-['Pretendard'] text-[2rem] font-bold leading-[1.3]"
                 style={{ color: lightTheme.label.neutral }}
@@ -339,7 +339,7 @@ const EmployeePage = () => {
               </span>
             </div>
 
-            <div className="grid flex-1 grid-cols-[minmax(0,1fr)_30.4375rem] gap-[1rem]">
+            <div className="grid flex-1 grid-cols-[minmax(0,1fr)_30.4375rem] gap-4">
               <EmployeeTable employees={employees} />
               <PermissionPanel permissionOptions={permissionOptions} />
             </div>
