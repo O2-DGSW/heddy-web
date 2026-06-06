@@ -5,7 +5,7 @@ import { QRresult } from "./QRresult";
 import { useQRreading } from "@/features/cuts/model/useQRreading";
 
 export const QrReading = () => {
-  const { result, cameraReady, error, handleScan, handleError, tracker } = useQRreading();
+  const { result, error, handleScan, handleError, tracker } = useQRreading();
 
   return result ? (
     <QRresult result={result} />
@@ -18,17 +18,12 @@ export const QrReading = () => {
       </h2>
 
       <div className="relative w-full max-w-[400px] overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
-        {cameraReady && (
-          <Scanner
-            onScan={handleScan}
-            onError={handleError}
-            constraints={{ facingMode: "environment" }}
-            components={{
-              tracker,
-              finder: false,
-            }}
-          />
-        )}
+        <Scanner
+          onScan={handleScan}
+          onError={handleError}
+          constraints={{ facingMode: "environment" }}
+          components={{ tracker, finder: false }}
+        />
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="relative w-[60%]">
