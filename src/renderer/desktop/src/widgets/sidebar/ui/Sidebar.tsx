@@ -31,7 +31,7 @@ const Sidebar = () => {
     <aside className="w-[4.25rem] shrink-0 bg-white pt-4 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
       <nav aria-label="대시보드 사이드 메뉴">
         <ul className="flex flex-col items-center gap-5">
-          {sidebarItems.map((item) => (
+          {sidebarItems.map(item => (
             <li key={item.label}>
               <NavLink
                 to={item.to}
@@ -54,7 +54,7 @@ const Sidebar = () => {
                         className="size-6 shrink-0 transition-all duration-150 ease-out"
                         style={{
                           filter: isActive ? ACTIVE_ICON_FILTER : undefined,
-                          opacity: isActive ? 1 : 0.72,
+                          opacity: 1,
                           transform: isActive ? "scale(1)" : "scale(0.92)",
                         }}
                       />
