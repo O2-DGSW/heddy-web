@@ -117,6 +117,10 @@ export const useProcedure = () => {
   const [selectedTagIds, setSelectedTagIds] = useState(
     () => new Set(PROCEDURE_TAGS.filter(tag => tag.selected).map(tag => tag.id))
   );
+  const imagePreviewsRef = useRef<Record<ProcedureUploadSlot, string | null>>({
+    before: null,
+    after: null,
+  });
   const [imagePreviews, setImagePreviews] = useState<Record<ProcedureUploadSlot, string | null>>({
     before: null,
     after: null,
@@ -205,26 +209,39 @@ export const useProcedure = () => {
   }, []);
 
   const handleImageChange = useCallback((slot: ProcedureUploadSlot, file: File | null) => {
+    const previousPreview = imagePreviewsRef.current[slot];
+
     if (!file) {
+      if (previousPreview) {
+        URL.revokeObjectURL(previousPreview);
+        uploadUrlsRef.current.delete(previousPreview);
+      }
+
+      const nextPreviews = {
+        ...imagePreviewsRef.current,
+        [slot]: null,
+      };
+
+      imagePreviewsRef.current = nextPreviews;
+      setImagePreviews(nextPreviews);
       return;
     }
 
     const previewUrl = URL.createObjectURL(file);
     uploadUrlsRef.current.add(previewUrl);
 
-    setImagePreviews(prevPreviews => {
-      const previousPreview = prevPreviews[slot];
+    if (previousPreview) {
+      URL.revokeObjectURL(previousPreview);
+      uploadUrlsRef.current.delete(previousPreview);
+    }
 
-      if (previousPreview) {
-        URL.revokeObjectURL(previousPreview);
-        uploadUrlsRef.current.delete(previousPreview);
-      }
+    const nextPreviews = {
+      ...imagePreviewsRef.current,
+      [slot]: previewUrl,
+    };
 
-      return {
-        ...prevPreviews,
-        [slot]: previewUrl,
-      };
-    });
+    imagePreviewsRef.current = nextPreviews;
+    setImagePreviews(nextPreviews);
   }, []);
 
   const handleCancel = useCallback(() => {
@@ -234,19 +251,20 @@ export const useProcedure = () => {
     setSelectedDesignerId(PROCEDURE_DESIGNERS[0].id);
     setMemo("");
     setSelectedTagIds(new Set(PROCEDURE_TAGS.filter(tag => tag.selected).map(tag => tag.id)));
-    setImagePreviews(prevPreviews => {
-      Object.values(prevPreviews).forEach(previewUrl => {
-        if (previewUrl) {
-          URL.revokeObjectURL(previewUrl);
-          uploadUrlsRef.current.delete(previewUrl);
-        }
-      });
-
-      return {
-        before: null,
-        after: null,
-      };
+    Object.values(imagePreviewsRef.current).forEach(previewUrl => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        uploadUrlsRef.current.delete(previewUrl);
+      }
     });
+
+    const nextPreviews = {
+      before: null,
+      after: null,
+    };
+
+    imagePreviewsRef.current = nextPreviews;
+    setImagePreviews(nextPreviews);
   }, []);
 
   const layoutWidthRem = Math.max(PROCEDURE_CONTENT_WIDTH_REM, availableContentWidthRem / scale);
