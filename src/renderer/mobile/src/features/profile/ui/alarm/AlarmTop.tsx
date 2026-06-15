@@ -33,7 +33,7 @@ export const AlarmTop = () => {
                 후기 작성, 후기 댓글, 이벤트 참여 등 소식
               </p>
             </div>
-            <Toggle />
+            <Toggle checked={false} />
           </div>
           <div className="flex flex-row items-center w-full justify-between">
             <div className="flex flex-col items-start">
@@ -44,7 +44,7 @@ export const AlarmTop = () => {
                 스냅 좋아요, 댓글, 팔로우 소식 및 패션톡 활동
               </p>
             </div>
-            <Toggle />
+            <Toggle checked={false} />
           </div>
         </div>
       </div>

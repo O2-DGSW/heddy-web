@@ -2,7 +2,26 @@
 @source "../../pakages";
 @source "../";
 
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 45 920;
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+}
+
 @layer base {
+  html,
+  body,
+  #root {
+    font-family:
+      "Pretendard",
+      -apple-system,
+      BlinkMacSystemFont,
+      system-ui,
+      sans-serif;
+  }
+
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,

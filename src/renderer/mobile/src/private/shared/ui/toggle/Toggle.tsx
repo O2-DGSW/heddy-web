@@ -1,20 +1,13 @@
-import { useState } from "react";
-
 import { lightTheme, palette } from "@design-tokens";
 
 export interface ToggleProps {
-  defaultValue?: boolean;
+  checked: boolean;
   onChange?: (isOn: boolean) => void;
 }
 
-export const Toggle = ({ defaultValue = false, onChange }: ToggleProps) => {
-  const [isOn, setIsOn] = useState(defaultValue);
-
+export const Toggle = ({ checked, onChange }: ToggleProps) => {
   const handleToggle = () => {
-    const newValue = !isOn;
-
-    setIsOn(newValue);
-    onChange?.(newValue);
+    onChange?.(!checked);
   };
 
   return (
@@ -32,7 +25,7 @@ export const Toggle = ({ defaultValue = false, onChange }: ToggleProps) => {
         cursor-pointer
       "
       style={{
-        backgroundColor: isOn ? lightTheme.primary.normal : lightTheme.line.normal,
+        backgroundColor: checked ? lightTheme.primary.normal : lightTheme.line.normal,
       }}
     >
       <div
@@ -41,7 +34,7 @@ export const Toggle = ({ defaultValue = false, onChange }: ToggleProps) => {
           h-full
           rounded-full
           transition-all duration-300
-          ${isOn ? "ml-auto" : "ml-0"}
+          ${checked ? "ml-auto" : "ml-0"}
         `}
         style={{
           backgroundColor: palette.neutral[95],

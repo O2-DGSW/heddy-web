@@ -13,7 +13,7 @@ export const AlarmBottom = () => {
           <p className={font.label.regular} style={{ color: lightTheme.label.assistive }}>
             마케팅 목적의 개인정보 수집 및 이용 동의(선택)
           </p>
-          <Toggle />
+          <Toggle checked={false} />
         </div>
         <div className="flex flex-row items-center w-full justify-between">
           <div className="flex flex-col items-start">
@@ -24,7 +24,7 @@ export const AlarmBottom = () => {
               쿠폰, 특가, 관심 상품 가격 인하 등 이벤트 혜택 정보
             </p>
           </div>
-          <Toggle />
+          <Toggle checked={false} />
         </div>
         <div className="flex flex-row items-center w-full justify-between">
           <div className="flex flex-col items-start">
@@ -35,7 +35,7 @@ export const AlarmBottom = () => {
               알림 신청한 관심 브랜드 신상품, 인기 상품 재입고
             </p>
           </div>
-          <Toggle />
+          <Toggle checked={false} />
         </div>
       </div>
     </div>

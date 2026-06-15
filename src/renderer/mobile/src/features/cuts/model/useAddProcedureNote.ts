@@ -11,7 +11,36 @@ import type {
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
 export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
-  const [notes, setNotes] = useState<ProcedureNote[]>([]);
+  // 이후 리팩토링에서 2026,4,20과 같은 숫자 년/월/일 호출을 사용해서 유동적인 날짜조작 객체로 변환
+  const [notes, setNotes] = useState<ProcedureNote[]>([
+    {
+      id: "1",
+      customerName: "오용준",
+      title: "레이어드 커트",
+      description: "자연스러운 레이어드로 볼륨감 살린 스타일",
+      date: new Date("2026-05-20"),
+      tags: "커트,레이어드",
+      imageUrl: null,
+    },
+    {
+      id: "2",
+      customerName: "강장민",
+      title: "남자 투블럭",
+      description: "옆면 짧게 정리하고 윗머리 텍스처 살림",
+      date: new Date("2026-05-22"),
+      tags: "커트,투블럭",
+      imageUrl: null,
+    },
+    {
+      id: "3",
+      customerName: "이민수",
+      title: "볼륨 펌",
+      description: "C컬로 자연스러운 떨어짐 연출",
+      date: new Date("2026-05-23"),
+      tags: "펌,볼륨",
+      imageUrl: null,
+    },
+  ]);
   const [isOpen, setIsOpen] = useState(false);
   const objectUrlsRef = useRef<Set<string>>(new Set());
   const [form, setForm] = useState<AddProcedureNoteForm>({
@@ -26,7 +55,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     const objectUrls = objectUrlsRef.current;
 
     return () => {
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+      objectUrls.forEach(url => URL.revokeObjectURL(url));
       objectUrls.clear();
     };
   }, []);
@@ -56,24 +85,19 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
   };
 
   /** @param value 제목 */
-  const onChangeTitle = (value: string) =>
-    setForm((prev) => ({ ...prev, title: value }));
+  const onChangeTitle = (value: string) => setForm(prev => ({ ...prev, title: value }));
 
   /** @param value 부가설명 */
-  const onChangeDescription = (value: string) =>
-    setForm((prev) => ({ ...prev, description: value }));
+  const onChangeDescription = (value: string) => setForm(prev => ({ ...prev, description: value }));
 
   /** @param date 시술 날짜 */
-  const onChangeDate = (date: Date) =>
-    setForm((prev) => ({ ...prev, date }));
+  const onChangeDate = (date: Date) => setForm(prev => ({ ...prev, date }));
 
   /** @param value 시술 태그 */
-  const onChangeTags = (value: string) =>
-    setForm((prev) => ({ ...prev, tags: value }));
+  const onChangeTags = (value: string) => setForm(prev => ({ ...prev, tags: value }));
 
   /** @param file 업로드한 이미지 파일 */
-  const onChangeImage = (file: File | null) =>
-    setForm((prev) => ({ ...prev, image: file }));
+  const onChangeImage = (file: File | null) => setForm(prev => ({ ...prev, image: file }));
 
   /** 시술기록 추가 제출 - TODO: API 연동 */
   const onSubmit = () => {
@@ -86,15 +110,20 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       tags: form.tags,
       imageUrl: createImageObjectUrl(form.image),
     };
-    setNotes((prev) => [newNote, ...prev]);
+    setNotes(prev => [newNote, ...prev]);
     onClose();
+  };
+
+  /** 시술기록 추가 (외부에서 생성된 노트를 목록에 추가) */
+  const addNote = (note: ProcedureNote) => {
+    setNotes(prev => [note, ...prev]);
   };
 
   /** 시술기록 삭제 */
   const onRemoveNote = (noteId: string) => {
-    const noteToRemove = notes.find((note) => note.id === noteId);
+    const noteToRemove = notes.find(note => note.id === noteId);
     revokeImageObjectUrl(noteToRemove?.imageUrl ?? null);
-    setNotes((prev) => prev.filter((note) => note.id !== noteId));
+    setNotes(prev => prev.filter(note => note.id !== noteId));
   };
 
   return {
@@ -110,5 +139,6 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
     onChangeImage,
     onSubmit,
     onRemoveNote,
+    addNote,
   };
 };
