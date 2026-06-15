@@ -1,62 +1,11 @@
-import { useCallback, useState } from "react";
-import { Scanner, type TrackFunction } from "@yudiel/react-qr-scanner";
+import { Scanner } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 import { QRresult } from "./QRresult";
-
-type QrSuccessData = {
-  name: string;
-  phone: string;
-  cutsCount: number;
-};
+import { useQRreading } from "@/features/cuts/model/useQRreading";
 
 export const QrReading = () => {
-  // API res
-  const responseData = {
-    name: "오용준",
-    phone: "010-9563-5423",
-    cutsCount: 12,
-  };
-
-  // QR 스캔 결과 저장 state
-  const [result, setResult] = useState<QrSuccessData | null>(null);
-
-  // 카메라/스캔 에러 메시지 저장 state
-  const [error, setError] = useState<string | null>(null);
-
-  // QR 코드 스캔 성공 시 실행되는 함수
-  const handleScan = (detectedCodes: { rawValue: string }[]) => {
-    if (detectedCodes.length > 0) {
-      // QR 인식 성공
-      console.log("QR:", detectedCodes[0].rawValue);
-
-      // 서버 조회 결과라고 가정
-      setResult(responseData);
-    }
-  };
-
-  // 카메라 접근 실패 또는 스캔 에러 처리 함수
-  const handleError = (err: unknown) => {
-    if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError("카메라 접근에 실패했습니다.");
-    }
-  };
-
-  const tracker: TrackFunction = useCallback((detectedCodes, ctx) => {
-    detectedCodes.forEach(({ boundingBox, cornerPoints }) => {
-      ctx.strokeStyle = "#00FF00";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-      ctx.fillStyle = lightTheme.primary.normal;
-      cornerPoints.forEach(({ x, y }) => {
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-      });
-    });
-  }, []);
+  const { result, error, handleScan, handleError, tracker } = useQRreading();
 
   return result ? (
     <QRresult result={result} />
@@ -73,10 +22,8 @@ export const QrReading = () => {
           onScan={handleScan}
           onError={handleError}
           constraints={{ facingMode: "environment" }}
-          components={{
-            tracker,
-            finder: false,
-          }}
+          components={{ tracker, finder: false }}
+          sound={false}
         />
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
