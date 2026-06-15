@@ -117,14 +117,11 @@ export const useProcedure = () => {
   const [selectedTagIds, setSelectedTagIds] = useState(
     () => new Set(PROCEDURE_TAGS.filter(tag => tag.selected).map(tag => tag.id))
   );
-  const imagePreviewsRef = useRef<Record<ProcedureUploadSlot, string | null>>({
-    before: null,
-    after: null,
-  });
   const [imagePreviews, setImagePreviews] = useState<Record<ProcedureUploadSlot, string | null>>({
     before: null,
     after: null,
   });
+  const imagePreviewsRef = useRef(imagePreviews);
   const layoutHeightRem = PROCEDURE_CONTENT_HEIGHT_REM;
 
   useLayoutEffect(() => {
@@ -170,6 +167,10 @@ export const useProcedure = () => {
       uploadUrlsRef.current.clear();
     };
   }, []);
+
+  useEffect(() => {
+    imagePreviewsRef.current = imagePreviews;
+  }, [imagePreviews]);
 
   const filteredCustomers = useMemo(() => {
     const normalizedQuery = query.trim();
@@ -222,7 +223,6 @@ export const useProcedure = () => {
         [slot]: null,
       };
 
-      imagePreviewsRef.current = nextPreviews;
       setImagePreviews(nextPreviews);
       return;
     }
@@ -240,7 +240,6 @@ export const useProcedure = () => {
       [slot]: previewUrl,
     };
 
-    imagePreviewsRef.current = nextPreviews;
     setImagePreviews(nextPreviews);
   }, []);
 
@@ -263,7 +262,6 @@ export const useProcedure = () => {
       after: null,
     };
 
-    imagePreviewsRef.current = nextPreviews;
     setImagePreviews(nextPreviews);
   }, []);
 
