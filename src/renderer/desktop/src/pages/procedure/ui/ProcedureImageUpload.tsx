@@ -22,7 +22,7 @@ const ProcedureImageUpload = ({
   return (
     <label
       htmlFor={inputId}
-      className="relative flex h-[13.25rem] min-w-0 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-xl border bg-white transition-shadow hover:shadow-[0_0_0.25rem_rgba(0,0,0,0.04)]"
+      className="relative flex h-[13.25rem] min-w-0 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-xl border bg-white transition-shadow hover:shadow-[0_0_0.25rem_rgba(0,0,0,0.04)] focus-within:ring-2 focus-within:ring-[#41BE8E]/30"
       style={{ borderColor: lightTheme.line.alternative }}
     >
       {previewUrl ? (
