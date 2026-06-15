@@ -50,7 +50,7 @@ const ProcedureRecordPanel = ({
           >
             태그
           </h2>
-          <div className="relative z-10 mt-2 flex h-[5.5rem] min-w-0 flex-wrap content-start gap-[0.3125rem] overflow-visible">
+          <div className="relative z-10 mt-2 flex h-[5.5rem] min-w-0 flex-wrap content-start gap-[0.3125rem] overflow-x-hidden overflow-y-auto">
             {tags.map(tag => (
               <ProcedureTagChip key={tag.id} tag={tag} onClick={onToggleTag} />
             ))}
