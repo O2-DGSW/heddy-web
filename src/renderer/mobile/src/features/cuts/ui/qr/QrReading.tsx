@@ -23,6 +23,7 @@ export const QrReading = () => {
           onError={handleError}
           constraints={{ facingMode: "environment" }}
           components={{ tracker, finder: false }}
+          sound={false}
         />
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
