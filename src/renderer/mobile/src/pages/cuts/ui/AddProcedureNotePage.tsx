@@ -23,6 +23,7 @@ export const AddProcedureNotePage = () => {
   } = useAddProcedureNoteForm();
 
   const [beforeImage, setBeforeImage] = useState<File | null>(null);
+  const [afterImage, setAfterImage] = useState<File | null>(null);
 
   useEffect(() => {
     const selected = location.state?.selectedCustomer as string | undefined;
@@ -129,7 +130,7 @@ export const AddProcedureNotePage = () => {
           <span className={labelClass} style={{ color: lightTheme.label.normal }}>사진 등록</span>
           <div className="flex gap-3">
             <ImageUploadArea label="Before 사진" onFileChange={setBeforeImage} />
-            <ImageUploadArea label="After 사진" onFileChange={() => {}} />
+            <ImageUploadArea label="After 사진" onFileChange={setAfterImage} />
           </div>
         </div>
       </div>
@@ -144,7 +145,7 @@ export const AddProcedureNotePage = () => {
             color: isValid ? lightTheme.label.buttonText : lightTheme.label.assistive,
           }}
           disabled={!isValid}
-          onClick={() => handleSubmit(beforeImage)}
+          onClick={() => handleSubmit(beforeImage, afterImage)}
         >
           추가
         </button>
