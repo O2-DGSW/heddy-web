@@ -61,7 +61,12 @@ const ProcedureImageUpload = ({
         type="file"
         accept="image/*"
         className="sr-only"
-        onChange={event => onImageChange(slot, event.target.files?.[0] ?? null)}
+        onChange={event => {
+          const file = event.currentTarget.files?.[0] ?? null;
+
+          onImageChange(slot, file);
+          event.currentTarget.value = "";
+        }}
       />
     </label>
   );
