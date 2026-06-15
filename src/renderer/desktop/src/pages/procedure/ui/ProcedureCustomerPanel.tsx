@@ -127,7 +127,7 @@ const ProcedureCustomerPanel = ({
           </label>
         </div>
 
-        <div className="mt-9 flex h-[17.625rem] flex-col gap-[0.9375rem]">
+        <div className="mt-9 flex h-[17.625rem] flex-col gap-[0.9375rem] overflow-x-hidden overflow-y-auto">
           {customers.map(customer => (
             <CustomerResultCard
               key={customer.id}
