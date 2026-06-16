@@ -21,7 +21,7 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
   }
 
   return (
-    <div className="flex h-[17.25rem] w-full flex-col gap-3 overflow-hidden">
+    <div className="scrollbar-thin flex h-[17.25rem] w-full flex-col gap-3 overflow-x-hidden overflow-y-auto">
       {items.map(item => (
         <article
           key={item.id}
@@ -129,4 +129,3 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
 };
 
 export { ScheduleSummaryList };
-
