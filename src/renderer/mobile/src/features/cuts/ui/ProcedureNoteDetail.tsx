@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { font, lightTheme, palette } from "@design-tokens";
@@ -19,8 +19,13 @@ export const ProcedureNoteDetail = () => {
   const note = state?.note as ProcedureNote | undefined;
   const [isPublic, setIsPublic] = useState(note?.isPublic ?? false);
 
+  useEffect(() => {
+    if (!note) {
+      navigate(-1);
+    }
+  }, [note, navigate]);
+
   if (!note) {
-    navigate(-1);
     return null;
   }
 
