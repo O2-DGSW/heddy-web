@@ -22,7 +22,11 @@ const loadSession = () => {
 };
 
 const saveSession = (data: { title: string; description: string; dateStr: string; customer: string; selectedTags: string[]; beforeImageUrl: string | null; afterImageUrl: string | null }) => {
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("저장 용량 초과로 세션 스토리지 저장에 실패했습니다:", error);
+  }
 };
 
 const clearSession = () => sessionStorage.removeItem(SESSION_KEY);
