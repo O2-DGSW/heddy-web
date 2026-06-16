@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import SESSION_KEY from "@/features/cuts/constrants/sessionKey.ts";
+정
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 
-const SESSION_KEY = "addProcedureNoteForm";
 
 const toInputDateValue = (date: Date) => {
   const year = date.getFullYear();
