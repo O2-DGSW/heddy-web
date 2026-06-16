@@ -5,6 +5,7 @@ import { font, lightTheme, palette } from "@design-tokens";
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types.ts";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
+import rightArrowSvg from "@/features/cuts/assets/procedute-note/rightArrow.svg";
 
 interface ProcedureNoteItemProps {
   note: ProcedureNote;
@@ -47,7 +48,7 @@ export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps
       </div>
 
       {/* 내용 */}
-      <div className="flex flex-col flex-1 gap-1 min-w-0">
+      <div className="flex flex-col flex-1 gap-1 min-w-0 overflow-hidden">
         {/* 제목 + 고객명 뱃지 */}
         <div className="flex items-center gap-2">
           <span className={font.body.bold} style={{ color: lightTheme.label.neutral }}>
@@ -84,6 +85,9 @@ export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps
           </div>
         )}
       </div>
+
+      {/* 우측 화살표 */}
+      <img src={rightArrowSvg} alt="상세보기" className="w-4 h-4 shrink-0" />
     </div>
   );
 };
