@@ -15,13 +15,13 @@ const toInputDateValue = (date: Date) => {
 const loadSession = () => {
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
-    return raw ? (JSON.parse(raw) as { title: string; description: string; dateStr: string; customer: string; selectedTags: string[] }) : null;
+    return raw ? (JSON.parse(raw) as { title: string; description: string; dateStr: string; customer: string; selectedTags: string[]; beforeImageUrl: string | null; afterImageUrl: string | null }) : null;
   } catch {
     return null;
   }
 };
 
-const saveSession = (data: { title: string; description: string; dateStr: string; customer: string; selectedTags: string[] }) => {
+const saveSession = (data: { title: string; description: string; dateStr: string; customer: string; selectedTags: string[]; beforeImageUrl: string | null; afterImageUrl: string | null }) => {
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
 };
 
@@ -36,17 +36,21 @@ export const useAddProcedureNoteForm = () => {
   const [date, setDateState] = useState(saved?.dateStr ? new Date(saved.dateStr) : new Date());
   const [customer, setCustomerState] = useState(saved?.customer ?? "");
   const [selectedTags, setSelectedTags] = useState<string[]>(saved?.selectedTags ?? []);
+  const [beforeImageUrl, setBeforeImageUrlState] = useState<string | null>(saved?.beforeImageUrl ?? null);
+  const [afterImageUrl, setAfterImageUrlState] = useState<string | null>(saved?.afterImageUrl ?? null);
 
   const dateValue = toInputDateValue(date);
 
-  const persist = (patch: Partial<{ title: string; description: string; dateStr: string; customer: string; selectedTags: string[] }>) => {
-    saveSession({ title, description, dateStr: toInputDateValue(date), customer, selectedTags, ...patch });
+  const persist = (patch: Partial<{ title: string; description: string; dateStr: string; customer: string; selectedTags: string[]; beforeImageUrl: string | null; afterImageUrl: string | null }>) => {
+    saveSession({ title, description, dateStr: toInputDateValue(date), customer, selectedTags, beforeImageUrl, afterImageUrl, ...patch });
   };
 
   const setTitle = (value: string) => { setTitleState(value); persist({ title: value }); };
   const setDescription = (value: string) => { setDescriptionState(value); persist({ description: value }); };
   const setDate = (d: Date) => { setDateState(d); persist({ dateStr: toInputDateValue(d) }); };
   const setCustomer = (value: string) => { setCustomerState(value); persist({ customer: value }); };
+  const setBeforeImageUrl = (url: string | null) => { setBeforeImageUrlState(url); persist({ beforeImageUrl: url }); };
+  const setAfterImageUrl = (url: string | null) => { setAfterImageUrlState(url); persist({ afterImageUrl: url }); };
 
   const toggleTag = (value: string) => {
     setSelectedTags((prev) => {
@@ -56,7 +60,7 @@ export const useAddProcedureNoteForm = () => {
     });
   };
 
-  const handleSubmit = (beforeImage: File | null, afterImage: File | null) => {
+  const handleSubmit = () => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
       customerName: customer || "고객",
@@ -64,8 +68,8 @@ export const useAddProcedureNoteForm = () => {
       description,
       date,
       tags: selectedTags.join(", "),
-      imageUrl: beforeImage ? URL.createObjectURL(beforeImage) : null,
-      afterImageUrl: afterImage ? URL.createObjectURL(afterImage) : null,
+      imageUrl: beforeImageUrl,
+      afterImageUrl: afterImageUrl,
     };
     clearSession();
     navigate("/cuts", { state: { newNote } });
@@ -77,6 +81,8 @@ export const useAddProcedureNoteForm = () => {
     dateValue, setDate,
     customer, setCustomer,
     selectedTags, toggleTag,
+    beforeImageUrl, setBeforeImageUrl,
+    afterImageUrl, setAfterImageUrl,
     handleSubmit,
   };
 };
