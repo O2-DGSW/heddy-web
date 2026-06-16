@@ -6,21 +6,12 @@ import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types.ts";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
 import rightArrowSvg from "@/features/cuts/assets/procedute-note/rightArrow.svg";
+import { formatShortDate } from "@/features/cuts/utils/date";
 
 interface ProcedureNoteItemProps {
   note: ProcedureNote;
   bgColorGreen?: boolean;
 }
-
-/**
- * 날짜를 "M/D" 형식으로 변환
- * @param date 변환할 날짜
- */
-const formatShortDate = (date: Date | string) => {
-  const d = new Date(date);
-
-  return Number.isNaN(d.getTime()) ? "" : `${d.getMonth() + 1}/${d.getDate()}`;
-};
 
 /**
  * 시술기록 목록 아이템 컴포넌트
