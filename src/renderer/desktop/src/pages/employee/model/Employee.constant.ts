@@ -84,15 +84,13 @@ export const roleMeta = {
     label: "디자이너",
     backgroundColor: palette.main[80],
     color: lightTheme.primary.normal,
-    dropdownColor: lightTheme.primary.normal,
   },
   director: {
     label: "원장",
     backgroundColor: lightTheme.primary.normal,
     color: lightTheme.label.buttonText,
-    dropdownColor: lightTheme.label.buttonText,
   },
 } satisfies Record<
   EmployeeRow["role"],
-  { label: string; backgroundColor: string; color: string; dropdownColor: string }
+  { label: string; backgroundColor: string; color: string }
 >;

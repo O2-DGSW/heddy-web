@@ -1,7 +1,7 @@
 import { lightTheme } from "@design-tokens";
 
 import dateIcon from "@/pages/employee/assets/svg/date.svg";
-import dropdownIcon from "@/pages/employee/assets/svg/dropdown.svg";
+import DropdownIcon from "@/pages/employee/assets/svg/dropdown.svg?react";
 import editIcon from "@/pages/employee/assets/svg/edit.svg";
 import searchIcon from "@/pages/employee/assets/svg/search.svg";
 import trashIcon from "@/pages/employee/assets/svg/trash.svg";
@@ -27,24 +27,14 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
   return (
     <button
       type="button"
-      className="flex h-7 w-full min-w-23 items-center justify-center rounded-[0.9375rem] pl-2.5 pr-0.5 font-['Pretendard'] text-base font-medium leading-[1.3] whitespace-nowrap"
+      className="flex h-8 w-[6.875rem] justify-self-center items-center justify-center gap-[0.1875rem] rounded-[0.9375rem] pl-[0.625rem] pr-[0.375rem] font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
       style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
     >
       {meta.label}
-      <span
-        className="size-5 shrink-0"
+      <DropdownIcon
         aria-hidden="true"
-        style={{
-          backgroundColor: meta.dropdownColor,
-          maskImage: `url(${dropdownIcon})`,
-          maskPosition: "center",
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          WebkitMaskImage: `url(${dropdownIcon})`,
-          WebkitMaskPosition: "center",
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-        }}
+        className="size-[1.25rem] shrink-0"
+        style={{ color: meta.color, fill: meta.color }}
       />
     </button>
   );
