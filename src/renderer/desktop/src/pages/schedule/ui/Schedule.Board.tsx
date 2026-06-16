@@ -9,7 +9,6 @@ import {
   SCHEDULE_CHART_EVENT_LAYER_HEIGHT_REM,
   SCHEDULE_CHART_EVENT_LAYER_LEFT_REM,
   SCHEDULE_CHART_EVENT_LAYER_TOP_REM,
-  SCHEDULE_CHART_EVENT_LAYER_WIDTH_REM,
   SCHEDULE_CHART_GRID_OFFSET_REM,
   SCHEDULE_CHART_HOUR_WIDTH_REM,
   SCHEDULE_CHART_INITIAL_HOUR,
@@ -25,6 +24,7 @@ import { ScheduleEventCard } from "./Schedule.EventCard";
 
 interface ScheduleBoardProps {
   events: ScheduleEvent[];
+  panelWidthRem: number;
   onOpenModal: () => void;
 }
 
@@ -40,14 +40,13 @@ interface PositionedScheduleEvent {
 const CURRENT_HOUR = 11;
 const EVENT_TOP_OFFSET_REM = 0.75;
 const BOARD_INNER_LEFT_REM = 1.375;
+const BOARD_INNER_RIGHT_REM = 1.375;
 const BOARD_INNER_TOP_REM = 1.3125;
-const BOARD_INNER_WIDTH_REM = 54.875;
-const BOARD_INNER_HEIGHT_REM = 49.3125;
+const BOARD_INNER_BOTTOM_REM = 1.25;
 const CHART_TOP_REM = 3.75;
-const CHART_WIDTH_REM = 54.875;
-const CHART_HEIGHT_REM = 45.5625;
 const CHART_SCROLL_VIEW_TOP_REM = 2.1875;
 const CHART_SCROLL_VIEW_HEIGHT_REM = 42.25;
+const CHART_SCROLL_VIEW_RIGHT_REM = 1.3125;
 const TIME_LABEL_LEFT_REM = 1.3125;
 const TIME_LABEL_WIDTH_REM = 3.875;
 const CHART_SCROLL_END_PADDING_REM = 1.5;
@@ -57,8 +56,8 @@ const WEEK_LABEL_STEP_REM = 7.6875;
 const EVENT_LAYER_TOP_REM = SCHEDULE_CHART_EVENT_LAYER_TOP_REM - CHART_TOP_REM;
 const EVENT_LAYER_TOP_IN_SCROLL_REM = EVENT_LAYER_TOP_REM - CHART_SCROLL_VIEW_TOP_REM;
 const HORIZONTAL_LINE_LEFT_REM = 0.8125;
+const HORIZONTAL_LINE_RIGHT_REM = 1.25;
 const HORIZONTAL_LINE_TOP_REM = 13.125;
-const HORIZONTAL_LINE_WIDTH_REM = 52.8125;
 const HORIZONTAL_LINE_HEIGHT_REM = 30.5;
 
 const getRootFontSize = () => {
@@ -79,10 +78,14 @@ const hourToChartRem = (hour: number, shouldClamp = false) =>
   ((shouldClamp ? clampHour(hour) : hour) - SCHEDULE_CHART_START_HOUR) *
     SCHEDULE_CHART_HOUR_WIDTH_REM;
 
-const getTimelineEndHour = (events: ScheduleEvent[]) => {
+const getTimelineEndHour = (events: ScheduleEvent[], minimumVisibleHourRange: number) => {
   const latestEventEndHour = Math.max(SCHEDULE_CHART_END_HOUR, ...events.map(event => event.endHour));
 
-  return Math.max(SCHEDULE_CHART_END_HOUR, Math.ceil(latestEventEndHour));
+  return Math.max(
+    SCHEDULE_CHART_END_HOUR,
+    SCHEDULE_CHART_START_HOUR + minimumVisibleHourRange,
+    Math.ceil(latestEventEndHour)
+  );
 };
 
 const getTimelineHours = (endHour: number) =>
@@ -116,14 +119,30 @@ const getPositionedEvents = (events: ScheduleEvent[]): PositionedScheduleEvent[]
   });
 };
 
-const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
+const ScheduleBoard = ({ events, panelWidthRem, onOpenModal }: ScheduleBoardProps) => {
   const chartScrollRef = useRef<HTMLDivElement>(null);
+  const boardInnerWidthRem = panelWidthRem - BOARD_INNER_LEFT_REM - BOARD_INNER_RIGHT_REM;
+  const chartScrollViewportWidthRem =
+    boardInnerWidthRem - SCHEDULE_CHART_EVENT_LAYER_LEFT_REM - CHART_SCROLL_VIEW_RIGHT_REM;
+  const viewportHourRange = Math.max(
+    0,
+    Math.ceil(
+      (chartScrollViewportWidthRem -
+        TIME_LABEL_LEFT_REM -
+        TIME_LABEL_WIDTH_REM -
+        CHART_SCROLL_END_PADDING_REM) /
+        SCHEDULE_CHART_HOUR_WIDTH_REM
+    )
+  );
   const positionedEvents = useMemo(() => getPositionedEvents(events), [events]);
-  const timelineEndHour = useMemo(() => getTimelineEndHour(events), [events]);
+  const timelineEndHour = useMemo(
+    () => getTimelineEndHour(events, viewportHourRange),
+    [events, viewportHourRange]
+  );
   const timelineHours = useMemo(() => getTimelineHours(timelineEndHour), [timelineEndHour]);
   const chartHourRange = timelineEndHour - SCHEDULE_CHART_START_HOUR;
   const chartScrollContentWidthRem = Math.max(
-    SCHEDULE_CHART_EVENT_LAYER_WIDTH_REM,
+    chartScrollViewportWidthRem,
     TIME_LABEL_LEFT_REM +
       chartHourRange * SCHEDULE_CHART_HOUR_WIDTH_REM +
       TIME_LABEL_WIDTH_REM +
@@ -152,8 +171,8 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
         style={{
           left: `${BOARD_INNER_LEFT_REM}rem`,
           top: `${BOARD_INNER_TOP_REM}rem`,
-          width: `${BOARD_INNER_WIDTH_REM}rem`,
-          height: `${BOARD_INNER_HEIGHT_REM}rem`,
+          right: `${BOARD_INNER_RIGHT_REM}rem`,
+          bottom: `${BOARD_INNER_BOTTOM_REM}rem`,
         }}
       >
         <div className="flex h-9 items-start justify-between">
@@ -200,8 +219,8 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
           style={{
             left: 0,
             top: `${CHART_TOP_REM}rem`,
-            width: `${CHART_WIDTH_REM}rem`,
-            height: `${CHART_HEIGHT_REM}rem`,
+            right: 0,
+            bottom: 0,
             backgroundColor: lightTheme.background.alternative,
           }}
         >
@@ -211,7 +230,7 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
             style={{
               left: `${SCHEDULE_CHART_EVENT_LAYER_LEFT_REM}rem`,
               top: `${EVENT_LAYER_TOP_REM}rem`,
-              width: `${SCHEDULE_CHART_EVENT_LAYER_WIDTH_REM}rem`,
+              right: `${CHART_SCROLL_VIEW_RIGHT_REM}rem`,
               height: `${SCHEDULE_CHART_EVENT_LAYER_HEIGHT_REM}rem`,
               backgroundColor: lightTheme.background.normal,
             }}
@@ -225,7 +244,7 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
             style={{
               left: `${SCHEDULE_CHART_EVENT_LAYER_LEFT_REM}rem`,
               top: `${CHART_SCROLL_VIEW_TOP_REM}rem`,
-              width: `${SCHEDULE_CHART_EVENT_LAYER_WIDTH_REM}rem`,
+              right: `${CHART_SCROLL_VIEW_RIGHT_REM}rem`,
               height: `${CHART_SCROLL_VIEW_HEIGHT_REM}rem`,
             }}
           >
@@ -238,6 +257,7 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
                 style={{
                   left: `${TIME_LABEL_LEFT_REM}rem`,
                   top: 0,
+                  width: `${chartScrollContentWidthRem - TIME_LABEL_LEFT_REM}rem`,
                 }}
               >
                 {timelineHours.map(hour => {
@@ -343,7 +363,7 @@ const ScheduleBoard = ({ events, onOpenModal }: ScheduleBoardProps) => {
             style={{
               left: `${HORIZONTAL_LINE_LEFT_REM}rem`,
               top: `${HORIZONTAL_LINE_TOP_REM}rem`,
-              width: `${HORIZONTAL_LINE_WIDTH_REM}rem`,
+              right: `${HORIZONTAL_LINE_RIGHT_REM}rem`,
               height: `${HORIZONTAL_LINE_HEIGHT_REM}rem`,
             }}
           >

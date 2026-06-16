@@ -5,8 +5,11 @@ import {
   MIN_SCHEDULE_SCALE,
   SCHEDULE_CONTENT_HEIGHT_REM,
   SCHEDULE_CONTENT_WIDTH_REM,
+  SCHEDULE_LEFT_PANEL_WIDTH_REM,
   SCHEDULE_EVENTS,
+  SCHEDULE_PANEL_GAP_REM,
   SCHEDULE_PAGE_PADDING_REM,
+  SCHEDULE_RIGHT_PANEL_WIDTH_REM,
   SCHEDULE_SUMMARY_BY_DATE,
 } from "./Schedule.constant";
 import type { ScheduleColorKey } from "./Schedule.types";
@@ -96,19 +99,20 @@ const getScheduleScale = (
     getAvailableContentWidth(containerSize, padding) / SCHEDULE_CONTENT_WIDTH_REM;
   const availableHeightRatio =
     getAvailableContentHeight(containerSize, padding) / SCHEDULE_CONTENT_HEIGHT_REM;
+  const viewportScale = Math.min(availableWidthRatio, availableHeightRatio);
 
-  return Math.min(
-    1,
-    Math.max(MIN_SCHEDULE_SCALE, Math.min(availableWidthRatio, availableHeightRatio))
-  );
+  return Math.min(1, Math.max(MIN_SCHEDULE_SCALE, viewportScale));
 };
 
 export const useSchedule = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(getScheduleScale);
+  const [availableContentWidthRem, setAvailableContentWidthRem] =
+    useState(getAvailableContentWidth);
   const [selectedDate, setSelectedDate] = useState(DEFAULT_SCHEDULE_DATE);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState<ScheduleColorKey>("blue");
+  const layoutHeightRem = SCHEDULE_CONTENT_HEIGHT_REM;
 
   useLayoutEffect(() => {
     const updateLayout = () => {
@@ -121,8 +125,14 @@ export const useSchedule = () => {
           }
         : getFallbackContainerSize();
       const padding = getElementPadding(pageElement, rootFontSize);
+      const nextAvailableContentWidthRem = getAvailableContentWidth(containerSize, padding);
       const nextScale = getScheduleScale(containerSize, padding);
 
+      setAvailableContentWidthRem(currentWidth =>
+        Math.abs(currentWidth - nextAvailableContentWidthRem) > 0.001
+          ? nextAvailableContentWidthRem
+          : currentWidth
+      );
       setScale(currentScale =>
         Math.abs(currentScale - nextScale) > 0.001 ? nextScale : currentScale
       );
@@ -151,11 +161,20 @@ export const useSchedule = () => {
     setIsModalOpen(false);
   }, []);
 
+  const layoutWidthRem = Math.max(SCHEDULE_CONTENT_WIDTH_REM, availableContentWidthRem / scale);
+  const rightPanelWidthRem = Math.max(
+    SCHEDULE_RIGHT_PANEL_WIDTH_REM,
+    layoutWidthRem - SCHEDULE_LEFT_PANEL_WIDTH_REM - SCHEDULE_PANEL_GAP_REM
+  );
+
   return {
     pageRef,
     scale,
-    layoutWidthRem: SCHEDULE_CONTENT_WIDTH_REM,
-    layoutHeightRem: SCHEDULE_CONTENT_HEIGHT_REM,
+    layoutWidthRem,
+    layoutHeightRem,
+    rightPanelWidthRem,
+    scaledLayoutWidthRem: layoutWidthRem * scale,
+    scaledLayoutHeightRem: layoutHeightRem * scale,
     selectedDate,
     selectedColor,
     summaryItems,

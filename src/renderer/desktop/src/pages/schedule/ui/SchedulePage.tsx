@@ -1,10 +1,6 @@
 import { lightTheme } from "@design-tokens";
 
-import {
-  SCHEDULE_CONTENT_HEIGHT_REM,
-  SCHEDULE_CONTENT_WIDTH_REM,
-  SCHEDULE_PANEL_GAP_REM,
-} from "@/pages/schedule/model/Schedule.constant";
+import { SCHEDULE_PANEL_GAP_REM } from "@/pages/schedule/model/Schedule.constant";
 import { useSchedule } from "@/pages/schedule/model/useSchedule";
 
 import { ScheduleBoard } from "./Schedule.Board";
@@ -17,6 +13,9 @@ const SchedulePage = () => {
     scale,
     layoutWidthRem,
     layoutHeightRem,
+    rightPanelWidthRem,
+    scaledLayoutWidthRem,
+    scaledLayoutHeightRem,
     selectedDate,
     selectedColor,
     summaryItems,
@@ -37,8 +36,8 @@ const SchedulePage = () => {
       <div
         className="shrink-0 overflow-visible"
         style={{
-          width: `${layoutWidthRem * scale}rem`,
-          height: `${layoutHeightRem * scale}rem`,
+          width: `${scaledLayoutWidthRem}rem`,
+          height: `${scaledLayoutHeightRem}rem`,
         }}
       >
         <div
@@ -52,8 +51,8 @@ const SchedulePage = () => {
           <div
             className="flex"
             style={{
-              width: `${SCHEDULE_CONTENT_WIDTH_REM}rem`,
-              height: `${SCHEDULE_CONTENT_HEIGHT_REM}rem`,
+              width: `${layoutWidthRem}rem`,
+              height: `${layoutHeightRem}rem`,
               gap: `${SCHEDULE_PANEL_GAP_REM}rem`,
             }}
           >
@@ -62,7 +61,11 @@ const SchedulePage = () => {
               summaryItems={summaryItems}
               onSelectDate={setSelectedDate}
             />
-            <ScheduleBoard events={events} onOpenModal={openModal} />
+            <ScheduleBoard
+              events={events}
+              panelWidthRem={rightPanelWidthRem}
+              onOpenModal={openModal}
+            />
           </div>
         </div>
       </div>
