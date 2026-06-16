@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { font, lightTheme, palette } from "@design-tokens";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
+import { Toggle } from "@/private/shared/ui/toggle/Toggle";
 import arrowSvg from "@/private/shared/ui/dialog/assets/Arrow.svg";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
 import pictureSvg from "@/features/cuts/assets/procedute-note/Picture.svg";
@@ -15,6 +17,7 @@ export const ProcedureNoteDetail = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const note = state?.note as ProcedureNote | undefined;
+  const [isPublic, setIsPublic] = useState(note?.isPublic ?? false);
 
   if (!note) {
     navigate(-1);
@@ -59,6 +62,12 @@ export const ProcedureNoteDetail = () => {
                 {note.customerName}
               </span>
             </div>
+          </div>
+          <div className="flex flex-col items-center gap-1 shrink-0">
+            <Toggle checked={isPublic} onChange={setIsPublic} />
+            <span className={font.caption.regular} style={{ color: lightTheme.label.assistive }}>
+              공개설정
+            </span>
           </div>
         </div>
 
