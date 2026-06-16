@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SESSION_KEY from "@/features/cuts/constrants/sessionKey.ts";
-정
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 
 
