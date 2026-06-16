@@ -7,11 +7,7 @@ import { Toggle } from "@/private/shared/ui/toggle/Toggle";
 import arrowSvg from "@/private/shared/ui/dialog/assets/Arrow.svg";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
 import pictureSvg from "@/features/cuts/assets/procedute-note/Picture.svg";
-
-const formatShortDate = (date: Date | string) => {
-  const d = new Date(date);
-  return Number.isNaN(d.getTime()) ? "" : `${d.getMonth() + 1}/${d.getDate()}`;
-};
+import { formatShortDate } from "@/features/cuts/utils/date";
 
 export const ProcedureNoteDetail = () => {
   const navigate = useNavigate();
