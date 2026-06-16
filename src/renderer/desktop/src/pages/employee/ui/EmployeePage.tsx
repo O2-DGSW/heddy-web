@@ -27,13 +27,13 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
   return (
     <button
       type="button"
-      className="flex h-8 w-[6.875rem] justify-self-center items-center justify-center gap-[0.1875rem] rounded-[0.9375rem] pl-[0.625rem] pr-[0.375rem] font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
+      className="flex h-8 w-27.5 justify-self-center items-center justify-center gap-0.75 rounded-[0.9375rem] pl-2.5 pr-1.5 font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
       style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
     >
       {meta.label}
       <DropdownIcon
         aria-hidden="true"
-        className="size-[1.25rem] shrink-0"
+        className="size-5 shrink-0"
         style={{ color: meta.color, fill: meta.color }}
       />
     </button>
