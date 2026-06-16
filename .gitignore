@@ -30,3 +30,6 @@ android/
 
 # Local docs
 docs/
+
+# .env
+.env*
