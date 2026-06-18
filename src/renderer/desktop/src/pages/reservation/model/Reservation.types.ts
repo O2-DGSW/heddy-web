@@ -1,10 +1,3 @@
-export interface CalendarDate {
-  dateKey: string;
-  day: string;
-  muted?: boolean;
-  selected?: boolean;
-}
-
 export type ReservationStatusKey = "approved" | "rejected" | "changeRequest";
 
 export type ReservationFilterKey = "all" | "rejected" | "approved" | "changeRequest";
@@ -28,20 +21,11 @@ export interface FilterTab {
   active?: boolean;
 }
 
-export interface ReservationMonthOption {
-  key: string;
-  label: string;
-  active?: boolean;
-}
-
 export interface ReservationCalendarProps {
-  monthLabel: string;
-  monthOptions: ReservationMonthOption[];
-  isMonthMenuOpen: boolean;
+  monthDate: string;
+  selectedDate: string;
   weekDays: string[];
-  calendarRows: CalendarDate[][];
-  onToggleMonthMenu: () => void;
-  onSelectMonth: (monthKey: string) => void;
+  onSelectMonth: (monthDate: string) => void;
   onSelectDate: (dateKey: string) => void;
 }
 
