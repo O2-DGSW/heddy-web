@@ -8,8 +8,6 @@ import {
   SelectPill,
 } from "@/pages/home/ui/components/DashboardPrimitives";
 
-const RESERVATION_GRID_COLUMNS = "72px 48px 225px 78px 55.714px";
-
 const StatusButton = () => (
   <button
     type="button"
@@ -55,10 +53,9 @@ const ReservationStatusCard = () => (
       <div className="w-full">
         <div className="relative h-9" style={{ backgroundColor: lightTheme.label.disable }}>
           <div
-            className="absolute left-[22.145px] right-[23.145px] top-1.5 grid items-center justify-between gap-x-[62px] font-['Pretendard'] text-[18px] font-medium leading-[1.3] tracking-[-0.36px]"
+            className="absolute left-[22.145px] right-[23.145px] top-1.5 grid grid-cols-[72px_48px_225px_78px_55.714px] items-center justify-between gap-x-[62px] font-['Pretendard'] text-[18px] font-medium leading-[1.3] tracking-[-0.36px]"
             style={{
               color: lightTheme.label.assistive,
-              gridTemplateColumns: RESERVATION_GRID_COLUMNS,
             }}
           >
             <span className="w-[72px] text-center">시간</span>
@@ -76,10 +73,9 @@ const ReservationStatusCard = () => (
             style={{ borderColor: lightTheme.background.neutral }}
           >
             <div
-              className="absolute left-[27px] right-[26.286px] top-[15px] grid h-[26px] items-center justify-between gap-x-[60px] font-['Pretendard'] text-[18px] font-semibold leading-[1.3] tracking-[-0.36px]"
+              className="absolute left-[27px] right-[26.286px] top-[15px] grid h-[26px] grid-cols-[72px_48px_225px_78px_55.714px] items-center justify-between gap-x-[60px] font-['Pretendard'] text-[18px] font-semibold leading-[1.3] tracking-[-0.36px]"
               style={{
                 color: lightTheme.label.assistive,
-                gridTemplateColumns: RESERVATION_GRID_COLUMNS,
               }}
             >
               <div className="flex h-[23px] w-[72px] items-center gap-2.5">
