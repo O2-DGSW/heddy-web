@@ -27,7 +27,7 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
   return (
     <button
       type="button"
-      className="flex h-7 w-full min-w-23 items-center justify-center rounded-[0.9375rem] pl-2.5 pr-0.5 font-['Pretendard'] text-base font-medium leading-[1.3] whitespace-nowrap"
+      className="flex h-8 w-27.5 justify-self-center items-center justify-center gap-0.75 rounded-[0.9375rem] pl-2.5 pr-1.5 font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
       style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
     >
       {meta.label}
