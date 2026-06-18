@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { NavLink } from "react-router-dom";
 import { font, lightTheme } from "@design-tokens";
 
@@ -24,47 +25,57 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 const ACTIVE_ICON_FILTER = "brightness(0) invert(1)";
-const INACTIVE_ITEM_COLOR = "#999999";
+const SIDEBAR_SHADOW = `0 1px 4px color-mix(in srgb, ${lightTheme.label.strong} 9%, transparent)`;
+const sidebarThemeStyle = {
+  "--sidebar-active-color": lightTheme.primary.normal,
+  "--sidebar-inactive-color": lightTheme.label.inactive,
+  "--sidebar-hover-background": lightTheme.fill.normal,
+  "--sidebar-hover-color": lightTheme.label.neutral,
+  "--sidebar-focus-ring": `color-mix(in srgb, ${lightTheme.primary.normal} 40%, transparent)`,
+  backgroundColor: lightTheme.background.normal,
+  boxShadow: SIDEBAR_SHADOW,
+} as CSSProperties;
 
 const Sidebar = () => {
   return (
-    <aside className="w-[4.25rem] shrink-0 bg-white pt-4 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.09)]">
-      <nav aria-label="대시보드 사이드 메뉴">
-        <ul className="flex flex-col items-center gap-5">
+    <aside className="w-[68px] shrink-0 pt-[43px]" style={sidebarThemeStyle}>
+      <nav aria-label="대시보드 사이드 메뉴" className="flex justify-center">
+        <ul className="flex w-[35px] flex-col items-center gap-5">
           {sidebarItems.map(item => (
-            <li key={item.label}>
+            <li key={item.label} className="w-full">
               <NavLink
                 to={item.to}
                 aria-label={item.label}
-                className="group flex w-[2.25rem] flex-col items-center gap-1 rounded-lg outline-none transition-transform duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 focus-visible:ring-[#49D2C6]/40"
+                className="group flex w-full flex-col items-center gap-1 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--sidebar-focus-ring)]"
               >
                 {({ isActive }) => (
                   <>
                     <span
-                      className="flex h-[2.125rem] w-[2.25rem] items-center justify-center rounded-lg transition-all duration-150 ease-out"
-                      style={{
-                        backgroundColor: isActive ? lightTheme.primary.normal : "transparent",
-                        transform: isActive ? "scale(1)" : "scale(0.94)",
-                      }}
+                      className={`flex h-[34px] w-full items-center justify-center overflow-hidden rounded-lg transition-colors duration-150 ${
+                        isActive
+                          ? "bg-[var(--sidebar-active-color)]"
+                          : "bg-transparent group-hover:bg-[var(--sidebar-hover-background)]"
+                      }`}
                     >
                       <img
                         src={item.icon}
                         alt=""
                         aria-hidden="true"
-                        className="size-6 shrink-0 transition-all duration-150 ease-out"
+                        className={`size-6 shrink-0 transition-opacity duration-150 ${
+                          isActive ? "" : "group-hover:opacity-90"
+                        }`}
                         style={{
                           filter: isActive ? ACTIVE_ICON_FILTER : undefined,
-                          opacity: 1,
-                          transform: isActive ? "scale(1)" : "scale(0.92)",
                         }}
                       />
                     </span>
 
                     <span
-                      className={`font-['Pretendard'] transition-colors duration-150 ease-out ${font.caption.medium}`}
-                      style={{
-                        color: isActive ? lightTheme.primary.normal : INACTIVE_ITEM_COLOR,
-                      }}
+                      className={`w-full break-words text-center font-['Pretendard'] transition-colors duration-150 ${font.caption.medium} ${
+                        isActive
+                          ? "text-[var(--sidebar-active-color)]"
+                          : "text-[var(--sidebar-inactive-color)] group-hover:text-[var(--sidebar-hover-color)]"
+                      }`}
                     >
                       {item.label}
                     </span>
