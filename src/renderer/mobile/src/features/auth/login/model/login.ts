@@ -17,8 +17,6 @@ export const useLoginForm = () => {
     try {
       const { accessToken } = await loginApi({ loginId: id, password });
       await setAccessToken(accessToken);
-      const stored = await getAccessToken();
-      console.log("저장된 액세스 토큰:", stored);
       navigate("/");
     } catch (err) {
       console.error("로그인 실패:", err);
