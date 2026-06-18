@@ -1,1 +1,12 @@
-export const useShopInfo = () => {};
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query.ts";
+import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query.ts";
+
+export const useShopInfo = () => {
+  const { data: myProfileResponse } = useGetMyProfileQuery();
+
+  const shopId = myProfileResponse?.data?.shopMembers?.[0].shopId ?? -1;
+
+  const { data: shopInfoResponse } = useShopInfoQuery({ shopId });
+
+  return shopInfoResponse;
+};

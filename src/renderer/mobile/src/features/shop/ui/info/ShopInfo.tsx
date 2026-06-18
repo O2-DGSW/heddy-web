@@ -13,8 +13,11 @@ import DgswImg from "@/features/shop/assets/shop-info/dgsw.png";
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag";
 import { ShopInfoStatCard } from "./ShopInfoStatCard";
 import { ShopInfoRow } from "./ShopInfoRow";
+import { useShopInfo } from "@/features/shop/model/useShopInfo.ts";
 
 export const ShopInfo = () => {
+  const shopInfoResponse = useShopInfo();
+
   return (
     <div
       className="overflow-y-auto h-full"
@@ -28,16 +31,17 @@ export const ShopInfo = () => {
           className={`break-keep ${font.headline1.semiBold}`}
           style={{ color: lightTheme.label.normal }}
         >
-          {SHOP_INFO.name}
+          {shopInfoResponse?.shop_name}
         </h2>
       </div>
       {/* 리뷰 · 태그 */}
       <div className="flex items-start justify-between gap-2 px-4 pt-2 pb-2">
-        <div className="min-w-0 flex-1">
-          <p className={`mt-1 ${font.body.medium}`} style={{ color: lightTheme.label.alternative }}>
-            리뷰 · {SHOP_INFO.reviewCount.toLocaleString()}
-          </p>
-        </div>
+        {/* 현재 존재하지 않는 리스폰스 */}
+        {/*<div className="min-w-0 flex-1">*/}
+        {/*  <p className={`mt-1 ${font.body.medium}`} style={{ color: lightTheme.label.alternative }}>*/}
+        {/*    리뷰 · {SHOP_INFO.reviewCount.toLocaleString()}*/}
+        {/*  </p>*/}
+        {/*</div>*/}
 
         <div className="flex gap-1.5 mt-1 shrink-0 flex-wrap justify-end">
           {SHOP_INFO.tags.map(tag => (

@@ -4,6 +4,6 @@ import type { ShopInfoRequest, ShopInfoResponse } from "@/entities/shop/model/Sh
 export const shopInfoApi = {
   getShopInfo: async (shopId: ShopInfoRequest) => {
     const result = await api.get<ApiResponse<ShopInfoResponse>>(`/shops/${shopId}`);
-    return result.data;
+    return result.data.data;
   },
 };
