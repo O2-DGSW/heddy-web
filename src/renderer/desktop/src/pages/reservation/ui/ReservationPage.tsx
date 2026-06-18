@@ -14,11 +14,9 @@ const ReservationPage = () => {
   const {
     scale,
     layoutWidthRem,
-    monthLabel,
-    monthOptions,
-    isMonthMenuOpen,
+    monthDate,
+    selectedDateKey,
     weekDays,
-    calendarRows,
     reservations,
     filterTabs,
     reservationStatusRows,
@@ -32,7 +30,6 @@ const ReservationPage = () => {
     isChangedTimeMenuOpen,
     activeStatusMenuReservationId,
     pageRef,
-    toggleMonthMenu,
     setSelectedMonth,
     setSelectedDateKey,
     setSelectedFilterKey,
@@ -85,12 +82,9 @@ const ReservationPage = () => {
             }}
           >
             <ReservationNavigationPanel
-              monthLabel={monthLabel}
-              monthOptions={monthOptions}
-              isMonthMenuOpen={isMonthMenuOpen}
+              monthDate={monthDate}
+              selectedDate={selectedDateKey}
               weekDays={weekDays}
-              calendarRows={calendarRows}
-              onToggleMonthMenu={toggleMonthMenu}
               onSelectMonth={setSelectedMonth}
               onSelectDate={setSelectedDateKey}
               reservations={reservations}
