@@ -5,19 +5,47 @@ import {
 } from "@/pages/reservation/model/Reservation.constant";
 import { useReservation } from "@/pages/reservation/model/useReservation";
 
+import { ReservationDetailModal } from "./Reservation.DetailModal";
 import { ReservationNavigationPanel } from "./Reservation.NavigationPanel";
 import { ReservationStatusPanel } from "./Reservation.StatusPanel";
+import { ReservationTimeChangeModal } from "./Reservation.TimeChangeModal";
 
 const ReservationPage = () => {
   const {
     scale,
     layoutWidthRem,
+    monthLabel,
+    monthOptions,
+    isMonthMenuOpen,
     weekDays,
     calendarRows,
     reservations,
     filterTabs,
     reservationStatusRows,
+    openedReservation,
+    openedTimeChangeReservation,
+    timeOptions,
+    currentTimeValue,
+    changedTimeValue,
+    isCurrentTimeMenuOpen,
+    isChangedTimeMenuOpen,
+    activeStatusMenuReservationId,
     pageRef,
+    toggleMonthMenu,
+    setSelectedMonth,
+    setSelectedDateKey,
+    setSelectedFilterKey,
+    setReservationStatus,
+    toggleStatusMenu,
+    openReservation,
+    closeReservation,
+    openTimeChangeModal,
+    closeTimeChangeModal,
+    toggleCurrentTimeMenu,
+    toggleChangedTimeMenu,
+    selectCurrentTime,
+    selectChangedTime,
+    saveTimeChange,
   } = useReservation();
   const layoutHeightRem = RESERVATION_CONTENT_TOP_OFFSET_REM + RESERVATION_CONTENT_HEIGHT_REM;
 
@@ -54,14 +82,50 @@ const ReservationPage = () => {
             }}
           >
             <ReservationNavigationPanel
+              monthLabel={monthLabel}
+              monthOptions={monthOptions}
+              isMonthMenuOpen={isMonthMenuOpen}
               weekDays={weekDays}
               calendarRows={calendarRows}
+              onToggleMonthMenu={toggleMonthMenu}
+              onSelectMonth={setSelectedMonth}
+              onSelectDate={setSelectedDateKey}
               reservations={reservations}
             />
-            <ReservationStatusPanel filterTabs={filterTabs} rows={reservationStatusRows} />
+            <ReservationStatusPanel
+              filterTabs={filterTabs}
+              rows={reservationStatusRows}
+              activeStatusMenuReservationId={activeStatusMenuReservationId}
+              onSelectFilter={setSelectedFilterKey}
+              onToggleStatusMenu={toggleStatusMenu}
+              onSelectStatus={setReservationStatus}
+              onOpenReservation={openReservation}
+              onOpenTimeChangeModal={openTimeChangeModal}
+            />
           </div>
         </div>
       </div>
+
+      {openedReservation ? (
+        <ReservationDetailModal reservation={openedReservation} onClose={closeReservation} />
+      ) : null}
+
+      {openedTimeChangeReservation ? (
+        <ReservationTimeChangeModal
+          reservation={openedTimeChangeReservation}
+          timeOptions={timeOptions}
+          currentTime={currentTimeValue}
+          changedTime={changedTimeValue}
+          isCurrentTimeMenuOpen={isCurrentTimeMenuOpen}
+          isChangedTimeMenuOpen={isChangedTimeMenuOpen}
+          onToggleCurrentTimeMenu={toggleCurrentTimeMenu}
+          onToggleChangedTimeMenu={toggleChangedTimeMenu}
+          onSelectCurrentTime={selectCurrentTime}
+          onSelectChangedTime={selectChangedTime}
+          onClose={closeTimeChangeModal}
+          onSave={saveTimeChange}
+        />
+      ) : null}
     </div>
   );
 };
