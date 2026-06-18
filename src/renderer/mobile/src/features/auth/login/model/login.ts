@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { loginApi } from "@/entities/auth/api/authApi";
+import { setAccessToken } from "@/entities/auth/model/token";
 
 export const useLoginForm = () => {
   const [id, setId] = useState("");
@@ -14,7 +15,8 @@ export const useLoginForm = () => {
     setError(null);
     setIsLoading(true);
     try {
-      await loginApi({ loginId: id, password });
+      const { accessToken } = await loginApi({ loginId: id, password });
+      await setAccessToken(accessToken);
       navigate("/");
     } catch (err) {
       console.error("로그인 실패:", err);
