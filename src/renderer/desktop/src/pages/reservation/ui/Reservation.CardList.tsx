@@ -2,7 +2,7 @@ import { lightTheme } from "@design-tokens";
 
 import dateIcon from "@/pages/reservation/assets/date.svg";
 import customerImage from "@/pages/reservation/assets/reservation-customer.png";
-import timeIcon from "@/pages/reservation/assets/time.svg";
+import timeIcon from "@/pages/reservation/assets/svg/time.svg";
 import type { ReservationCardListProps } from "@/pages/reservation/model/Reservation.types";
 
 const ReservationCardList = ({
