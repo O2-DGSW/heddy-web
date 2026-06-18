@@ -22,6 +22,18 @@ const CustomerPage = () => {
     summaries,
     filters,
     rows,
+    searchQuery,
+    sortLabel,
+    sortOptions,
+    designerOptions,
+    isSortMenuOpen,
+    openDesignerMenuRowId,
+    onChangeSearchQuery,
+    onSelectFilter,
+    onToggleSortMenu,
+    onSelectSort,
+    onToggleDesignerMenu,
+    onSelectDesigner,
   } = useCustomer();
 
   return (
@@ -81,7 +93,22 @@ const CustomerPage = () => {
             </div>
 
             <CustomerSummaryCards summaries={summaries} />
-            <CustomerTable filters={filters} rows={rows} />
+            <CustomerTable
+              filters={filters}
+              rows={rows}
+              searchQuery={searchQuery}
+              sortLabel={sortLabel}
+              sortOptions={sortOptions}
+              designerOptions={designerOptions}
+              isSortMenuOpen={isSortMenuOpen}
+              openDesignerMenuRowId={openDesignerMenuRowId}
+              onChangeSearchQuery={onChangeSearchQuery}
+              onSelectFilter={onSelectFilter}
+              onToggleSortMenu={onToggleSortMenu}
+              onSelectSort={onSelectSort}
+              onToggleDesignerMenu={onToggleDesignerMenu}
+              onSelectDesigner={onSelectDesigner}
+            />
           </div>
         </div>
       </div>
