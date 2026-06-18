@@ -6,7 +6,10 @@ const DASHBOARD_BASE_HEIGHT = 830;
 
 const DashboardCanvas = ({ children }: { children: ReactNode }) => {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const [viewportWidth, setViewportWidth] = useState(DASHBOARD_BASE_WIDTH);
+  const [viewportSize, setViewportSize] = useState({
+    width: DASHBOARD_BASE_WIDTH,
+    height: DASHBOARD_BASE_HEIGHT,
+  });
 
   useLayoutEffect(() => {
     const viewportElement = viewportRef.current;
@@ -15,23 +18,26 @@ const DashboardCanvas = ({ children }: { children: ReactNode }) => {
       return undefined;
     }
 
-    const updateWidth = (width: number) => {
-      setViewportWidth(previousWidth => {
-        if (Math.abs(previousWidth - width) < 0.5) {
-          return previousWidth;
+    const updateSize = (width: number, height: number) => {
+      setViewportSize(previousSize => {
+        if (
+          Math.abs(previousSize.width - width) < 0.5 &&
+          Math.abs(previousSize.height - height) < 0.5
+        ) {
+          return previousSize;
         }
 
-        return width;
+        return { width, height };
       });
     };
 
-    updateWidth(viewportElement.clientWidth);
+    updateSize(viewportElement.clientWidth, viewportElement.clientHeight);
 
     const resizeObserver = new ResizeObserver(entries => {
       const [entry] = entries;
 
       if (entry) {
-        updateWidth(entry.contentRect.width);
+        updateSize(entry.contentRect.width, entry.contentRect.height);
       }
     });
 
@@ -42,16 +48,31 @@ const DashboardCanvas = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const scale = Math.min(1, viewportWidth / DASHBOARD_BASE_WIDTH);
-  const canvasWidth = scale < 1 ? DASHBOARD_BASE_WIDTH : viewportWidth;
+  const widthScale = viewportSize.width / DASHBOARD_BASE_WIDTH;
+  const heightScale = viewportSize.height / DASHBOARD_BASE_HEIGHT;
+  const scale = Math.min(1, widthScale, heightScale);
+  const layoutWidth =
+    scale > 0
+      ? Math.max(DASHBOARD_BASE_WIDTH, viewportSize.width / scale)
+      : DASHBOARD_BASE_WIDTH;
+  const scaledWidth = layoutWidth * scale;
+  const scaledHeight = DASHBOARD_BASE_HEIGHT * scale;
 
   return (
-    <div ref={viewportRef} className="w-full">
-      <div style={{ height: `${DASHBOARD_BASE_HEIGHT * scale}px` }}>
+    <div ref={viewportRef} className="h-full w-full" data-dashboard-canvas-viewport>
+      <div
+        className="relative shrink-0 overflow-visible"
+        data-dashboard-canvas-frame
+        style={{
+          width: `${scaledWidth}px`,
+          height: `${scaledHeight}px`,
+        }}
+      >
         <div
-          className="origin-top-left"
+          className="absolute left-0 top-0 origin-top-left"
+          data-dashboard-canvas
           style={{
-            width: `${canvasWidth}px`,
+            width: `${layoutWidth}px`,
             height: `${DASHBOARD_BASE_HEIGHT}px`,
             transform: `scale(${scale})`,
           }}
