@@ -1,42 +1,85 @@
 export interface CalendarDate {
+  dateKey: string;
   day: string;
   muted?: boolean;
   selected?: boolean;
 }
 
-export interface Reservation {
+export type ReservationStatusKey = "approved" | "rejected" | "changeRequest";
+
+export type ReservationFilterKey = "all" | "rejected" | "approved" | "changeRequest";
+
+export interface ReservationRecord {
   id: number;
-  name: string;
-  date: string;
+  customerName: string;
+  service: string;
+  dateKey: string;
+  dateLabel: string;
   time: string;
+  requestedTime?: string;
   tags: string[];
+  request: string;
+  status: ReservationStatusKey;
 }
 
 export interface FilterTab {
+  key: ReservationFilterKey;
   label: string;
   active?: boolean;
 }
 
-export interface ReservationStatusRow {
-  id: number;
-  request: string;
-  status: string;
-  statusColor: string;
+export interface ReservationMonthOption {
+  key: string;
+  label: string;
+  active?: boolean;
 }
 
 export interface ReservationCalendarProps {
+  monthLabel: string;
+  monthOptions: ReservationMonthOption[];
+  isMonthMenuOpen: boolean;
   weekDays: string[];
   calendarRows: CalendarDate[][];
+  onToggleMonthMenu: () => void;
+  onSelectMonth: (monthKey: string) => void;
+  onSelectDate: (dateKey: string) => void;
 }
 
 export interface ReservationCardListProps {
-  reservations: Reservation[];
+  reservations: ReservationRecord[];
 }
 
 export interface ReservationNavigationPanelProps
-  extends ReservationCalendarProps, ReservationCardListProps {}
+  extends ReservationCalendarProps,
+    ReservationCardListProps {}
 
 export interface ReservationStatusPanelProps {
   filterTabs: FilterTab[];
-  rows: ReservationStatusRow[];
+  rows: ReservationRecord[];
+  onSelectFilter: (filterKey: ReservationFilterKey) => void;
+  activeStatusMenuReservationId: number | null;
+  onToggleStatusMenu: (reservationId: number) => void;
+  onSelectStatus: (reservationId: number, status: ReservationStatusKey) => void;
+  onOpenReservation: (reservationId: number) => void;
+  onOpenTimeChangeModal: (reservationId: number) => void;
+}
+
+export interface ReservationDetailModalProps {
+  reservation: ReservationRecord;
+  onClose: () => void;
+}
+
+export interface ReservationTimeChangeModalProps {
+  reservation: ReservationRecord;
+  timeOptions: string[];
+  currentTime: string;
+  changedTime: string;
+  isCurrentTimeMenuOpen: boolean;
+  isChangedTimeMenuOpen: boolean;
+  onToggleCurrentTimeMenu: () => void;
+  onToggleChangedTimeMenu: () => void;
+  onSelectCurrentTime: (time: string) => void;
+  onSelectChangedTime: (time: string) => void;
+  onClose: () => void;
+  onSave: () => void;
 }
