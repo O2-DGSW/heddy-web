@@ -8,7 +8,6 @@ import {
   RESERVATION_CONTENT_WIDTH_REM,
   RESERVATION_FILTER_STATUS_MAP,
   RESERVATION_FILTER_TAB_DEFINITIONS,
-  RESERVATION_MONTH_OPTIONS,
   RESERVATION_PAGE_HORIZONTAL_PADDING_REM,
   RESERVATION_RECORDS,
   RESERVATION_STATUS_CYCLE,
@@ -16,7 +15,6 @@ import {
   RESERVATION_WEEK_DAYS,
 } from "./Reservation.constant";
 import type {
-  CalendarDate,
   ReservationFilterKey,
   ReservationRecord,
   ReservationStatusKey,
@@ -46,16 +44,6 @@ const getRootFontSize = () => {
 
 const getMonthKey = (dateKey: string) => dateKey.slice(0, 7);
 
-const createDateKey = (year: number, monthIndex: number, day: number) => {
-  return `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-};
-
-const formatMonthLabel = (monthKey: string) => {
-  const [year, month] = monthKey.split("-");
-
-  return `${year}. ${Number.parseInt(month, 10)}`;
-};
-
 const getFallbackContainerSize = (): ReservationContainerSize => {
   if (typeof window === "undefined") {
     return {
@@ -83,47 +71,6 @@ const getReservationScale = (containerSize = getFallbackContainerSize()) => {
   return Math.min(1, Math.max(MIN_RESERVATION_SCALE, viewportScale));
 };
 
-const buildCalendarRows = (monthKey: string, selectedDateKey: string): CalendarDate[][] => {
-  const [yearText, monthText] = monthKey.split("-");
-  const year = Number.parseInt(yearText, 10);
-  const monthIndex = Number.parseInt(monthText, 10) - 1;
-  const firstDate = new Date(year, monthIndex, 1);
-  const lastDate = new Date(year, monthIndex + 1, 0);
-  const leadingDays = firstDate.getDay();
-  const startDate = new Date(year, monthIndex, 1 - leadingDays);
-  const calendarRows: CalendarDate[][] = [];
-
-  for (let rowIndex = 0; rowIndex < 5; rowIndex += 1) {
-    const row: CalendarDate[] = [];
-
-    for (let dayIndex = 0; dayIndex < 7; dayIndex += 1) {
-      const currentDate = new Date(startDate);
-      currentDate.setDate(startDate.getDate() + rowIndex * 7 + dayIndex);
-
-      const dateKey = createDateKey(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate()
-      );
-      const inCurrentMonth =
-        currentDate >= firstDate &&
-        currentDate <= lastDate &&
-        currentDate.getMonth() === monthIndex;
-
-      row.push({
-        dateKey,
-        day: String(currentDate.getDate()),
-        muted: !inCurrentMonth,
-        selected: dateKey === selectedDateKey,
-      });
-    }
-
-    calendarRows.push(row);
-  }
-
-  return calendarRows;
-};
-
 const getFirstDateKeyOfMonth = (monthKey: string) => `${monthKey}-01`;
 
 const getNextStatus = (status: ReservationStatusKey) => {
@@ -140,7 +87,6 @@ export const useReservation = () => {
   const [reservations, setReservations] = useState<ReservationRecord[]>(RESERVATION_RECORDS);
   const [selectedDateKey, setSelectedDateKey] = useState(DEFAULT_RESERVATION_DATE_KEY);
   const [selectedFilterKey, setSelectedFilterKey] = useState<ReservationFilterKey>("all");
-  const [isMonthMenuOpen, setIsMonthMenuOpen] = useState(false);
   const [openedReservationId, setOpenedReservationId] = useState<number | null>(null);
   const [activeStatusMenuReservationId, setActiveStatusMenuReservationId] = useState<number | null>(null);
   const [timeChangeReservationId, setTimeChangeReservationId] = useState<number | null>(null);
@@ -182,17 +128,7 @@ export const useReservation = () => {
   }, []);
 
   const selectedMonthKey = getMonthKey(selectedDateKey);
-
-  const monthOptions = useMemo(() => {
-    return RESERVATION_MONTH_OPTIONS.map(option => ({
-      ...option,
-      active: option.key === selectedMonthKey,
-    }));
-  }, [selectedMonthKey]);
-
-  const calendarRows = useMemo(() => {
-    return buildCalendarRows(selectedMonthKey, selectedDateKey);
-  }, [selectedDateKey, selectedMonthKey]);
+  const selectedMonthDateKey = getFirstDateKeyOfMonth(selectedMonthKey);
 
   const reservationsForSelectedDate = useMemo(() => {
     return reservations
@@ -220,7 +156,6 @@ export const useReservation = () => {
 
     setSelectedDateKey(firstReservationInMonth?.dateKey ?? getFirstDateKeyOfMonth(monthKey));
     setSelectedFilterKey("all");
-    setIsMonthMenuOpen(false);
     setOpenedReservationId(null);
     setActiveStatusMenuReservationId(null);
     setTimeChangeReservationId(null);
@@ -258,10 +193,7 @@ export const useReservation = () => {
     scale,
     layoutWidthRem,
     weekDays: RESERVATION_WEEK_DAYS,
-    monthLabel: formatMonthLabel(selectedMonthKey),
-    monthOptions,
-    isMonthMenuOpen,
-    calendarRows,
+    monthDate: selectedMonthDateKey,
     selectedDateKey,
     reservations: reservationsForSelectedDate,
     filterTabs,
@@ -278,15 +210,13 @@ export const useReservation = () => {
     setSelectedDateKey: (dateKey: string) => {
       setSelectedDateKey(dateKey);
       setSelectedFilterKey("all");
-      setIsMonthMenuOpen(false);
       setOpenedReservationId(null);
       setActiveStatusMenuReservationId(null);
       setTimeChangeReservationId(null);
       setIsDetailTimeMenuOpen(false);
     },
-    setSelectedMonth,
+    setSelectedMonth: (monthDate: string) => setSelectedMonth(getMonthKey(monthDate)),
     setSelectedFilterKey,
-    toggleMonthMenu: () => setIsMonthMenuOpen(current => !current),
     cycleReservationStatus: (reservationId: number) => {
       const reservation = reservations.find(item => item.id === reservationId);
 
@@ -308,7 +238,6 @@ export const useReservation = () => {
     },
     openReservation: (reservationId: number) => {
       setOpenedReservationId(reservationId);
-      setIsMonthMenuOpen(false);
       setActiveStatusMenuReservationId(null);
       setTimeChangeReservationId(null);
       setIsDetailTimeMenuOpen(false);
