@@ -8,6 +8,7 @@ export interface Theme {
     neutral: string;
     alternative: string;
     assistive: string;
+    inactive: string;
     disable: string;
     buttonText: string;
   };
