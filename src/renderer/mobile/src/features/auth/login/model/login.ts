@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { loginApi } from "@/entities/auth/api/authApi";
-import { setAccessToken, getAccessToken } from "@/entities/auth/model/token";
+import { setAccessToken } from "@/entities/auth/model/token";
 
 export const useLoginForm = () => {
   const [id, setId] = useState("");
