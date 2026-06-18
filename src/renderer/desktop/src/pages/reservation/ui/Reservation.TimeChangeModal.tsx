@@ -3,28 +3,8 @@ import { lightTheme } from "@design-tokens";
 import closeIcon from "@/pages/schedule/assets/svg/close.svg";
 import dropdownDownIcon from "@/pages/schedule/assets/svg/dropdown-down.svg";
 import dropdownUpIcon from "@/pages/schedule/assets/svg/dropdown-up.svg";
+import timeIcon from "@/pages/reservation/assets/svg/time.svg";
 import type { ReservationTimeChangeModalProps } from "@/pages/reservation/model/Reservation.types";
-
-const TimeIcon = () => {
-  return (
-    <svg
-      className="size-[1.3125rem] shrink-0"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="8.25" stroke="currentColor" strokeWidth="2.4" />
-      <path
-        d="M12 7.75V12.4L15.1 15.5"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
 
 interface TimeFieldProps {
   label: string;
@@ -60,7 +40,7 @@ const TimeField = ({
       >
         <span className="flex items-center gap-[0.375rem]">
           <span className="flex shrink-0 items-center justify-center" style={{ color: lightTheme.label.assistive }}>
-            <TimeIcon />
+            <img src={timeIcon} alt="" className="size-[1.3125rem] shrink-0" aria-hidden="true" />
           </span>
           <span
             className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
