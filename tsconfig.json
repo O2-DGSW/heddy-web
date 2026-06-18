@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "Bundler",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "jsx": "react-jsx"
   }
 }
