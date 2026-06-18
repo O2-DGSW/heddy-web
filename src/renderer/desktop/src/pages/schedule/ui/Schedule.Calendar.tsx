@@ -1,7 +1,6 @@
 import { Calendar } from "@/shared/ui/calendar";
 import {
-  SCHEDULE_CALENDAR_ROWS,
-  SCHEDULE_MONTH_LABEL,
+  DEFAULT_SCHEDULE_DATE,
   SCHEDULE_WEEK_DAYS,
 } from "@/pages/schedule/model/Schedule.constant";
 
@@ -13,8 +12,7 @@ interface ScheduleCalendarProps {
 const ScheduleCalendar = ({ selectedDate, onSelectDate }: ScheduleCalendarProps) => {
   return (
     <Calendar
-      calendarRows={SCHEDULE_CALENDAR_ROWS}
-      monthLabel={SCHEDULE_MONTH_LABEL}
+      initialMonthDate={DEFAULT_SCHEDULE_DATE}
       selectedDate={selectedDate}
       variant="desktop"
       weekDays={SCHEDULE_WEEK_DAYS}
