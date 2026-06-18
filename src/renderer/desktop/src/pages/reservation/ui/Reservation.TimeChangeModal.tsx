@@ -68,15 +68,17 @@ const TimeField = ({
 
       {isMenuOpen ? (
         <div
-          className="absolute left-0 top-[5.375rem] z-10 flex max-h-[12rem] w-full flex-col overflow-y-auto rounded-[0.75rem] border bg-white py-[0.25rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+          className="absolute left-0 top-[5.375rem] z-20 flex max-h-[13.5rem] w-full flex-col gap-[0.375rem] overflow-y-auto rounded-[0.75rem] border bg-white p-[0.5rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
           style={{ borderColor: lightTheme.line.alternative }}
         >
           {options.map(option => (
             <button
               key={option}
               type="button"
-              className="flex h-[2rem] items-center justify-center font-['Pretendard'] text-[0.875rem] font-medium leading-[1.3]"
+              className="flex h-[2.25rem] items-center justify-center rounded-[0.5rem] font-['Pretendard'] text-[0.875rem] font-medium leading-[1.3] transition-colors hover:bg-[#F2F4F6]"
               style={{
+                backgroundColor:
+                  option === value ? lightTheme.background.neutral : "transparent",
                 color: option === value ? lightTheme.primary.normal : lightTheme.label.alternative,
               }}
               onClick={() => onSelect(option)}
@@ -106,7 +108,7 @@ const ReservationTimeChangeModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <section
-        className="w-[27.5rem] overflow-hidden rounded-[1.25rem] bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+        className="w-[27.5rem] overflow-visible rounded-[1.25rem] bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="reservation-time-change-title"
