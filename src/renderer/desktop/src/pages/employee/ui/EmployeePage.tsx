@@ -1,7 +1,7 @@
 import { lightTheme } from "@design-tokens";
 
 import dateIcon from "@/pages/employee/assets/svg/date.svg";
-import dropdownIcon from "@/pages/employee/assets/svg/dropdown.svg";
+import DropdownIcon from "@/pages/employee/assets/svg/dropdown.svg?react";
 import editIcon from "@/pages/employee/assets/svg/edit.svg";
 import searchIcon from "@/pages/employee/assets/svg/search.svg";
 import trashIcon from "@/pages/employee/assets/svg/trash.svg";
@@ -31,20 +31,10 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
       style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
     >
       {meta.label}
-      <span
-        className="size-5 shrink-0"
+      <DropdownIcon
         aria-hidden="true"
-        style={{
-          backgroundColor: meta.dropdownColor,
-          maskImage: `url(${dropdownIcon})`,
-          maskPosition: "center",
-          maskRepeat: "no-repeat",
-          maskSize: "contain",
-          WebkitMaskImage: `url(${dropdownIcon})`,
-          WebkitMaskPosition: "center",
-          WebkitMaskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-        }}
+        className="size-5 shrink-0"
+        style={{ color: meta.color }}
       />
     </button>
   );
