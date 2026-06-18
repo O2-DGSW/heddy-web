@@ -38,6 +38,9 @@ importers:
       axios:
         specifier: ^1.16.0
         version: 1.16.0
+      capacitor-secure-storage-plugin:
+        specifier: ^0.13.0
+        version: 0.13.0(@capacitor/core@8.3.3)
       qrcode.react:
         specifier: ^4.2.0
         version: 4.2.0(react@19.2.6)
@@ -793,6 +796,11 @@ packages:
 
   caniuse-lite@1.0.30001792:
     resolution: {integrity: sha512-hVLMUZFgR4JJ6ACt1uEESvQN1/dBVqPAKY0hgrV70eN3391K6juAfTjKZLKvOMsx8PxA7gsY1/tLMMTcfFLLpw==}
+
+  capacitor-secure-storage-plugin@0.13.0:
+    resolution: {integrity: sha512-+rLC/9Z0LTaRRt6L6HjBwcDh5gqgI3NPmDSwo4hk41XQOy3EBrRo81VleIqFsowsMA3oMT+E59Bl8/HiWk0nhQ==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
 
   chownr@3.0.0:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
@@ -2441,6 +2449,10 @@ snapshots:
   camelcase@6.3.0: {}
 
   caniuse-lite@1.0.30001792: {}
+
+  capacitor-secure-storage-plugin@0.13.0(@capacitor/core@8.3.3):
+    dependencies:
+      '@capacitor/core': 8.3.3
 
   chownr@3.0.0: {}
 
