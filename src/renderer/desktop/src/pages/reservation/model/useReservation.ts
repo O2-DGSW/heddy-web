@@ -148,6 +148,7 @@ export const useReservation = () => {
   const [changedTimeValue, setChangedTimeValue] = useState("");
   const [isCurrentTimeMenuOpen, setIsCurrentTimeMenuOpen] = useState(false);
   const [isChangedTimeMenuOpen, setIsChangedTimeMenuOpen] = useState(false);
+  const [isDetailTimeMenuOpen, setIsDetailTimeMenuOpen] = useState(false);
 
   useEffect(() => {
     const updateLayout = () => {
@@ -223,6 +224,7 @@ export const useReservation = () => {
     setOpenedReservationId(null);
     setActiveStatusMenuReservationId(null);
     setTimeChangeReservationId(null);
+    setIsDetailTimeMenuOpen(false);
   };
 
   const updateReservationStatus = (reservationId: number, status: ReservationStatusKey) => {
@@ -269,6 +271,7 @@ export const useReservation = () => {
     timeOptions: RESERVATION_TIME_OPTIONS,
     currentTimeValue,
     changedTimeValue,
+    isDetailTimeMenuOpen,
     isCurrentTimeMenuOpen,
     isChangedTimeMenuOpen,
     activeStatusMenuReservationId,
@@ -279,6 +282,7 @@ export const useReservation = () => {
       setOpenedReservationId(null);
       setActiveStatusMenuReservationId(null);
       setTimeChangeReservationId(null);
+      setIsDetailTimeMenuOpen(false);
     },
     setSelectedMonth,
     setSelectedFilterKey,
@@ -304,10 +308,35 @@ export const useReservation = () => {
     },
     openReservation: (reservationId: number) => {
       setOpenedReservationId(reservationId);
+      setIsMonthMenuOpen(false);
       setActiveStatusMenuReservationId(null);
       setTimeChangeReservationId(null);
+      setIsDetailTimeMenuOpen(false);
     },
-    closeReservation: () => setOpenedReservationId(null),
+    closeReservation: () => {
+      setOpenedReservationId(null);
+      setIsDetailTimeMenuOpen(false);
+    },
+    toggleDetailTimeMenu: () => {
+      setIsDetailTimeMenuOpen(current => !current);
+    },
+    selectDetailTime: (time: string) => {
+      if (openedReservationId === null) {
+        return;
+      }
+
+      setReservations(currentReservations =>
+        currentReservations.map(reservation =>
+          reservation.id === openedReservationId
+            ? {
+                ...reservation,
+                time,
+              }
+            : reservation
+        )
+      );
+      setIsDetailTimeMenuOpen(false);
+    },
     openTimeChangeModal: (reservationId: number) => {
       const reservation = reservations.find(item => item.id === reservationId);
 
@@ -318,6 +347,7 @@ export const useReservation = () => {
       setTimeChangeReservationId(reservationId);
       setOpenedReservationId(null);
       setActiveStatusMenuReservationId(null);
+      setIsDetailTimeMenuOpen(false);
       setCurrentTimeValue(reservation.time);
       setChangedTimeValue(reservation.requestedTime ?? reservation.time);
       setIsCurrentTimeMenuOpen(false);
