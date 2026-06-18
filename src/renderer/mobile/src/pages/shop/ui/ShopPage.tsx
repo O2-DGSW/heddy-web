@@ -2,7 +2,7 @@
 
 import { Route, Routes } from "react-router-dom";
 
-import { ShopLayout, ShopInfo, ReservationList } from "@/features/shop";
+import { ShopLayout, ShopInfo, ReservationList, ShopSchedule } from "@/features/shop";
 
 export const ShopPage = () => {
   return (
@@ -10,7 +10,7 @@ export const ShopPage = () => {
       <Routes>
         <Route index element={<ShopInfo />} />
         <Route path="reservation" element={<ReservationList />} />
-        <Route path="schedule" element={null} />
+        <Route path="schedule" element={<ShopSchedule />} />
       </Routes>
     </ShopLayout>
   );
