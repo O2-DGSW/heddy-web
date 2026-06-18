@@ -9,7 +9,7 @@ const ReservationCardList = ({
   reservations,
 }: ReservationCardListProps) => {
   return (
-    <div className="flex h-full w-full flex-col gap-[0.9375rem]">
+    <div className="flex h-full w-full flex-col gap-3.75">
       {reservations.length === 0 ? (
         <div
           className="flex h-full items-center justify-center rounded-xl bg-[#F7F7F7] font-['Pretendard'] text-base font-medium leading-[1.3]"
@@ -38,10 +38,10 @@ const ReservationCardList = ({
                   />
                 </div>
 
-                <div className="flex min-w-0 flex-1 flex-col gap-[0.375rem]">
+                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                   <div className="flex w-full items-center justify-between">
                     <div
-                      className="flex w-[4.5rem] items-center gap-1 font-['Pretendard'] text-xl leading-[1.3]"
+                      className="flex w-18 items-center gap-1 font-['Pretendard'] text-xl leading-[1.3]"
                       style={{ color: lightTheme.label.neutral }}
                     >
                       <span className="font-bold whitespace-nowrap">{reservation.customerName}</span>
@@ -63,7 +63,7 @@ const ReservationCardList = ({
 
                   <div className="flex h-5 items-center gap-2.5">
                     <span className="flex items-center gap-1">
-                      <img src={dateIcon} alt="" className="size-[1rem]" aria-hidden="true" />
+                      <img src={dateIcon} alt="" className="size-4" aria-hidden="true" />
                       <span
                         className="font-['Pretendard'] text-base font-normal leading-[1.3]"
                         style={{ color: lightTheme.label.alternative }}
@@ -78,7 +78,7 @@ const ReservationCardList = ({
                       ·
                     </span>
                     <span className="flex items-center gap-1">
-                      <img src={timeIcon} alt="" className="size-[1rem]" aria-hidden="true" />
+                      <img src={timeIcon} alt="" className="size-4" aria-hidden="true" />
                       <span
                         className="font-['Pretendard'] text-base font-normal leading-[1.3]"
                         style={{ color: lightTheme.label.alternative }}
