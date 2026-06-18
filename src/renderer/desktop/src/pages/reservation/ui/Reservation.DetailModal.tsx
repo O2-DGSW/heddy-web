@@ -6,11 +6,18 @@ import dropdownUpIcon from "@/pages/schedule/assets/svg/dropdown-up.svg";
 import timeIcon from "@/pages/reservation/assets/svg/time.svg";
 import type { ReservationDetailModalProps } from "@/pages/reservation/model/Reservation.types";
 
-const ReservationDetailModal = ({ reservation, onClose }: ReservationDetailModalProps) => {
+const ReservationDetailModal = ({
+  reservation,
+  timeOptions,
+  isTimeMenuOpen,
+  onToggleTimeMenu,
+  onSelectTime,
+  onClose,
+}: ReservationDetailModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <section
-        className="h-[27.5rem] w-[27.5rem] overflow-hidden rounded-[1.25rem] bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+        className="h-[27.5rem] w-[27.5rem] overflow-visible rounded-[1.25rem] bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="reservation-modal-title"
@@ -82,16 +89,18 @@ const ReservationDetailModal = ({ reservation, onClose }: ReservationDetailModal
                   </label>
                 </div>
 
-                <label className="flex flex-col gap-3">
+                <div className="relative flex flex-col gap-3">
                   <span
                     className="pl-[0.6875rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
                     style={{ color: lightTheme.label.assistive }}
                   >
                     시간
                   </span>
-                  <div
+                  <button
+                    type="button"
                     className="flex h-[2.625rem] items-center justify-between rounded-[0.625rem] px-[1rem]"
                     style={{ backgroundColor: lightTheme.background.neutral }}
+                    onClick={onToggleTimeMenu}
                   >
                     <span className="flex items-center gap-[0.375rem]">
                       <span className="flex shrink-0 items-center justify-center" style={{ color: lightTheme.label.assistive }}>
@@ -119,8 +128,36 @@ const ReservationDetailModal = ({ reservation, onClose }: ReservationDetailModal
                         aria-hidden="true"
                       />
                     </span>
-                  </div>
-                </label>
+                  </button>
+
+                  {isTimeMenuOpen ? (
+                    <div
+                      className="absolute left-0 top-[5.375rem] z-20 flex max-h-[13.5rem] w-full flex-col gap-[0.375rem] overflow-y-auto rounded-[0.75rem] border bg-white p-[0.5rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+                      style={{ borderColor: lightTheme.line.alternative }}
+                    >
+                      {timeOptions.map(option => (
+                        <button
+                          key={option}
+                          type="button"
+                          className="flex h-[2.25rem] items-center justify-center rounded-[0.5rem] font-['Pretendard'] text-[0.875rem] font-medium leading-[1.3] transition-colors hover:bg-[#F2F4F6]"
+                          style={{
+                            backgroundColor:
+                              option === reservation.time
+                                ? lightTheme.background.neutral
+                                : "transparent",
+                            color:
+                              option === reservation.time
+                                ? lightTheme.primary.normal
+                                : lightTheme.label.alternative,
+                          }}
+                          onClick={() => onSelectTime(option)}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
 
                 <label className="flex flex-col gap-3">
                   <span

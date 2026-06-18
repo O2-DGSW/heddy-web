@@ -66,6 +66,10 @@ export interface ReservationStatusPanelProps {
 
 export interface ReservationDetailModalProps {
   reservation: ReservationRecord;
+  timeOptions: string[];
+  isTimeMenuOpen: boolean;
+  onToggleTimeMenu: () => void;
+  onSelectTime: (time: string) => void;
   onClose: () => void;
 }
 

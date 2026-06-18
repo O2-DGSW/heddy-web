@@ -27,6 +27,7 @@ const ReservationPage = () => {
     timeOptions,
     currentTimeValue,
     changedTimeValue,
+    isDetailTimeMenuOpen,
     isCurrentTimeMenuOpen,
     isChangedTimeMenuOpen,
     activeStatusMenuReservationId,
@@ -39,6 +40,8 @@ const ReservationPage = () => {
     toggleStatusMenu,
     openReservation,
     closeReservation,
+    toggleDetailTimeMenu,
+    selectDetailTime,
     openTimeChangeModal,
     closeTimeChangeModal,
     toggleCurrentTimeMenu,
@@ -107,7 +110,14 @@ const ReservationPage = () => {
       </div>
 
       {openedReservation ? (
-        <ReservationDetailModal reservation={openedReservation} onClose={closeReservation} />
+        <ReservationDetailModal
+          reservation={openedReservation}
+          timeOptions={timeOptions}
+          isTimeMenuOpen={isDetailTimeMenuOpen}
+          onToggleTimeMenu={toggleDetailTimeMenu}
+          onSelectTime={selectDetailTime}
+          onClose={closeReservation}
+        />
       ) : null}
 
       {openedTimeChangeReservation ? (
