@@ -36,18 +36,17 @@ const ReservationCalendar = ({
 
       {isMonthMenuOpen && (
         <div
-          className="absolute left-0 top-10 z-10 w-32 rounded-2xl border bg-white p-1.5 shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+          className="absolute left-0 top-[2.5rem] z-20 flex w-[7.5rem] flex-col overflow-hidden rounded-[0.75rem] border bg-white py-[0.25rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
           style={{ borderColor: lightTheme.line.alternative }}
         >
           {monthOptions.map(option => (
             <button
               key={option.key}
               type="button"
-              className="flex h-8 w-full items-center justify-center rounded-xl font-['Pretendard'] text-[0.9375rem] font-medium leading-[1.3]"
+              className="flex h-[2rem] w-full items-center justify-center whitespace-nowrap font-['Pretendard'] text-[0.9375rem] font-medium leading-[1.3] transition-colors hover:bg-[#F7F7F7]"
               style={{
-                backgroundColor: option.active ? lightTheme.primary.normal : "transparent",
                 color: option.active
-                  ? lightTheme.label.buttonText
+                  ? lightTheme.primary.normal
                   : lightTheme.label.alternative,
               }}
               onClick={() => onSelectMonth(option.key)}
