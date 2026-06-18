@@ -14,10 +14,10 @@ const ReservationCalendar = ({
   onSelectDate,
 }: ReservationCalendarProps) => {
   return (
-    <div className="relative w-[30.25rem]">
+    <div className="relative w-121">
       <button
         type="button"
-        className="flex h-[1.9375rem] items-start gap-[0.4375rem]"
+        className="flex h-7.75 items-start gap-1.75"
         aria-label="월 선택"
         onClick={onToggleMonthMenu}
       >
@@ -29,21 +29,21 @@ const ReservationCalendar = ({
         </span>
         <DropdownIcon
           aria-hidden="true"
-          className="size-[1.9375rem]"
+          className="size-7.75"
           style={{ color: lightTheme.line.normal }}
         />
       </button>
 
       {isMonthMenuOpen && (
         <div
-          className="absolute left-0 top-[2.5rem] z-10 w-[8rem] rounded-[1rem] border bg-white p-[0.375rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+          className="absolute left-0 top-10 z-10 w-32 rounded-2xl border bg-white p-1.5 shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
           style={{ borderColor: lightTheme.line.alternative }}
         >
           {monthOptions.map(option => (
             <button
               key={option.key}
               type="button"
-              className="flex h-[2rem] w-full items-center justify-center rounded-[0.75rem] font-['Pretendard'] text-[0.9375rem] font-medium leading-[1.3]"
+              className="flex h-8 w-full items-center justify-center rounded-xl font-['Pretendard'] text-[0.9375rem] font-medium leading-[1.3]"
               style={{
                 backgroundColor: option.active ? lightTheme.primary.normal : "transparent",
                 color: option.active
@@ -58,12 +58,12 @@ const ReservationCalendar = ({
         </div>
       )}
 
-      <div className="mt-9 flex w-full flex-col gap-[1.625rem]">
-        <div className="flex h-[1.4375rem] items-start justify-center gap-[1.375rem] text-center font-['Pretendard'] text-xl font-medium leading-[1.3]">
+      <div className="mt-9 flex w-full flex-col gap-6.5">
+        <div className="flex h-5.75 items-start justify-center gap-5.5 text-center font-['Pretendard'] text-xl font-medium leading-[1.3]">
           {weekDays.map((day, index) => (
             <span
               key={day}
-              className="w-[2.9375rem]"
+              className="w-11.75"
               style={{
                 color: index === 0 ? lightTheme.status.error : lightTheme.label.alternative,
               }}
@@ -74,12 +74,12 @@ const ReservationCalendar = ({
         </div>
 
         {calendarRows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex h-[1.875rem] items-center justify-center gap-[1.375rem] text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3]">
+          <div key={rowIndex} className="flex h-7.5 items-center justify-center gap-5.5 text-center font-['Pretendard'] text-2xl font-semibold leading-[1.3]">
             {row.map(date => (
               <button
                 key={date.dateKey}
                 type="button"
-                className="flex size-[2.9375rem] items-center justify-center rounded-full outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                className="flex size-11.75 items-center justify-center rounded-full outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
                 style={{
                   backgroundColor: date.selected ? lightTheme.primary.normal : "transparent",
                   color: date.selected

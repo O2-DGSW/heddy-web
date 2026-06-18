@@ -23,7 +23,7 @@ const ReservationStatusPanel = ({
   onOpenTimeChangeModal,
 }: ReservationStatusPanelProps) => {
   return (
-    <section className="h-full min-w-[49.4375rem] flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
+    <section className="h-full min-w-197.75 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
       <div className="flex h-full w-full flex-col gap-5 pt-7.75">
         <div className="flex w-full items-center justify-between px-[1.84375rem]">
           <h2
@@ -33,12 +33,12 @@ const ReservationStatusPanel = ({
             예약 현황
           </h2>
 
-          <div className="flex min-w-0 items-center gap-[0.625rem]">
+          <div className="flex min-w-0 items-center gap-2.5">
             {filterTabs.map(tab => (
               <button
                 key={tab.key}
                 type="button"
-                className="flex h-7 items-center justify-center rounded-2xl px-[0.875rem] py-[0.3125rem] font-['Pretendard'] text-sm font-medium leading-[1.3]"
+                className="flex h-7 items-center justify-center rounded-2xl px-3.5 py-1.25 font-['Pretendard'] text-sm font-medium leading-[1.3]"
                 style={{
                   backgroundColor: tab.active ? lightTheme.primary.normal : lightTheme.fill.neutral,
                   color: tab.active ? lightTheme.label.buttonText : lightTheme.label.alternative,
@@ -131,7 +131,7 @@ const ReservationStatusPanel = ({
                       <span className="col-start-3 min-w-0 truncate">{row.customerName}</span>
                       <span className="col-start-5 min-w-0 truncate text-center">{row.service}</span>
                       <span
-                        className="col-start-7 flex h-[2rem] w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border bg-white px-[0.9375rem] text-center font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+                        className="col-start-7 flex h-8 w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border bg-white px-3.75 text-center font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
                         style={{ borderColor: lightTheme.line.alternative }}
                       >
                         <span className="block w-full truncate">{row.request}</span>
@@ -139,7 +139,7 @@ const ReservationStatusPanel = ({
                       <div className="col-start-9 relative flex justify-center">
                         <button
                           type="button"
-                          className="flex h-[1.625rem] w-[5.231875rem] items-center justify-center overflow-hidden rounded-[0.9375rem] pl-[0.6190625rem] pr-[0.15475rem] font-['Pretendard'] font-medium leading-[1.3]"
+                          className="flex h-6.5 w-[5.231875rem] items-center justify-center overflow-hidden rounded-[0.9375rem] pl-[0.6190625rem] pr-[0.15475rem] font-['Pretendard'] font-medium leading-[1.3]"
                           style={{
                             backgroundColor: statusMeta.color,
                             color: statusMeta.textColor,
@@ -169,7 +169,7 @@ const ReservationStatusPanel = ({
 
                         {isStatusMenuOpen ? (
                           <div
-                            className="absolute right-0 top-[2rem] z-10 flex w-[7.375rem] flex-col overflow-hidden rounded-[1rem] bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.05)]"
+                            className="absolute right-0 top-8 z-10 flex w-29.5 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.05)]"
                           >
                             {STATUS_MENU_OPTIONS.map(option => {
                               const optionMeta = RESERVATION_STATUS_META[option];
@@ -178,7 +178,7 @@ const ReservationStatusPanel = ({
                                 <button
                                   key={option}
                                   type="button"
-                                  className="flex h-[2.875rem] items-center justify-center border-b px-[0.875rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3] transition-colors hover:bg-[#F7F7F7] last:border-b-0"
+                                  className="flex h-11.5 items-center justify-center border-b px-3.5 font-['Pretendard'] text-[1rem] font-medium leading-[1.3] transition-colors hover:bg-[#F7F7F7] last:border-b-0"
                                   style={{
                                     color: STATUS_MENU_TEXT_COLOR,
                                     borderColor: lightTheme.line.alternative,
