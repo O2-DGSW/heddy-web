@@ -53,7 +53,7 @@ const CalendarMonthSelector = ({
       <button
         type="button"
         aria-label={`${displayedMonthLabel} 월 선택`}
-        className={buttonClassName}
+        className={getClassName("cursor-pointer", buttonClassName)}
         style={{ color: buttonColor }}
         onClick={() => setIsOpen(open => !open)}
       >
@@ -78,7 +78,7 @@ const CalendarMonthSelector = ({
                 ref={isCurrent ? currentOptionRef : undefined}
                 type="button"
                 aria-label={`${formatMonthLabel(monthDate)}로 이동`}
-                className="h-10 shrink-0 px-4 text-left font-['Pretendard'] text-[14px] font-medium leading-[1.3] tracking-[-0.28px]"
+                className="h-10 shrink-0 cursor-pointer px-4 text-left font-['Pretendard'] text-[14px] font-medium leading-[1.3] tracking-[-0.28px]"
                 style={{
                   backgroundColor: isCurrent ? lightTheme.background.neutral : "transparent",
                   color: isCurrent ? lightTheme.primary.normal : lightTheme.label.alternative,
