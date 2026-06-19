@@ -79,7 +79,10 @@ const hourToChartRem = (hour: number, shouldClamp = false) =>
     SCHEDULE_CHART_HOUR_WIDTH_REM;
 
 const getTimelineEndHour = (events: ScheduleEvent[], minimumVisibleHourRange: number) => {
-  const latestEventEndHour = Math.max(SCHEDULE_CHART_END_HOUR, ...events.map(event => event.endHour));
+  const latestEventEndHour = events.reduce(
+    (maxEndHour, event) => Math.max(maxEndHour, event.endHour),
+    SCHEDULE_CHART_END_HOUR
+  );
 
   return Math.max(
     SCHEDULE_CHART_END_HOUR,
@@ -107,16 +110,23 @@ const formatTimelineHour = (hour: number) => {
 const getPositionedEvents = (events: ScheduleEvent[]): PositionedScheduleEvent[] => {
   const laneEndsByDay = new Map<number, number[]>();
 
-  return events.map(event => {
-    const laneEnds = laneEndsByDay.get(event.dayIndex) ?? [];
-    const availableLaneIndex = laneEnds.findIndex(endHour => endHour <= event.startHour);
-    const lane = availableLaneIndex === -1 ? laneEnds.length : availableLaneIndex;
+  return [...events]
+    .sort(
+      (firstEvent, secondEvent) =>
+        firstEvent.dayIndex - secondEvent.dayIndex ||
+        firstEvent.startHour - secondEvent.startHour ||
+        firstEvent.endHour - secondEvent.endHour
+    )
+    .map(event => {
+      const laneEnds = laneEndsByDay.get(event.dayIndex) ?? [];
+      const availableLaneIndex = laneEnds.findIndex(endHour => endHour <= event.startHour);
+      const lane = availableLaneIndex === -1 ? laneEnds.length : availableLaneIndex;
 
-    laneEnds[lane] = event.endHour;
-    laneEndsByDay.set(event.dayIndex, laneEnds);
+      laneEnds[lane] = event.endHour;
+      laneEndsByDay.set(event.dayIndex, laneEnds);
 
-    return { event, lane };
-  });
+      return { event, lane };
+    });
 };
 
 const ScheduleBoard = ({ events, panelWidthRem, onOpenModal }: ScheduleBoardProps) => {
