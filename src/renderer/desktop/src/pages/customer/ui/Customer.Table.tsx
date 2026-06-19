@@ -81,6 +81,8 @@ const CustomerTable = ({
             <div className="relative">
               <button
                 type="button"
+                aria-haspopup="menu"
+                aria-expanded={isSortMenuOpen}
                 className="flex h-[1.875rem] w-[7.6875rem] items-center justify-center rounded-[1rem] border bg-white font-['Pretendard'] text-sm font-medium leading-[1.3]"
                 style={{
                   borderColor: lightTheme.line.alternative,
@@ -159,108 +161,112 @@ const CustomerTable = ({
                 className="h-16 border-b"
                 style={{ borderColor: lightTheme.background.neutral }}
               >
-              <div
-                className="grid h-full items-center gap-[3.25rem] px-[4.4375rem] font-['Pretendard'] text-lg font-medium leading-[1.3]"
-                style={{
-                  gridTemplateColumns: CUSTOMER_GRID_COLUMNS,
-                  color: lightTheme.label.assistive,
-                }}
-              >
-                <span
-                  className="col-start-1 min-w-0 truncate font-bold"
-                  style={{ color: lightTheme.label.alternative }}
+                <div
+                  className="grid h-full items-center gap-[3.25rem] px-[4.4375rem] font-['Pretendard'] text-lg font-medium leading-[1.3]"
+                  style={{
+                    gridTemplateColumns: CUSTOMER_GRID_COLUMNS,
+                    color: lightTheme.label.assistive,
+                  }}
                 >
-                  {row.name}
-                </span>
-                <span className="col-start-2 min-w-0 truncate text-center">{row.phone}</span>
-                <span className="col-start-3 flex min-w-0 items-center justify-center gap-[0.5rem] whitespace-nowrap">
-                  <img src={dateIcon} alt="" className="size-[1.375rem]" aria-hidden="true" />
-                  {row.lastVisit}
-                </span>
-                <span className="col-start-4 min-w-0 truncate whitespace-nowrap text-center">
-                  {row.visitCycle}
-                </span>
-                <span className="col-start-5 flex min-w-0 items-center gap-[0.5rem]">
                   <span
-                    className="relative h-[1rem] min-w-[11.625rem] flex-1 overflow-hidden rounded-[1.25rem]"
-                    style={{ backgroundColor: lightTheme.label.buttonText }}
-                  >
-                    <span
-                      className="absolute left-0 top-0 h-full rounded-[1.25rem]"
-                      style={{
-                        width: `${row.riskPercent}%`,
-                        backgroundColor: riskColorMap[row.riskLevel],
-                      }}
-                    />
-                  </span>
-                  <span
-                    className="w-[2.125rem] shrink-0 text-base"
+                    className="col-start-1 min-w-0 truncate font-bold"
                     style={{ color: lightTheme.label.alternative }}
                   >
-                    {row.riskPercent}%
+                    {row.name}
                   </span>
-                </span>
-                <span className="col-start-6 flex min-w-0 justify-center gap-[0.25rem]">
-                  {row.tags.map(tag => (
+                  <span className="col-start-2 min-w-0 truncate text-center">{row.phone}</span>
+                  <span className="col-start-3 flex min-w-0 items-center justify-center gap-[0.5rem] whitespace-nowrap">
+                    <img src={dateIcon} alt="" className="size-[1.375rem]" aria-hidden="true" />
+                    {row.lastVisit}
+                  </span>
+                  <span className="col-start-4 min-w-0 truncate whitespace-nowrap text-center">
+                    {row.visitCycle}
+                  </span>
+                  <span className="col-start-5 flex min-w-0 items-center gap-[0.5rem]">
                     <span
-                      key={tag}
-                      className="shrink-0 rounded-[0.25rem] px-[0.5rem] py-[0.25rem] font-['Pretendard'] text-xs font-medium leading-[1.3]"
-                      style={{
-                        backgroundColor: lightTheme.fill.neutral,
-                        color: lightTheme.label.alternative,
-                      }}
+                      className="relative h-[1rem] min-w-[11.625rem] flex-1 overflow-hidden rounded-[1.25rem]"
+                      style={{ backgroundColor: lightTheme.label.buttonText }}
                     >
-                      {tag}
+                      <span
+                        className="absolute left-0 top-0 h-full rounded-[1.25rem]"
+                        style={{
+                          width: `${row.riskPercent}%`,
+                          backgroundColor: riskColorMap[row.riskLevel],
+                        }}
+                      />
                     </span>
-                  ))}
-                </span>
-                <span className="col-start-7 min-w-0 truncate text-center">{row.totalVisits}</span>
-                <div className="relative col-start-8 flex min-w-0 justify-center">
-                  <button
-                    type="button"
-                    className="flex h-[1.625rem] w-full min-w-[6.125rem] items-center justify-center rounded-[1rem] border bg-white font-['Pretendard'] text-base font-medium leading-[1.3]"
-                    style={{
-                      borderColor: lightTheme.line.alternative,
-                      color: lightTheme.label.assistive,
-                    }}
-                    onClick={() => onToggleDesignerMenu(row.id)}
-                  >
-                    {row.designer}
-                    <img
-                      src={dropdownIcon}
-                      alt=""
-                      className="ml-[0.375rem] size-[1.25rem]"
-                      style={{ filter: DROPDOWN_FILTER }}
-                      aria-hidden="true"
-                    />
-                  </button>
-
-                  {openDesignerMenuRowId === row.id ? (
-                    <div
-                      className="absolute right-0 top-[2rem] z-20 flex w-[6.125rem] flex-col overflow-hidden rounded-[0.75rem] bg-white py-[0.25rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
-                      style={{ border: `0.0625rem solid ${lightTheme.line.alternative}` }}
+                    <span
+                      className="w-[2.125rem] shrink-0 text-base"
+                      style={{ color: lightTheme.label.alternative }}
                     >
-                      {designerOptions.map(option => (
-                        <button
-                          key={option.id}
-                          type="button"
-                          className="flex h-[2rem] items-center justify-center whitespace-nowrap font-['Pretendard'] text-base font-medium leading-[1.3] hover:bg-[#F7F7F7]"
-                          style={{
-                            color:
-                              row.designer === option.name
-                                ? lightTheme.primary.normal
-                                : lightTheme.label.assistive,
-                          }}
-                          onClick={() => onSelectDesigner(row.id, option.name)}
-                        >
-                          {option.name}
-                        </button>
-                      ))}
-                    </div>
-                  ) : null}
+                      {row.riskPercent}%
+                    </span>
+                  </span>
+                  <span className="col-start-6 flex min-w-0 justify-center gap-[0.25rem]">
+                    {row.tags.map(tag => (
+                      <span
+                        key={tag}
+                        className="shrink-0 rounded-[0.25rem] px-[0.5rem] py-[0.25rem] font-['Pretendard'] text-xs font-medium leading-[1.3]"
+                        style={{
+                          backgroundColor: lightTheme.fill.neutral,
+                          color: lightTheme.label.alternative,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </span>
+                  <span className="col-start-7 min-w-0 truncate text-center">
+                    {row.totalVisits}
+                  </span>
+                  <div className="relative col-start-8 flex min-w-0 justify-center">
+                    <button
+                      type="button"
+                      aria-haspopup="menu"
+                      aria-expanded={openDesignerMenuRowId === row.id}
+                      className="flex h-[1.625rem] w-full min-w-[6.125rem] items-center justify-center rounded-[1rem] border bg-white font-['Pretendard'] text-base font-medium leading-[1.3]"
+                      style={{
+                        borderColor: lightTheme.line.alternative,
+                        color: lightTheme.label.assistive,
+                      }}
+                      onClick={() => onToggleDesignerMenu(row.id)}
+                    >
+                      {row.designer}
+                      <img
+                        src={dropdownIcon}
+                        alt=""
+                        className="ml-[0.375rem] size-[1.25rem]"
+                        style={{ filter: DROPDOWN_FILTER }}
+                        aria-hidden="true"
+                      />
+                    </button>
+
+                    {openDesignerMenuRowId === row.id ? (
+                      <div
+                        className="absolute right-0 top-[2rem] z-20 flex w-[6.125rem] flex-col overflow-hidden rounded-[0.75rem] bg-white py-[0.25rem] shadow-[0_0_0.5rem_rgba(0,0,0,0.08)]"
+                        style={{ border: `0.0625rem solid ${lightTheme.line.alternative}` }}
+                      >
+                        {designerOptions.map(option => (
+                          <button
+                            key={option.id}
+                            type="button"
+                            className="flex h-[2rem] items-center justify-center whitespace-nowrap font-['Pretendard'] text-base font-medium leading-[1.3] hover:bg-[#F7F7F7]"
+                            style={{
+                              color:
+                                row.designer === option.name
+                                  ? lightTheme.primary.normal
+                                  : lightTheme.label.assistive,
+                            }}
+                            onClick={() => onSelectDesigner(row.id, option.name)}
+                          >
+                            {option.name}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
               </div>
-            </div>
             ))
           )}
         </div>
