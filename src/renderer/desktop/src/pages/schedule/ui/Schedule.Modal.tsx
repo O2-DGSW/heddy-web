@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { lightTheme, palette } from "@design-tokens";
 
 import calendarIcon from "@/pages/schedule/assets/svg/calendar.svg";
@@ -119,6 +119,18 @@ const TimeField = ({ label }: TimeFieldProps) => (
 );
 
 const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalProps) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <section
