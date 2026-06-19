@@ -63,7 +63,7 @@ export const ShopInfo = () => {
       <div className="flex flex-col gap-5 px-4 py-5">
         <ShopInfoRow
           icon={<MapIcon />}
-          text={SHOP_INFO.address || "미용실 주소 정보가 없습니다."}
+          text={shopInfoResponse?.address || "미용실 주소 정보가 없습니다."}
         />
         <ShopInfoRow
           icon={<CallIcon />}
