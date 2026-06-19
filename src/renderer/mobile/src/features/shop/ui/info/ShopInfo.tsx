@@ -61,9 +61,18 @@ export const ShopInfo = () => {
 
       {/* 상세 정보 */}
       <div className="flex flex-col gap-5 px-4 py-5">
-        <ShopInfoRow icon={<MapIcon />} text={SHOP_INFO.address} />
-        <ShopInfoRow icon={<CallIcon />} text={SHOP_INFO.phone} />
-        <ShopInfoRow icon={<TimeIcon />} text={SHOP_INFO.hours} />
+        <ShopInfoRow
+          icon={<MapIcon />}
+          text={SHOP_INFO.address || "미용실 주소 정보가 없습니다."}
+        />
+        <ShopInfoRow
+          icon={<CallIcon />}
+          text={shopInfoResponse?.phone_number || "미용실 전화번호 정보가 없습니다."}
+        />
+        <ShopInfoRow
+          icon={<TimeIcon />}
+          text={shopInfoResponse?.open_hours || "미용실 오픈 시간정보가 없습니다."}
+        />
       </div>
     </div>
   );
