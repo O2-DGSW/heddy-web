@@ -52,7 +52,7 @@ const DesktopCalendar = ({
                 key={date.date}
                 type="button"
                 aria-label={date.date}
-                className="flex size-[2.625rem] items-center justify-center rounded-full outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                className="flex size-[2.625rem] cursor-pointer items-center justify-center rounded-full outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
                 style={{
                   backgroundColor: isSelected ? lightTheme.primary.normal : "transparent",
                   color: isSelected
