@@ -59,7 +59,7 @@ interface DesignerFieldProps {
 
 const TIME_STEP_MINUTES = SCHEDULE_TIME_STEP_MINUTES;
 const MIN_TIME_MINUTES = 0;
-const MAX_TIME_MINUTES = 24 * 60 - TIME_STEP_MINUTES;
+const MAX_TIME_MINUTES = 24 * 60;
 const MAX_START_TIME_MINUTES = MAX_TIME_MINUTES - TIME_STEP_MINUTES;
 const DEFAULT_START_TIME = "10:00";
 const DEFAULT_END_TIME = "10:10";
@@ -139,7 +139,7 @@ const getSwatchColor = (color: ScheduleColorKey) => {
 };
 
 const timeOptions = Array.from(
-  { length: (24 * 60) / TIME_STEP_MINUTES },
+  { length: MAX_TIME_MINUTES / TIME_STEP_MINUTES + 1 },
   (_, index) => formatTime(index * TIME_STEP_MINUTES)
 );
 
