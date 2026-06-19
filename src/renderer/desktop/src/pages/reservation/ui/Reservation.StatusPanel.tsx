@@ -107,38 +107,39 @@ const ReservationStatusPanel = ({
                     className="flex h-16 items-center justify-center border-b border-[#F7F7F7]"
                   >
                     <div
-                      className="grid w-full grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)_2.5rem_5.231875rem] items-center px-[2.65625rem] font-['Pretendard'] text-lg font-semibold leading-[1.3] cursor-pointer"
-                      style={{ color: lightTheme.label.assistive }}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onOpenReservation(row.id)}
-                      onKeyDown={event => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          onOpenReservation(row.id);
-                        }
-                      }}
+                      className="grid w-full grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)_2.5rem_5.231875rem] items-center px-[2.65625rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                     >
-                      <div className="col-start-1 flex min-w-0 items-center gap-2.5">
-                        <img
-                          src={radioButtonIcon}
-                          alt=""
-                          className="size-3.5"
-                          aria-hidden="true"
-                        />
-                        <span>{row.time}</span>
-                      </div>
-                      <span className="col-start-3 min-w-0 truncate">{row.customerName}</span>
-                      <span className="col-start-5 min-w-0 truncate text-center">{row.service}</span>
-                      <span
-                        className="col-start-7 flex h-8 w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border bg-white px-3.75 text-center font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
-                        style={{ borderColor: lightTheme.line.alternative }}
+                      <button
+                        type="button"
+                        className="col-start-1 col-end-8 grid w-full cursor-pointer grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)] items-center border-0 bg-transparent p-0 text-left font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                        style={{ color: lightTheme.label.assistive }}
+                        onClick={() => onOpenReservation(row.id)}
                       >
-                        <span className="block w-full truncate">{row.request}</span>
-                      </span>
+                        <span className="col-start-1 flex min-w-0 items-center gap-2.5">
+                          <img
+                            src={radioButtonIcon}
+                            alt=""
+                            className="size-3.5"
+                            aria-hidden="true"
+                          />
+                          <span>{row.time}</span>
+                        </span>
+                        <span className="col-start-3 min-w-0 truncate">{row.customerName}</span>
+                        <span className="col-start-5 min-w-0 truncate text-center">
+                          {row.service}
+                        </span>
+                        <span
+                          className="col-start-7 flex h-8 w-full min-w-0 items-center justify-center overflow-hidden rounded-[1.25rem] border bg-white px-3.75 text-center font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+                          style={{ borderColor: lightTheme.line.alternative }}
+                        >
+                          <span className="block w-full truncate">{row.request}</span>
+                        </span>
+                      </button>
                       <div className="col-start-9 relative flex justify-center">
                         <button
                           type="button"
+                          aria-haspopup="menu"
+                          aria-expanded={isStatusMenuOpen}
                           className="flex h-6.5 w-[5.231875rem] items-center justify-center overflow-hidden rounded-[0.9375rem] pl-[0.6190625rem] pr-[0.15475rem] font-['Pretendard'] font-medium leading-[1.3]"
                           style={{
                             backgroundColor: statusMeta.color,
