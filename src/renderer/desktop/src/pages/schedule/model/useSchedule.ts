@@ -10,6 +10,7 @@ import {
 
 import {
   MIN_SCHEDULE_SCALE,
+  SCHEDULE_BOARD_DAY_COUNT,
   SCHEDULE_CONTENT_HEIGHT_REM,
   SCHEDULE_CONTENT_WIDTH_REM,
   SCHEDULE_DESIGNERS,
@@ -49,7 +50,7 @@ const getRootFontSize = () => {
 };
 
 const getWeekDateKeys = (weekStartDate: string) =>
-  Array.from({ length: SCHEDULE_WEEK_DAYS.length }, (_, index) =>
+  Array.from({ length: SCHEDULE_BOARD_DAY_COUNT }, (_, index) =>
     addDaysToDateKey(weekStartDate, index)
   );
 
