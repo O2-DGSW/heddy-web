@@ -1,11 +1,12 @@
-import { useEffect, type CSSProperties } from "react";
+import { useEffect } from "react";
 import { lightTheme, palette } from "@design-tokens";
 
-import calendarIcon from "@/pages/schedule/assets/svg/calendar.svg";
-import clockIcon from "@/pages/schedule/assets/svg/clock.svg";
-import closeIcon from "@/pages/schedule/assets/svg/close.svg";
 import dropdownDownIcon from "@/pages/schedule/assets/svg/dropdown-down.svg";
 import dropdownUpIcon from "@/pages/schedule/assets/svg/dropdown-up.svg";
+import modalCloseIcon from "@/pages/schedule/assets/svg/modal-close.svg";
+import modalDateIcon from "@/pages/schedule/assets/svg/modal-date.svg";
+import modalDropdownIcon from "@/pages/schedule/assets/svg/modal-dropdown.svg";
+import modalTimeIcon from "@/pages/schedule/assets/svg/modal-time.svg";
 import {
   SCHEDULE_COLOR_OPTIONS,
   SCHEDULE_DESIGNERS,
@@ -19,7 +20,7 @@ interface ScheduleModalProps {
 }
 
 const textStyle = {
-  letterSpacing: 0,
+  letterSpacing: "-0.02em",
 };
 
 const valueTextStyle = {
@@ -31,29 +32,6 @@ const labelTextStyle = {
   ...textStyle,
   color: lightTheme.label.assistive,
 };
-
-const createMaskStyle = (src: string, color: string): CSSProperties =>
-  ({
-    backgroundColor: color,
-    WebkitMaskImage: `url(${src})`,
-    WebkitMaskRepeat: "no-repeat",
-    WebkitMaskPosition: "center",
-    WebkitMaskSize: "contain",
-    maskImage: `url(${src})`,
-    maskRepeat: "no-repeat",
-    maskPosition: "center",
-    maskSize: "contain",
-  }) as CSSProperties;
-
-interface MaskIconProps {
-  src: string;
-  className: string;
-  color: string;
-}
-
-const MaskIcon = ({ src, className, color }: MaskIconProps) => (
-  <span className={`block ${className}`} style={createMaskStyle(src, color)} aria-hidden="true" />
-);
 
 const getSwatchColor = (color: ScheduleColorKey) => {
   if (color === "blue") {
@@ -89,10 +67,11 @@ const TimeField = ({ label }: TimeFieldProps) => (
     >
       <span className="absolute left-1/2 top-1/2 flex w-[9.5625rem] -translate-x-1/2 -translate-y-1/2 items-center justify-between">
         <span className="flex items-center gap-[0.375rem]">
-          <MaskIcon
-            src={clockIcon}
+          <img
+            src={modalTimeIcon}
+            alt=""
             className="size-[1.3125rem] shrink-0"
-            color={lightTheme.line.normal}
+            aria-hidden="true"
           />
           <span
             className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
@@ -102,16 +81,13 @@ const TimeField = ({ label }: TimeFieldProps) => (
           </span>
         </span>
         <span className="flex h-[1.625rem] w-4 flex-col items-start">
-          <MaskIcon
+          <img
             src={dropdownUpIcon}
+            alt=""
             className="mb-[-0.375rem] size-4 shrink-0"
-            color={lightTheme.label.disable}
+            aria-hidden="true"
           />
-          <MaskIcon
-            src={dropdownDownIcon}
-            className="size-4 shrink-0"
-            color={lightTheme.label.disable}
-          />
+          <img src={dropdownDownIcon} alt="" className="size-4 shrink-0" aria-hidden="true" />
         </span>
       </span>
     </span>
@@ -156,7 +132,7 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
                   className="flex size-7 items-center justify-center"
                   onClick={onClose}
                 >
-                  <img src={closeIcon} alt="" className="size-7" aria-hidden="true" />
+                  <img src={modalCloseIcon} alt="" className="size-7" aria-hidden="true" />
                 </button>
               </div>
               <div className="h-px w-full" style={{ backgroundColor: lightTheme.line.alternative }} />
@@ -175,10 +151,11 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
                   style={{ backgroundColor: lightTheme.background.neutral }}
                 >
                   <span className="absolute left-[0.9375rem] top-1/2 flex -translate-y-1/2 items-center gap-[0.375rem]">
-                    <MaskIcon
-                      src={calendarIcon}
+                    <img
+                      src={modalDateIcon}
+                      alt=""
                       className="size-[1.3125rem] shrink-0"
-                      color={lightTheme.line.normal}
+                      aria-hidden="true"
                     />
                     <span
                       className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
@@ -229,10 +206,11 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
                   style={{ backgroundColor: lightTheme.background.neutral }}
                 >
                   <span className="absolute left-[0.9375rem] top-1/2 flex -translate-y-1/2 items-center gap-[0.375rem]">
-                    <MaskIcon
-                      src={dropdownDownIcon}
+                    <img
+                      src={modalDropdownIcon}
+                      alt=""
                       className="size-[1.8125rem] shrink-0"
-                      color={lightTheme.line.normal}
+                      aria-hidden="true"
                     />
                     <span
                       className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
