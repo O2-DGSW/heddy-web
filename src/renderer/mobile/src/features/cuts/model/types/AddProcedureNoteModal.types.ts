@@ -30,6 +30,8 @@ export interface ProcedureNote {
   date: Date;
   tags: string;
   imageUrl: string | null;
+  afterImageUrl: string | null;
+  isPublic?: boolean;
 }
 
 /** useAddProcedureNote 훅 반환 타입 */

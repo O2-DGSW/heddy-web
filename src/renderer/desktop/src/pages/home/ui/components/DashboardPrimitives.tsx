@@ -35,7 +35,7 @@ const DashboardCard = ({
 const MoreButton = () => (
   <button
     type="button"
-    className="flex items-center gap-2 font-['Pretendard'] text-[16px] font-medium leading-[1.3] tracking-normal"
+    className="flex items-center gap-2 font-['Pretendard'] text-[16px] font-medium leading-[1.3] tracking-[-0.32px]"
     style={{ color: lightTheme.label.alternative }}
   >
     전체보기
@@ -66,7 +66,7 @@ const SelectPill = ({
 }) => (
   <button
     type="button"
-    className={`flex h-[26px] items-center justify-start overflow-hidden whitespace-nowrap rounded-full border pl-[15px] pr-0 font-['Pretendard'] text-[14px] font-medium leading-[1.3] tracking-normal ${className}`}
+    className={`flex h-[26px] items-center justify-start overflow-hidden whitespace-nowrap rounded-full border pl-[15px] pr-0 font-['Pretendard'] text-[14px] font-medium leading-[1.3] tracking-[-0.28px] ${className}`}
     style={{
       backgroundColor: lightTheme.background.normal,
       borderColor: lightTheme.line.alternative,

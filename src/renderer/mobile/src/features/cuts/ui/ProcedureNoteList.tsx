@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { lightTheme } from "@design-tokens";
@@ -13,10 +13,12 @@ export const ProcedureNoteList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { notes, addNote } = useProcedureNotes();
+  const processedRef = useRef(false);
 
   useEffect(() => {
     const newNote = location.state?.newNote as ProcedureNote | undefined;
-    if (newNote) {
+    if (newNote && !processedRef.current) {
+      processedRef.current = true;
       addNote(newNote);
       navigate("/cuts", { replace: true, state: null });
     }

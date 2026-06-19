@@ -10,6 +10,7 @@ export const lightTheme: Theme = {
         neutral: "#3C3E3F",
         alternative: "#5A5C5D",
         assistive: "#76787A",
+        inactive: "#999999",
         disable: "#E6E6E7",
         buttonText: "#F5F5F5",
     },

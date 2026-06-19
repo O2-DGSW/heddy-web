@@ -1,4 +1,6 @@
 export type CustomerRiskLevel = "normal" | "caution" | "risk";
+export type CustomerFilterKey = "all" | CustomerRiskLevel;
+export type CustomerSortKey = "recent" | "oldest";
 
 export interface CustomerSummary {
   id: CustomerRiskLevel;
@@ -10,8 +12,19 @@ export interface CustomerSummary {
 }
 
 export interface CustomerFilter {
+  key: CustomerFilterKey;
   label: string;
   active?: boolean;
+}
+
+export interface CustomerSortOption {
+  key: CustomerSortKey;
+  label: string;
+}
+
+export interface CustomerDesignerOption {
+  id: string;
+  name: string;
 }
 
 export interface CustomerRow {
@@ -34,4 +47,16 @@ export interface CustomerSummaryCardsProps {
 export interface CustomerTableProps {
   filters: CustomerFilter[];
   rows: CustomerRow[];
+  searchQuery: string;
+  sortLabel: string;
+  sortOptions: CustomerSortOption[];
+  designerOptions: CustomerDesignerOption[];
+  isSortMenuOpen: boolean;
+  openDesignerMenuRowId: number | null;
+  onChangeSearchQuery: (query: string) => void;
+  onSelectFilter: (filter: CustomerFilterKey) => void;
+  onToggleSortMenu: () => void;
+  onSelectSort: (sort: CustomerSortKey) => void;
+  onToggleDesignerMenu: (rowId: number) => void;
+  onSelectDesigner: (rowId: number, designer: string) => void;
 }

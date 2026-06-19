@@ -1,14 +1,34 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { loginApi } from "@/entities/auth/api/authApi";
+import { setAccessToken } from "@/entities/auth/model/token";
 
 export const useLoginForm = () => {
-  const [id, setId] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate('/') // API가 없는관계로 임시로 라우팅 설정
-  }
+  const handleLogin = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const { accessToken } = await loginApi({ loginId: id, password });
+      await setAccessToken(accessToken);
+      navigate("/");
+    } catch (err) {
+      console.error("로그인 실패:", err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  return { id, setId, password, setPassword, handleLogin }
-}
+  return { id, setId, password, setPassword, error, isLoading, handleLogin };
+};

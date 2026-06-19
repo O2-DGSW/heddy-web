@@ -26,6 +26,7 @@ interface CustomerGrade {
   value: number;
   percent: string;
   barWidth: number;
+  valueLeft: number;
   color: string;
   valueColor?: string;
 }
@@ -47,8 +48,6 @@ const chartPoints = [
   { x: 569.4, y: 64.9 },
   { x: 672.8, y: 39 },
 ];
-
-const reservationGridTemplate = "72px 48px minmax(225px, 1fr) 78px 55.714px";
 
 const summaryCards = [
   {
@@ -101,7 +100,7 @@ const summaryCards = [
   },
   {
     title: "이달의 예상 매출",
-    value: "12,000...",
+    value: "1,200,000",
     unit: "",
     image: monthlySalesImage,
     imageStyle: { left: 158, top: 43.5, width: 63, height: 63 },
@@ -112,15 +111,16 @@ const summaryCards = [
 ] satisfies SummaryCardItem[];
 
 const customerGrades = [
-  { label: "VVIP", value: 8, percent: "8%", barWidth: 54, color: palette.main[30] },
-  { label: "VIP", value: 8, percent: "16%", barWidth: 88, color: palette.main[40] },
-  { label: "골드", value: 8, percent: "34%", barWidth: 185, color: palette.main[50] },
-  { label: "실버", value: 8, percent: "34%", barWidth: 274, color: palette.main[70] },
+  { label: "VVIP", value: 8, percent: "8%", barWidth: 54, valueLeft: 36, color: palette.main[30] },
+  { label: "VIP", value: 8, percent: "16%", barWidth: 88, valueLeft: 68, color: palette.main[40] },
+  { label: "골드", value: 8, percent: "34%", barWidth: 185, valueLeft: 167, color: palette.main[50] },
+  { label: "실버", value: 8, percent: "34%", barWidth: 274, valueLeft: 256, color: palette.main[70] },
   {
     label: "일반",
     value: 8,
     percent: "34%",
     barWidth: 185,
+    valueLeft: 165,
     color: palette.main[90],
     valueColor: lightTheme.label.assistive,
   },
@@ -135,4 +135,4 @@ const reservations = [
 ] satisfies ReservationItem[];
 
 export type { CustomerGrade, ReservationItem, SummaryCardItem };
-export { chartPoints, customerGrades, reservationGridTemplate, reservations, summaryCards };
+export { chartPoints, customerGrades, reservations, summaryCards };
