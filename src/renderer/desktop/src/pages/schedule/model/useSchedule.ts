@@ -1,18 +1,27 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import {
-  DEFAULT_SCHEDULE_DATE,
+  addDaysToDateKey,
+  formatMonthLabel,
+  getMonthStartKey,
+  getTodayDateKey,
+  parseDateKey,
+} from "@/shared/ui/calendar/model/date";
+
+import {
   MIN_SCHEDULE_SCALE,
   SCHEDULE_CONTENT_HEIGHT_REM,
   SCHEDULE_CONTENT_WIDTH_REM,
+  SCHEDULE_DESIGNERS,
   SCHEDULE_LEFT_PANEL_WIDTH_REM,
-  SCHEDULE_EVENTS,
   SCHEDULE_PANEL_GAP_REM,
   SCHEDULE_PAGE_PADDING_REM,
   SCHEDULE_RIGHT_PANEL_WIDTH_REM,
-  SCHEDULE_SUMMARY_BY_DATE,
+  SCHEDULE_TIME_STEP_MINUTES,
+  SCHEDULE_WEEK_DAYS,
 } from "./Schedule.constant";
-import type { ScheduleColorKey } from "./Schedule.types";
+import { SCHEDULE_EVENTS } from "./Schedule.mock";
+import type { ScheduleEvent, ScheduleFormValues, ScheduleSummaryItem } from "./Schedule.types";
 
 interface ScheduleContainerSize {
   height: number;
@@ -26,6 +35,9 @@ interface ScheduleContainerPadding {
   top: number;
 }
 
+const DEFAULT_CUSTOMER_NAME = "오용준";
+const DEFAULT_TAGS = ["# 남자", "# 다운펌"];
+
 const getRootFontSize = () => {
   if (typeof window === "undefined") {
     return 16;
@@ -35,6 +47,17 @@ const getRootFontSize = () => {
 
   return Number.parseFloat(rootFontSize ?? "") || 16;
 };
+
+const getWeekDateKeys = (weekStartDate: string) =>
+  Array.from({ length: SCHEDULE_WEEK_DAYS.length }, (_, index) =>
+    addDaysToDateKey(weekStartDate, index)
+  );
+
+const getWeekLabels = (weekDateKeys: string[]) =>
+  weekDateKeys.map(dateKey => ({
+    date: String(parseDateKey(dateKey).getDate()),
+    day: SCHEDULE_WEEK_DAYS[parseDateKey(dateKey).getDay()] ?? "",
+  }));
 
 const getFallbackContainerSize = (): ScheduleContainerSize => {
   if (typeof window === "undefined") {
@@ -103,6 +126,67 @@ const getScheduleScale = (
 
   return Math.min(1, Math.max(MIN_SCHEDULE_SCALE, viewportScale));
 };
+
+const getHourFromTime = (time: string) => {
+  const [hour = "0", minute = "0"] = time.split(":");
+
+  return Number(hour) + Number(minute) / 60;
+};
+
+const formatTimeFromHour = (hour: number) => {
+  const totalMinutes =
+    Math.round(Math.round(hour * 60) / SCHEDULE_TIME_STEP_MINUTES) * SCHEDULE_TIME_STEP_MINUTES;
+  const normalizedMinutes = ((totalMinutes % (24 * 60)) + 24 * 60) % (24 * 60);
+  const timeHour = Math.floor(normalizedMinutes / 60);
+  const minute = normalizedMinutes % 60;
+
+  return `${String(timeHour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+};
+
+const formatSummaryDate = (date: string) => {
+  const [, month = "1", day = "1"] = date.split("-");
+
+  return `${Number(month)}/${Number(day)}`;
+};
+
+const getDesigner = (designerId: string) =>
+  SCHEDULE_DESIGNERS.find(item => item.id === designerId) ?? SCHEDULE_DESIGNERS[0];
+
+const createEventFromValues = (
+  id: number,
+  values: ScheduleFormValues,
+  visibleWeekDateKeys: string[]
+): ScheduleEvent => {
+  const designer = getDesigner(values.designerId);
+  const startHour = getHourFromTime(values.startTime);
+  const endHour = Math.max(
+    startHour + SCHEDULE_TIME_STEP_MINUTES / 60,
+    getHourFromTime(values.endTime)
+  );
+  const dayIndex = visibleWeekDateKeys.indexOf(values.date);
+
+  return {
+    id,
+    customerName: DEFAULT_CUSTOMER_NAME,
+    designerId: designer?.id ?? values.designerId,
+    designerName: designer?.name ?? DEFAULT_CUSTOMER_NAME,
+    tags: DEFAULT_TAGS,
+    color: values.color,
+    date: values.date,
+    dayIndex: dayIndex === -1 ? 0 : dayIndex,
+    startHour,
+    endHour,
+  };
+};
+
+const createSummaryItem = (event: ScheduleEvent): ScheduleSummaryItem => ({
+  id: event.id,
+  customerName: event.customerName,
+  designerName: event.designerName,
+  date: formatSummaryDate(event.date),
+  time: formatTimeFromHour(event.startHour),
+  tags: event.tags,
+});
 
 export const useSchedule = () => {
   const pageRef = useRef<HTMLDivElement>(null);
