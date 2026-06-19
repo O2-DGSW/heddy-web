@@ -5,20 +5,30 @@ import pictureSvg from "@/features/cuts/assets/procedute-note/Picture.svg";
 
 interface ImageUploadAreaProps {
   label: string;
-  onFileChange: (file: File | null) => void;
+  initialUrl?: string | null;
+  onFileChange: (dataUrl: string | null) => void;
 }
 
-export const ImageUploadArea = ({ label, onFileChange }: ImageUploadAreaProps) => {
+export const ImageUploadArea = ({ label, initialUrl, onFileChange }: ImageUploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null);
 
   const handleClick = () => inputRef.current?.click();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] ?? null;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(selected ? URL.createObjectURL(selected) : null);
-    onFileChange(selected);
+    if (!selected) {
+      setPreviewUrl(null);
+      onFileChange(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setPreviewUrl(dataUrl);
+      onFileChange(dataUrl);
+    };
+    reader.readAsDataURL(selected);
   };
 
   return (
