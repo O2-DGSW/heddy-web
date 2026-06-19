@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { UIEvent } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { lightTheme, palette } from "@design-tokens";
 
 import chevronLeftIcon from "@/pages/schedule/assets/svg/chevron-left.svg";
@@ -47,12 +46,6 @@ interface PositionedScheduleEvent {
   lane: number;
 }
 
-interface RenderedScheduleEvent extends PositionedScheduleEvent {
-  leftRem: number;
-  topRem: number;
-  widthRem: number;
-}
-
 const EVENT_TOP_OFFSET_REM = 0.75;
 const BOARD_INNER_LEFT_REM = 1.375;
 const BOARD_INNER_RIGHT_REM = 1.375;
@@ -66,7 +59,6 @@ const TIME_LABEL_LEFT_REM = 1.3125;
 const TIME_LABEL_WIDTH_REM = 3.875;
 const CHART_SCROLL_END_PADDING_REM = 1.5;
 const CURRENT_TIME_SCROLL_LEAD_SLOTS = 2;
-const TIMELINE_RENDER_OVERSCAN_SLOTS = 8;
 const WEEK_LABEL_LEFT_REM = 1.6875;
 const WEEK_LABEL_TOP_REM = 6.1875;
 const WEEK_LABEL_STEP_REM = 7.6875;
@@ -195,7 +187,6 @@ const ScheduleBoard = ({
   const chartScrollRef = useRef<HTMLDivElement>(null);
   const didScrollToCurrentTimeRef = useRef(false);
   const [currentHour, setCurrentHour] = useState(getCurrentHour);
-  const [scrollLeftRem, setScrollLeftRem] = useState(0);
   const boardInnerWidthRem = panelWidthRem - BOARD_INNER_LEFT_REM - BOARD_INNER_RIGHT_REM;
   const chartScrollViewportWidthRem =
     boardInnerWidthRem - SCHEDULE_CHART_EVENT_LAYER_LEFT_REM - CHART_SCROLL_VIEW_RIGHT_REM;
@@ -230,48 +221,6 @@ const ScheduleBoard = ({
   const chartGridWidthRem = chartScrollContentWidthRem - SCHEDULE_CHART_GRID_OFFSET_REM;
   const activeTimelineSlotIndex = Math.floor(getSlotIndexFromHour(currentHour, true));
   const currentHourLeftRem = hourToChartRem(currentHour, true);
-  const timelineOverscanRem = TIMELINE_RENDER_OVERSCAN_SLOTS * SCHEDULE_CHART_TIME_SLOT_WIDTH_REM;
-  const renderStartRem = Math.max(0, scrollLeftRem - timelineOverscanRem);
-  const renderEndRem = scrollLeftRem + chartScrollViewportWidthRem + timelineOverscanRem;
-  const renderedTimelineSlots = useMemo(
-    () =>
-      timelineSlots.filter(hour => {
-        const slotIndex = Math.round(getSlotIndexFromHour(hour));
-        const leftRem = TIME_LABEL_LEFT_REM + slotIndex * SCHEDULE_CHART_TIME_SLOT_WIDTH_REM;
-
-        return leftRem <= renderEndRem && leftRem + TIME_LABEL_WIDTH_REM >= renderStartRem;
-      }),
-    [renderEndRem, renderStartRem, timelineSlots]
-  );
-  const renderedEvents = useMemo<RenderedScheduleEvent[]>(
-    () =>
-      positionedEvents
-        .map(({ dayIndex, event, lane }) => {
-          const leftRem = hourToChartRem(event.startHour);
-          const widthRem = getEventWidthRem(event);
-          const topRem =
-            dayIndex * SCHEDULE_CHART_ROW_HEIGHT_REM +
-            EVENT_TOP_OFFSET_REM +
-            lane * SCHEDULE_EVENT_LANE_STEP_REM;
-
-          return {
-            dayIndex,
-            event,
-            lane,
-            leftRem,
-            topRem,
-            widthRem,
-          };
-        })
-        .filter(
-          ({ leftRem, widthRem }) => leftRem <= renderEndRem && leftRem + widthRem >= renderStartRem
-        ),
-    [positionedEvents, renderEndRem, renderStartRem]
-  );
-
-  const handleChartScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-    setScrollLeftRem(event.currentTarget.scrollLeft / getRootFontSize());
-  }, []);
 
   useEffect(() => {
     const timerId = window.setInterval(() => {
@@ -297,7 +246,6 @@ const ScheduleBoard = ({
     const leadRem = CURRENT_TIME_SCROLL_LEAD_SLOTS * SCHEDULE_CHART_TIME_SLOT_WIDTH_REM;
 
     chartScrollElement.scrollLeft = Math.max(0, (currentTimeLeftRem - leadRem) * rootFontSize);
-    setScrollLeftRem(chartScrollElement.scrollLeft / rootFontSize);
     didScrollToCurrentTimeRef.current = true;
   }, [chartScrollViewportWidthRem]);
 
@@ -381,7 +329,6 @@ const ScheduleBoard = ({
             className="scrollbar-thin absolute z-40 overflow-x-auto overflow-y-hidden"
             role="region"
             aria-label="주간 스케줄 시간표"
-            onScroll={handleChartScroll}
             style={{
               left: `${SCHEDULE_CHART_EVENT_LAYER_LEFT_REM}rem`,
               top: `${CHART_SCROLL_VIEW_TOP_REM}rem`,
@@ -401,7 +348,7 @@ const ScheduleBoard = ({
                   width: `${chartScrollContentWidthRem - TIME_LABEL_LEFT_REM}rem`,
                 }}
               >
-                {renderedTimelineSlots.map(hour => {
+                {timelineSlots.map(hour => {
                   const slotIndex = Math.round(getSlotIndexFromHour(hour));
                   const active = slotIndex === activeTimelineSlotIndex;
                   const label = formatTimelineHour(hour);
@@ -453,16 +400,25 @@ const ScheduleBoard = ({
                 />
 
                 <div className="absolute inset-0 z-40">
-                  {renderedEvents.map(({ event, leftRem, topRem, widthRem }) => (
-                    <ScheduleEventCard
-                      key={event.id}
-                      event={event}
-                      leftRem={leftRem}
-                      topRem={topRem}
-                      widthRem={widthRem}
-                      onSelect={() => onSelectEvent(event.id)}
-                    />
-                  ))}
+                  {positionedEvents.map(({ dayIndex, event, lane }) => {
+                    const leftRem = hourToChartRem(event.startHour);
+                    const topRem =
+                      dayIndex * SCHEDULE_CHART_ROW_HEIGHT_REM +
+                      EVENT_TOP_OFFSET_REM +
+                      lane * SCHEDULE_EVENT_LANE_STEP_REM;
+                    const widthRem = getEventWidthRem(event);
+
+                    return (
+                      <ScheduleEventCard
+                        key={event.id}
+                        event={event}
+                        leftRem={leftRem}
+                        topRem={topRem}
+                        widthRem={widthRem}
+                        onSelect={() => onSelectEvent(event.id)}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>
