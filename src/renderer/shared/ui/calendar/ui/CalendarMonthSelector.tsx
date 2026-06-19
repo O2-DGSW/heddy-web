@@ -6,6 +6,7 @@ import { getClassName } from "./className";
 import { DropdownIcon } from "./DropdownIcon";
 
 const MONTH_OPTION_RANGE = 12;
+const MONTH_OPTION_LOAD_SIZE = 12;
 
 interface CalendarMonthSelectorProps {
   buttonClassName: string;
@@ -27,13 +28,16 @@ const CalendarMonthSelector = ({
   onChangeMonth,
 }: CalendarMonthSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [pastOptionRange, setPastOptionRange] = useState(MONTH_OPTION_RANGE);
+  const [futureOptionRange, setFutureOptionRange] = useState(MONTH_OPTION_RANGE);
+  const selectorRef = useRef<HTMLDivElement>(null);
   const currentOptionRef = useRef<HTMLButtonElement>(null);
   const monthOptions = useMemo(
     () =>
-      Array.from({ length: MONTH_OPTION_RANGE * 2 + 1 }, (_, index) =>
-        addMonthsToMonthKey(displayedMonthDate, index - MONTH_OPTION_RANGE)
+      Array.from({ length: pastOptionRange + futureOptionRange + 1 }, (_, index) =>
+        addMonthsToMonthKey(displayedMonthDate, index - pastOptionRange)
       ),
-    [displayedMonthDate]
+    [displayedMonthDate, futureOptionRange, pastOptionRange]
   );
   const displayedMonthLabel = formatMonthLabel(displayedMonthDate);
 
@@ -43,13 +47,39 @@ const CalendarMonthSelector = ({
     }
   }, [displayedMonthDate, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!selectorRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
+
   const handleChangeMonth = (date: string) => {
     onChangeMonth(date);
     setIsOpen(false);
   };
 
+  const showPreviousMonths = () => {
+    setPastOptionRange(range => range + MONTH_OPTION_LOAD_SIZE);
+  };
+
+  const showNextMonths = () => {
+    setFutureOptionRange(range => range + MONTH_OPTION_LOAD_SIZE);
+  };
+
   return (
-    <div className="relative w-fit">
+    <div ref={selectorRef} className="relative w-fit">
       <button
         type="button"
         aria-label={`${displayedMonthLabel} 월 선택`}
@@ -69,6 +99,19 @@ const CalendarMonthSelector = ({
           )}
           style={{ borderColor: lightTheme.line.alternative }}
         >
+          <button
+            type="button"
+            aria-label="이전 달 더보기"
+            className="h-9 shrink-0 cursor-pointer border-b px-4 text-left font-['Pretendard'] text-[13px] font-semibold leading-[1.3] tracking-[-0.26px]"
+            style={{
+              borderColor: lightTheme.line.alternative,
+              backgroundColor: lightTheme.background.neutral,
+              color: lightTheme.primary.normal,
+            }}
+            onClick={showPreviousMonths}
+          >
+            이전 더보기
+          </button>
           {monthOptions.map(monthDate => {
             const isCurrent = monthDate === displayedMonthDate;
 
@@ -89,6 +132,19 @@ const CalendarMonthSelector = ({
               </button>
             );
           })}
+          <button
+            type="button"
+            aria-label="다음 달 더보기"
+            className="h-9 shrink-0 cursor-pointer border-t px-4 text-left font-['Pretendard'] text-[13px] font-semibold leading-[1.3] tracking-[-0.26px]"
+            style={{
+              borderColor: lightTheme.line.alternative,
+              backgroundColor: lightTheme.background.neutral,
+              color: lightTheme.primary.normal,
+            }}
+            onClick={showNextMonths}
+          >
+            다음 더보기
+          </button>
         </div>
       )}
     </div>
