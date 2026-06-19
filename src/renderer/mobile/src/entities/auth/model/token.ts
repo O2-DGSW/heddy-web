@@ -1,36 +1,65 @@
 import { SecureStoragePlugin } from "capacitor-secure-storage-plugin";
 
 const ACCESS_TOKEN_KEY = "accessToken";
+const REFRESH_TOKEN_KEY = "refreshToken";
 
-const isLocalStorageAvailable = () => typeof window !== "undefined" && window.localStorage != null;
-
-export const setAccessToken = async (token: string) => {
+const getLocalStorage = () => {
   try {
-    await SecureStoragePlugin.set({ key: ACCESS_TOKEN_KEY, value: token });
+    return typeof window !== "undefined" ? window.localStorage : null;
   } catch {
-    if (isLocalStorageAvailable()) {
-      window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
-    }
+    return null;
   }
 };
 
-export const getAccessToken = async () => {
+const setToken = async (key: string, token: string) => {
   try {
-    const { value } = await SecureStoragePlugin.get({ key: ACCESS_TOKEN_KEY });
+    await SecureStoragePlugin.set({ key, value: token });
+  } catch {
+    getLocalStorage()?.setItem(key, token);
+  }
+};
+
+const getToken = async (key: string) => {
+  try {
+    const { value } = await SecureStoragePlugin.get({ key });
     return value;
   } catch {
-    return isLocalStorageAvailable() ? window.localStorage.getItem(ACCESS_TOKEN_KEY) : null;
+    return getLocalStorage()?.getItem(key) ?? null;
   }
 };
 
-export const clearAccessToken = async () => {
+const clearToken = async (key: string) => {
   try {
-    await SecureStoragePlugin.remove({ key: ACCESS_TOKEN_KEY });
+    await SecureStoragePlugin.remove({ key });
   } catch {
     // Ignore storage plugin failures and still clear the web fallback below.
   }
 
-  if (isLocalStorageAvailable()) {
-    window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-  }
+  getLocalStorage()?.removeItem(key);
+};
+
+export const setAccessToken = (token: string) => setToken(ACCESS_TOKEN_KEY, token);
+
+export const getAccessToken = () => getToken(ACCESS_TOKEN_KEY);
+
+export const clearAccessToken = () => clearToken(ACCESS_TOKEN_KEY);
+
+export const setRefreshToken = (token: string) => setToken(REFRESH_TOKEN_KEY, token);
+
+export const getRefreshToken = () => getToken(REFRESH_TOKEN_KEY);
+
+export const clearRefreshToken = () => clearToken(REFRESH_TOKEN_KEY);
+
+export const setAuthTokens = async ({
+  accessToken,
+  refreshToken,
+}: {
+  accessToken: string;
+  refreshToken: string;
+}) => {
+  await Promise.all([setAccessToken(accessToken), setRefreshToken(refreshToken)]);
+};
+
+export const clearAuthTokens = async () => {
+  await Promise.all([clearAccessToken(), clearRefreshToken()]);
 };
