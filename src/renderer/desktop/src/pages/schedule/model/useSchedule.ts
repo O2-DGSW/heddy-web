@@ -190,12 +190,17 @@ const createSummaryItem = (event: ScheduleEvent): ScheduleSummaryItem => ({
 
 export const useSchedule = () => {
   const pageRef = useRef<HTMLDivElement>(null);
+  const nextEventIdRef = useRef(SCHEDULE_EVENTS.length + 1);
+  const [initialDate] = useState(getTodayDateKey);
   const [scale, setScale] = useState(getScheduleScale);
   const [availableContentWidthRem, setAvailableContentWidthRem] =
     useState(getAvailableContentWidth);
-  const [selectedDate, setSelectedDate] = useState(DEFAULT_SCHEDULE_DATE);
+  const [events, setEvents] = useState(SCHEDULE_EVENTS);
+  const [visibleWeekStartDate, setVisibleWeekStartDate] = useState(initialDate);
+  const [calendarMonthDate, setCalendarMonthDate] = useState(getMonthStartKey(initialDate));
+  const [selectedDate, setSelectedDate] = useState(initialDate);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState<ScheduleColorKey>("blue");
+  const [editingEventId, setEditingEventId] = useState<number | null>(null);
   const layoutHeightRem = SCHEDULE_CONTENT_HEIGHT_REM;
 
   useLayoutEffect(() => {
@@ -235,15 +240,146 @@ export const useSchedule = () => {
     };
   }, []);
 
-  const summaryItems = useMemo(() => SCHEDULE_SUMMARY_BY_DATE[selectedDate] ?? [], [selectedDate]);
+  const visibleWeekDateKeys = useMemo(
+    () => getWeekDateKeys(visibleWeekStartDate),
+    [visibleWeekStartDate]
+  );
+  const weekLabels = useMemo(() => getWeekLabels(visibleWeekDateKeys), [visibleWeekDateKeys]);
+  const monthLabel = useMemo(() => formatMonthLabel(selectedDate), [selectedDate]);
+  const visibleEvents = useMemo(
+    () => events.filter(event => visibleWeekDateKeys.includes(event.date)),
+    [events, visibleWeekDateKeys]
+  );
+  const summaryItems = useMemo(
+    () =>
+      events
+        .filter(event => event.date === selectedDate)
+        .sort((firstEvent, secondEvent) => firstEvent.startHour - secondEvent.startHour)
+        .map(createSummaryItem),
+    [selectedDate, events]
+  );
+  const calendarMarkerMap = useMemo(
+    () =>
+      events.reduce<Record<string, number>>((markerMap, event) => {
+        markerMap[event.date] = (markerMap[event.date] ?? 0) + 1;
+
+        return markerMap;
+      }, {}),
+    [events]
+  );
+  const editingEvent = useMemo(
+    () => events.find(event => event.id === editingEventId) ?? null,
+    [editingEventId, events]
+  );
+
+  const focusDate = useCallback((date: string) => {
+    setSelectedDate(date);
+    setCalendarMonthDate(getMonthStartKey(date));
+    setVisibleWeekStartDate(date);
+  }, []);
+
+  const selectDate = useCallback(
+    (date: string) => {
+      focusDate(date);
+    },
+    [focusDate]
+  );
+
+  const moveToPreviousDay = useCallback(() => {
+    focusDate(addDaysToDateKey(selectedDate, -1));
+  }, [focusDate, selectedDate]);
+
+  const moveToNextDay = useCallback(() => {
+    focusDate(addDaysToDateKey(selectedDate, 1));
+  }, [focusDate, selectedDate]);
+
+  const moveToToday = useCallback(() => {
+    focusDate(getTodayDateKey());
+  }, [focusDate]);
 
   const openModal = useCallback(() => {
+    setEditingEventId(null);
     setIsModalOpen(true);
   }, []);
 
+  const openEventModal = useCallback(
+    (eventId: number) => {
+      const event = events.find(item => item.id === eventId);
+
+      if (!event) {
+        return;
+      }
+
+      setEditingEventId(event.id);
+      focusDate(event.date);
+      setIsModalOpen(true);
+    },
+    [events, focusDate]
+  );
+
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
+    setEditingEventId(null);
   }, []);
+
+  const createSchedule = useCallback(
+    (values: ScheduleFormValues) => {
+      const nextEventId = nextEventIdRef.current;
+
+      nextEventIdRef.current += 1;
+
+      setEvents(currentEvents => [
+        ...currentEvents,
+        createEventFromValues(nextEventId, values, visibleWeekDateKeys),
+      ]);
+      focusDate(values.date);
+      closeModal();
+    },
+    [closeModal, focusDate, visibleWeekDateKeys]
+  );
+
+  const updateSchedule = useCallback(
+    (values: ScheduleFormValues) => {
+      if (!values.id) {
+        return;
+      }
+
+      setEvents(currentEvents =>
+        currentEvents.map(event =>
+          event.id === values.id
+            ? {
+                ...createEventFromValues(values.id, values, visibleWeekDateKeys),
+                customerName: event.customerName,
+                tags: event.tags,
+              }
+            : event
+        )
+      );
+      focusDate(values.date);
+      closeModal();
+    },
+    [closeModal, focusDate, visibleWeekDateKeys]
+  );
+
+  const deleteSchedule = useCallback(
+    (eventId: number) => {
+      setEvents(currentEvents => currentEvents.filter(event => event.id !== eventId));
+      closeModal();
+    },
+    [closeModal]
+  );
+
+  const saveSchedule = useCallback(
+    (values: ScheduleFormValues) => {
+      if (values.id) {
+        updateSchedule(values);
+        return;
+      }
+
+      createSchedule(values);
+    },
+    [createSchedule, updateSchedule]
+  );
 
   const layoutWidthRem = Math.max(SCHEDULE_CONTENT_WIDTH_REM, availableContentWidthRem / scale);
   const rightPanelWidthRem = Math.max(
@@ -260,13 +396,24 @@ export const useSchedule = () => {
     scaledLayoutWidthRem: layoutWidthRem * scale,
     scaledLayoutHeightRem: layoutHeightRem * scale,
     selectedDate,
-    selectedColor,
+    calendarMonthDate,
+    calendarMarkerMap,
     summaryItems,
-    events: SCHEDULE_EVENTS,
+    events: visibleEvents,
+    editingEvent,
+    visibleWeekDateKeys,
+    weekLabels,
+    monthLabel,
     isModalOpen,
-    setSelectedDate,
-    setSelectedColor,
+    setCalendarMonthDate,
+    selectDate,
     openModal,
+    openEventModal,
     closeModal,
+    saveSchedule,
+    deleteSchedule,
+    moveToPreviousDay,
+    moveToNextDay,
+    moveToToday,
   };
 };
