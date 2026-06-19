@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { FormEvent, MouseEvent } from "react";
 import { lightTheme, palette } from "@design-tokens";
 
+import { parseDateKey } from "@/shared/ui/calendar/model/date";
 import dropdownDownIcon from "@/pages/schedule/assets/svg/dropdown-down.svg";
 import dropdownUpIcon from "@/pages/schedule/assets/svg/dropdown-up.svg";
 import modalCloseIcon from "@/pages/schedule/assets/svg/modal-close.svg";
@@ -8,16 +10,61 @@ import modalDateIcon from "@/pages/schedule/assets/svg/modal-date.svg";
 import modalDropdownIcon from "@/pages/schedule/assets/svg/modal-dropdown.svg";
 import modalTimeIcon from "@/pages/schedule/assets/svg/modal-time.svg";
 import {
+  DEFAULT_SCHEDULE_DESIGNER_ID,
   SCHEDULE_COLOR_OPTIONS,
   SCHEDULE_DESIGNERS,
+  SCHEDULE_TIME_STEP_MINUTES,
 } from "@/pages/schedule/model/Schedule.constant";
-import type { ScheduleColorKey } from "@/pages/schedule/model/Schedule.types";
+import type {
+  ScheduleColorKey,
+  ScheduleEvent,
+  ScheduleFormValues,
+} from "@/pages/schedule/model/Schedule.types";
 
 interface ScheduleModalProps {
-  selectedColor: ScheduleColorKey;
+  editingEvent: ScheduleEvent | null;
+  initialDate: string;
+  visibleWeekDateKeys: string[];
   onClose: () => void;
-  onSelectColor: (color: ScheduleColorKey) => void;
+  onDelete: (eventId: number) => void;
+  onSave: (values: ScheduleFormValues) => void;
 }
+
+type OpenPopover = "date" | "designer" | "endTime" | "startTime" | null;
+
+interface DateFieldProps {
+  isOpen: boolean;
+  value: string;
+  visibleWeekDateKeys: string[];
+  onSelect: (value: string) => void;
+  onToggle: () => void;
+}
+
+interface TimeFieldProps {
+  isOpen: boolean;
+  label: string;
+  maxMinutes: number;
+  minMinutes: number;
+  value: string;
+  onChange: (value: string) => void;
+  onToggle: () => void;
+}
+
+interface DesignerFieldProps {
+  isOpen: boolean;
+  value: string;
+  onSelect: (value: string) => void;
+  onToggle: () => void;
+}
+
+const TIME_STEP_MINUTES = SCHEDULE_TIME_STEP_MINUTES;
+const MIN_TIME_MINUTES = 0;
+const MAX_TIME_MINUTES = 24 * 60 - TIME_STEP_MINUTES;
+const MAX_START_TIME_MINUTES = MAX_TIME_MINUTES - TIME_STEP_MINUTES;
+const DEFAULT_START_TIME = "10:00";
+const DEFAULT_END_TIME = "10:10";
+const DEFAULT_COLOR: ScheduleColorKey = "blue";
+const DATE_OPTION_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 const textStyle = {
   letterSpacing: "-0.02em",
@@ -25,12 +72,54 @@ const textStyle = {
 
 const valueTextStyle = {
   ...textStyle,
-  color: lightTheme.line.normal,
+  color: lightTheme.label.neutral,
 };
 
 const labelTextStyle = {
   ...textStyle,
   color: lightTheme.label.assistive,
+};
+
+const fieldButtonClassName =
+  "flex h-[2.625rem] w-full cursor-pointer items-center rounded-[0.625rem] px-[0.9375rem] text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35";
+
+const popoverClassName =
+  "absolute left-0 top-[2.875rem] z-40 flex max-h-[10.5rem] w-full flex-col overflow-y-auto rounded-[0.625rem] border bg-white py-1 shadow-[0_0.375rem_1rem_rgba(0,0,0,0.12)]";
+
+const optionClassName =
+  "flex h-9 shrink-0 items-center px-[0.9375rem] text-left font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#41BE8E]/35";
+
+const padTimePart = (value: number) => String(value).padStart(2, "0");
+
+const getTimeMinutes = (time: string) => {
+  const [hour = "0", minute = "0"] = time.split(":");
+
+  return Number(hour) * 60 + Number(minute);
+};
+
+const formatTime = (minutes: number, maxMinutes = MAX_TIME_MINUTES) => {
+  const clampedMinutes = Math.min(maxMinutes, Math.max(MIN_TIME_MINUTES, minutes));
+  const hour = Math.floor(clampedMinutes / 60);
+  const minute = clampedMinutes % 60;
+
+  return `${padTimePart(hour)}:${padTimePart(minute)}`;
+};
+
+const formatTimeFromHour = (hour: number, maxMinutes = MAX_TIME_MINUTES) =>
+  formatTime(Math.round(Math.round(hour * 60) / TIME_STEP_MINUTES) * TIME_STEP_MINUTES, maxMinutes);
+
+const getSteppedTime = (time: string, stepMinutes: number, maxMinutes = MAX_TIME_MINUTES) =>
+  formatTime(getTimeMinutes(time) + stepMinutes, maxMinutes);
+
+const getInitialDate = (initialDate: string, visibleWeekDateKeys: string[]) =>
+  visibleWeekDateKeys.includes(initialDate) ? initialDate : visibleWeekDateKeys[0];
+
+const formatDate = (date: string) => date.replaceAll("-", "/");
+
+const getDateOptionLabel = (date: string) => {
+  const day = DATE_OPTION_DAYS[parseDateKey(date).getDay()];
+
+  return day ? `${formatDate(date)} ${day}` : formatDate(date);
 };
 
 const getSwatchColor = (color: ScheduleColorKey) => {
@@ -49,52 +138,262 @@ const getSwatchColor = (color: ScheduleColorKey) => {
   return palette.main[90];
 };
 
-interface TimeFieldProps {
-  label: string;
-}
+const timeOptions = Array.from(
+  { length: (24 * 60) / TIME_STEP_MINUTES },
+  (_, index) => formatTime(index * TIME_STEP_MINUTES)
+);
 
-const TimeField = ({ label }: TimeFieldProps) => (
-  <label className="flex w-[11.375rem] flex-col items-end gap-3">
+const DateField = ({
+  isOpen,
+  value,
+  visibleWeekDateKeys,
+  onSelect,
+  onToggle,
+}: DateFieldProps) => (
+  <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
     <span
-      className="h-[1.3125rem] w-[10.6875rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+      className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
       style={labelTextStyle}
     >
-      {label}
+      예약 날짜
     </span>
-    <span
-      className="relative h-[2.625rem] w-full overflow-hidden rounded-[0.625rem]"
-      style={{ backgroundColor: lightTheme.background.neutral }}
-    >
-      <span className="absolute left-1/2 top-1/2 flex w-[9.5625rem] -translate-x-1/2 -translate-y-1/2 items-center justify-between">
+    <div className="relative w-full">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-label="예약 날짜 선택"
+        className={fieldButtonClassName}
+        style={{ backgroundColor: lightTheme.background.neutral }}
+        onClick={onToggle}
+      >
         <span className="flex items-center gap-[0.375rem]">
-          <img
-            src={modalTimeIcon}
-            alt=""
-            className="size-[1.3125rem] shrink-0"
-            aria-hidden="true"
-          />
+          <img src={modalDateIcon} alt="" className="size-[1.3125rem] shrink-0" aria-hidden="true" />
           <span
             className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
             style={valueTextStyle}
           >
-            10:00
+            {formatDate(value)}
           </span>
         </span>
-        <span className="flex h-[1.625rem] w-4 flex-col items-start">
-          <img
-            src={dropdownUpIcon}
-            alt=""
-            className="mb-[-0.375rem] size-4 shrink-0"
-            aria-hidden="true"
-          />
-          <img src={dropdownDownIcon} alt="" className="size-4 shrink-0" aria-hidden="true" />
-        </span>
-      </span>
-    </span>
-  </label>
+      </button>
+
+      {isOpen && (
+        <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
+          {visibleWeekDateKeys.map(date => {
+            const isSelected = date === value;
+
+            return (
+              <button
+                key={date}
+                type="button"
+                className={optionClassName}
+                style={{
+                  backgroundColor: isSelected ? lightTheme.background.neutral : "transparent",
+                  color: isSelected ? lightTheme.primary.normal : lightTheme.label.alternative,
+                  ...textStyle,
+                }}
+                onClick={() => onSelect(date)}
+              >
+                {getDateOptionLabel(date)}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </div>
 );
 
-const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalProps) => {
+const TimeField = ({
+  isOpen,
+  label,
+  maxMinutes,
+  minMinutes,
+  value,
+  onChange,
+  onToggle,
+}: TimeFieldProps) => {
+  const options = timeOptions.filter(time => {
+    const minutes = getTimeMinutes(time);
+
+    return minutes >= minMinutes && minutes <= maxMinutes;
+  });
+
+  return (
+    <div className="flex w-[11.375rem] flex-col items-end gap-3">
+      <span
+        className="h-[1.3125rem] w-[10.6875rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+        style={labelTextStyle}
+      >
+        {label}
+      </span>
+      <div className="relative w-full">
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-label={`${label} 선택`}
+          className={`${fieldButtonClassName} pr-[2.75rem]`}
+          style={{ backgroundColor: lightTheme.background.neutral }}
+          onClick={onToggle}
+        >
+          <span className="flex items-center gap-[0.375rem]">
+            <img
+              src={modalTimeIcon}
+              alt=""
+              className="size-[1.3125rem] shrink-0"
+              aria-hidden="true"
+            />
+            <span
+              className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
+              style={valueTextStyle}
+            >
+              {value}
+            </span>
+          </span>
+        </button>
+
+        <span className="absolute right-[0.8125rem] top-1/2 z-20 flex h-[1.625rem] w-4 -translate-y-1/2 flex-col items-start">
+          <button
+            type="button"
+            aria-label={`${label} ${TIME_STEP_MINUTES}분 증가`}
+            className="mb-[-0.375rem] flex size-4 shrink-0 cursor-pointer items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+            onClick={() => onChange(getSteppedTime(value, TIME_STEP_MINUTES, maxMinutes))}
+          >
+            <img src={dropdownUpIcon} alt="" className="size-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label={`${label} ${TIME_STEP_MINUTES}분 감소`}
+            className="flex size-4 shrink-0 cursor-pointer items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+            onClick={() => onChange(getSteppedTime(value, -TIME_STEP_MINUTES, maxMinutes))}
+          >
+            <img src={dropdownDownIcon} alt="" className="size-4" aria-hidden="true" />
+          </button>
+        </span>
+
+        {isOpen && (
+          <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
+            {options.map(time => {
+              const isSelected = time === value;
+
+              return (
+                <button
+                  key={time}
+                  type="button"
+                  className={optionClassName}
+                  style={{
+                    backgroundColor: isSelected ? lightTheme.background.neutral : "transparent",
+                    color: isSelected ? lightTheme.primary.normal : lightTheme.label.alternative,
+                    ...textStyle,
+                  }}
+                  onClick={() => onChange(time)}
+                >
+                  {time}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps) => {
+  const selectedDesigner =
+    SCHEDULE_DESIGNERS.find(designer => designer.id === value) ?? SCHEDULE_DESIGNERS[0];
+
+  return (
+    <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
+      <span
+        className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+        style={labelTextStyle}
+      >
+        디자이너 선택
+      </span>
+      <div className="relative w-full">
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-label="디자이너 선택"
+          className={fieldButtonClassName}
+          style={{ backgroundColor: lightTheme.background.neutral }}
+          onClick={onToggle}
+        >
+          <span className="flex items-center gap-[0.375rem]">
+            <img
+              src={modalDropdownIcon}
+              alt=""
+              className="size-[1.8125rem] shrink-0"
+              aria-hidden="true"
+            />
+            <span
+              className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
+              style={valueTextStyle}
+            >
+              {selectedDesigner?.name}
+            </span>
+          </span>
+        </button>
+
+        {isOpen && (
+          <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
+            {SCHEDULE_DESIGNERS.map(designer => {
+              const isSelected = designer.id === value;
+
+              return (
+                <button
+                  key={designer.id}
+                  type="button"
+                  className={optionClassName}
+                  style={{
+                    backgroundColor: isSelected ? lightTheme.background.neutral : "transparent",
+                    color: isSelected ? lightTheme.primary.normal : lightTheme.label.alternative,
+                    ...textStyle,
+                  }}
+                  onClick={() => onSelect(designer.id)}
+                >
+                  {designer.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ScheduleModal = ({
+  editingEvent,
+  initialDate,
+  visibleWeekDateKeys,
+  onClose,
+  onDelete,
+  onSave,
+}: ScheduleModalProps) => {
+  const initialForm = useMemo(
+    () => ({
+      color: editingEvent?.color ?? DEFAULT_COLOR,
+      date: editingEvent?.date ?? getInitialDate(initialDate, visibleWeekDateKeys),
+      designerId: editingEvent?.designerId ?? DEFAULT_SCHEDULE_DESIGNER_ID,
+      endTime: editingEvent
+        ? formatTimeFromHour(editingEvent.endHour)
+        : DEFAULT_END_TIME,
+      startTime: editingEvent
+        ? formatTimeFromHour(editingEvent.startHour, MAX_START_TIME_MINUTES)
+        : DEFAULT_START_TIME,
+    }),
+    [editingEvent, initialDate, visibleWeekDateKeys]
+  );
+  const [openPopover, setOpenPopover] = useState<OpenPopover>(null);
+  const [date, setDate] = useState(initialForm.date);
+  const [startTime, setStartTime] = useState(initialForm.startTime);
+  const [endTime, setEndTime] = useState(initialForm.endTime);
+  const [designerId, setDesignerId] = useState(initialForm.designerId);
+  const [color, setColor] = useState<ScheduleColorKey>(initialForm.color);
+  const isEditMode = Boolean(editingEvent);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -107,15 +406,74 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  const closePopover = () => setOpenPopover(null);
+
+  const togglePopover = (popover: OpenPopover) => {
+    setOpenPopover(currentPopover => (currentPopover === popover ? null : popover));
+  };
+
+  const updateStartTime = (value: string) => {
+    const nextStartTime = formatTime(getTimeMinutes(value), MAX_START_TIME_MINUTES);
+    const nextStartMinutes = getTimeMinutes(nextStartTime);
+
+    setStartTime(nextStartTime);
+    setEndTime(currentEndTime =>
+      getTimeMinutes(currentEndTime) <= nextStartMinutes
+        ? formatTime(nextStartMinutes + TIME_STEP_MINUTES)
+        : currentEndTime
+    );
+  };
+
+  const updateEndTime = (value: string) => {
+    const minEndMinutes = getTimeMinutes(startTime) + TIME_STEP_MINUTES;
+
+    setEndTime(formatTime(Math.max(getTimeMinutes(value), minEndMinutes)));
+  };
+
+  const handleSelectDate = (value: string) => {
+    setDate(value);
+    closePopover();
+  };
+
+  const handleSelectDesigner = (value: string) => {
+    setDesignerId(value);
+    closePopover();
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    onSave({
+      id: editingEvent?.id,
+      color,
+      date,
+      designerId,
+      endTime,
+      startTime,
+    });
+  };
+
+  const handleBackdropMouseDown = (event: MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onMouseDown={handleBackdropMouseDown}
+    >
       <section
-        className="relative h-[33.8125rem] w-[27.5rem] overflow-hidden rounded-[1.25rem] bg-white"
+        className="relative h-[33.8125rem] w-[27.5rem] overflow-visible rounded-[1.25rem] bg-white"
         role="dialog"
         aria-modal="true"
         aria-labelledby="schedule-modal-title"
       >
-        <div className="absolute left-[1.75rem] top-[1.875rem] flex w-[23.9375rem] flex-col items-end gap-[2.1875rem]">
+        <form
+          className="absolute left-[1.75rem] top-[1.875rem] flex w-[23.9375rem] flex-col items-end gap-[2.1875rem]"
+          onSubmit={handleSubmit}
+        >
           <div className="flex w-full flex-col gap-6">
             <div className="flex w-full flex-col gap-[0.5625rem]">
               <div className="flex h-7 w-full items-center justify-between">
@@ -129,7 +487,7 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
                 <button
                   type="button"
                   aria-label="스케줄 모달 닫기"
-                  className="flex size-7 items-center justify-center"
+                  className="flex size-7 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
                   onClick={onClose}
                 >
                   <img src={modalCloseIcon} alt="" className="size-7" aria-hidden="true" />
@@ -139,37 +497,33 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
             </div>
 
             <div className="flex w-full flex-col gap-5">
-              <label className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
-                <span
-                  className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
-                  style={labelTextStyle}
-                >
-                  예약 날짜
-                </span>
-                <span
-                  className="relative h-[2.625rem] w-full rounded-[0.625rem]"
-                  style={{ backgroundColor: lightTheme.background.neutral }}
-                >
-                  <span className="absolute left-[0.9375rem] top-1/2 flex -translate-y-1/2 items-center gap-[0.375rem]">
-                    <img
-                      src={modalDateIcon}
-                      alt=""
-                      className="size-[1.3125rem] shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span
-                      className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
-                      style={valueTextStyle}
-                    >
-                      2026/09/09
-                    </span>
-                  </span>
-                </span>
-              </label>
+              <DateField
+                isOpen={openPopover === "date"}
+                value={date}
+                visibleWeekDateKeys={visibleWeekDateKeys}
+                onSelect={handleSelectDate}
+                onToggle={() => togglePopover("date")}
+              />
 
               <div className="flex w-full items-center gap-[1.1875rem]">
-                <TimeField label="시작 시간" />
-                <TimeField label="끝 시간" />
+                <TimeField
+                  isOpen={openPopover === "startTime"}
+                  label="시작 시간"
+                  maxMinutes={MAX_START_TIME_MINUTES}
+                  minMinutes={MIN_TIME_MINUTES}
+                  value={startTime}
+                  onChange={updateStartTime}
+                  onToggle={() => togglePopover("startTime")}
+                />
+                <TimeField
+                  isOpen={openPopover === "endTime"}
+                  label="끝 시간"
+                  maxMinutes={MAX_TIME_MINUTES}
+                  minMinutes={getTimeMinutes(startTime) + TIME_STEP_MINUTES}
+                  value={endTime}
+                  onChange={updateEndTime}
+                  onToggle={() => togglePopover("endTime")}
+                />
               </div>
 
               <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
@@ -180,77 +534,80 @@ const ScheduleModal = ({ selectedColor, onClose, onSelectColor }: ScheduleModalP
                   색상 선택
                 </span>
                 <div className="flex h-[2.625rem] w-full items-center gap-[0.5625rem]">
-                  {SCHEDULE_COLOR_OPTIONS.map(color => (
+                  {SCHEDULE_COLOR_OPTIONS.map(colorOption => (
                     <button
-                      key={color}
+                      key={colorOption}
                       type="button"
-                      aria-label={`${color} 스케줄 색상`}
-                      aria-pressed={color === selectedColor}
-                      className="size-[2.625rem] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
-                      style={{ backgroundColor: getSwatchColor(color) }}
-                      onClick={() => onSelectColor(color)}
+                      aria-label={`${colorOption} 스케줄 색상`}
+                      aria-pressed={colorOption === color}
+                      className="size-[2.625rem] cursor-pointer rounded-full outline-none transition-shadow hover:ring-2 hover:ring-[#41BE8E]/20 focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                      style={{
+                        backgroundColor: getSwatchColor(colorOption),
+                        boxShadow:
+                          colorOption === color
+                            ? `inset 0 0 0 0.125rem ${lightTheme.primary.normal}`
+                            : undefined,
+                      }}
+                      onClick={() => setColor(colorOption)}
                     />
                   ))}
                 </div>
               </div>
 
-              <label className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
-                <span
-                  className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
-                  style={labelTextStyle}
-                >
-                  디자이너 선택
-                </span>
-                <span
-                  className="relative h-[2.625rem] w-full rounded-[0.625rem]"
-                  style={{ backgroundColor: lightTheme.background.neutral }}
-                >
-                  <span className="absolute left-[0.9375rem] top-1/2 flex -translate-y-1/2 items-center gap-[0.375rem]">
-                    <img
-                      src={modalDropdownIcon}
-                      alt=""
-                      className="size-[1.8125rem] shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span
-                      className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
-                      style={valueTextStyle}
-                    >
-                      {SCHEDULE_DESIGNERS[0].name}
-                    </span>
-                  </span>
-                </span>
-              </label>
+              <DesignerField
+                isOpen={openPopover === "designer"}
+                value={designerId}
+                onSelect={handleSelectDesigner}
+                onToggle={() => togglePopover("designer")}
+              />
             </div>
           </div>
 
-          <div className="flex items-center gap-[0.375rem]">
-            <button
-              type="button"
-              className="flex h-8 w-[3.75rem] items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3]"
-              style={{
-                ...textStyle,
-                backgroundColor: lightTheme.background.neutral,
-                color: lightTheme.line.normal,
-              }}
-              onClick={onClose}
-            >
-              취소
-            </button>
-            <button
-              type="button"
-              className="flex h-8 w-[3.75rem] items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3]"
-              style={{
-                ...textStyle,
-                backgroundColor: lightTheme.primary.normal,
-                color: lightTheme.fill.normal,
-              }}
-              onClick={onClose}
-            >
-              저장
-            </button>
+          <div className="flex w-full items-center justify-between">
+            {isEditMode ? (
+              <button
+                type="button"
+                  className="flex h-8 w-[3.75rem] cursor-pointer items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                style={{
+                  ...textStyle,
+                  backgroundColor: palette.red[60],
+                  color: lightTheme.fill.normal,
+                }}
+                onClick={() => editingEvent && onDelete(editingEvent.id)}
+              >
+                삭제
+              </button>
+            ) : (
+              <span />
+            )}
+
+            <div className="flex items-center gap-[0.375rem]">
+              <button
+                type="button"
+                className="flex h-8 w-[3.75rem] cursor-pointer items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                style={{
+                  ...textStyle,
+                  backgroundColor: lightTheme.background.neutral,
+                  color: lightTheme.line.normal,
+                }}
+                onClick={onClose}
+              >
+                취소
+              </button>
+              <button
+                type="submit"
+                className="flex h-8 w-[3.75rem] cursor-pointer items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                style={{
+                  ...textStyle,
+                  backgroundColor: lightTheme.primary.normal,
+                  color: lightTheme.fill.normal,
+                }}
+              >
+                저장
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </section>
     </div>
   );
