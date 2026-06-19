@@ -3,7 +3,6 @@ import { lightTheme } from "@design-tokens";
 import type {
   FilterTab,
   ReservationFilterKey,
-  ReservationMonthOption,
   ReservationRecord,
   ReservationStatusKey,
 } from "./Reservation.types";
@@ -25,12 +24,6 @@ export const RESERVATION_FILTER_TAB_DEFINITIONS: Omit<FilterTab, "active">[] = [
   { key: "rejected", label: "거절" },
   { key: "approved", label: "승인" },
   { key: "changeRequest", label: "변경 요청" },
-];
-
-export const RESERVATION_MONTH_OPTIONS: ReservationMonthOption[] = [
-  { key: "2026-04", label: "2026. 4" },
-  { key: "2026-05", label: "2026. 5", active: true },
-  { key: "2026-06", label: "2026. 6" },
 ];
 
 export const RESERVATION_TIME_OPTIONS = [

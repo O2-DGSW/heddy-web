@@ -128,7 +128,15 @@ export const useCustomer = () => {
     const matchesFilter = selectedFilter === "all" || row.riskLevel === selectedFilter;
     const matchesSearch =
       normalizedSearchQuery.length === 0 ||
-      [row.name, row.phone, row.lastVisit, row.visitCycle, row.totalVisits, designer, ...row.tags]
+      [
+        row.name,
+        row.phone,
+        row.lastVisit,
+        row.visitCycle,
+        row.totalVisits,
+        designer,
+        ...(row.tags ?? []),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(normalizedSearchQuery);
