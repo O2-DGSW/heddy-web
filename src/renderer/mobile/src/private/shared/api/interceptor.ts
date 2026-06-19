@@ -1,18 +1,12 @@
 import { api } from "@/shared/api";
-import { refreshTokenApi } from "@/entities/auth/api/authApi";
-import {
-  clearAuthTokens,
-  getAccessToken,
-  getRefreshToken,
-  setAuthTokens,
-} from "@/entities/auth/model/token";
+import { refreshAuthTokens } from "@/entities/auth/model/session";
+import { clearAuthTokens, getAccessToken } from "@/entities/auth/model/token";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-let refreshTokenRequest: ReturnType<typeof refreshTokenApi> | null = null;
 let requestInterceptorId: number | null = null;
 let responseInterceptorId: number | null = null;
 
@@ -52,19 +46,15 @@ export const setupInterceptor = () => {
         return Promise.reject(error);
       }
 
-      const refreshToken = await getRefreshToken();
-      if (!refreshToken) {
-        await clearAuthTokens();
-        redirectToLogin();
-        return Promise.reject(error);
-      }
-
       originalRequest._retry = true;
 
       try {
-        refreshTokenRequest ??= refreshTokenApi(refreshToken);
-        const tokens = await refreshTokenRequest;
-        await setAuthTokens(tokens);
+        const tokens = await refreshAuthTokens();
+        if (!tokens) {
+          await clearAuthTokens();
+          redirectToLogin();
+          return Promise.reject(error);
+        }
 
         originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
         return api(originalRequest);
@@ -72,8 +62,6 @@ export const setupInterceptor = () => {
         await clearAuthTokens();
         redirectToLogin();
         return Promise.reject(refreshError);
-      } finally {
-        refreshTokenRequest = null;
       }
     }
   );

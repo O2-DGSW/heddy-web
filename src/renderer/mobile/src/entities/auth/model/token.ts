@@ -55,9 +55,12 @@ export const setAuthTokens = async ({
   refreshToken,
 }: {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
 }) => {
-  await Promise.all([setAccessToken(accessToken), setRefreshToken(refreshToken)]);
+  await Promise.all([
+    setAccessToken(accessToken),
+    refreshToken ? setRefreshToken(refreshToken) : clearRefreshToken(),
+  ]);
 };
 
 export const clearAuthTokens = async () => {
