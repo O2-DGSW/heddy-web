@@ -24,6 +24,7 @@ export const SCHEDULE_CHART_GRID_OFFSET_REM = 3.25;
 export const SCHEDULE_EVENT_HEIGHT_REM = 2.0625;
 export const SCHEDULE_EVENT_LANE_STEP_REM = 2.25;
 
+export const SCHEDULE_BOARD_DAY_COUNT = 5;
 export const SCHEDULE_WEEK_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 export const SCHEDULE_TIME_LABELS = Array.from(
   { length: SCHEDULE_CHART_END_HOUR - SCHEDULE_CHART_START_HOUR + 1 },
