@@ -19,7 +19,7 @@ type AddProcedureNoteState = {
   reset: () => void;
 };
 
-const initialState = {
+const getInitialState = () => ({
   title: "",
   description: "",
   date: new Date(),
@@ -27,10 +27,10 @@ const initialState = {
   selectedTags: [] as string[],
   beforeImageFile: null,
   afterImageFile: null,
-};
+});
 
 export const useAddProcedureNoteStore = create<AddProcedureNoteState>((set, get) => ({
-  ...initialState,
+  ...getInitialState(),
 
   setTitle: (value) => set({ title: value }),
   setDescription: (value) => set({ description: value }),
@@ -45,5 +45,5 @@ export const useAddProcedureNoteStore = create<AddProcedureNoteState>((set, get)
   },
   setBeforeImageFile: (file) => set({ beforeImageFile: file }),
   setAfterImageFile: (file) => set({ afterImageFile: file }),
-  reset: () => set(initialState),
+  reset: () => set(getInitialState()),
 }));
