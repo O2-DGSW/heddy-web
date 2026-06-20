@@ -29,13 +29,6 @@ export const ImageUploadArea = ({ label, initialFile, onFileChange }: ImageUploa
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] ?? null;
-    if (!selected) {
-      setPreviewUrl(null);
-      onFileChange(null);
-      return;
-    }
-    const url = URL.createObjectURL(selected);
-    setPreviewUrl(url);
     onFileChange(selected);
   };
 
