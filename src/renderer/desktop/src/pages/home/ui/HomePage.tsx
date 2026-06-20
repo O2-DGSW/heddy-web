@@ -7,6 +7,7 @@ import {
   RevenueChart,
   SummaryCards,
 } from "@/pages/home/ui/components";
+import { DESKTOP_PAGE_LAYOUT_OFFSET_REM } from "@/shared/constants/Layout.constant";
 
 const HomePage = () => {
   return (
@@ -15,10 +16,10 @@ const HomePage = () => {
       className="h-full w-full overflow-hidden"
       style={{
         backgroundColor: lightTheme.background.alternative,
-        paddingBottom: "2.5625rem",
-        paddingLeft: "2.5625rem",
-        paddingRight: "2.5rem",
-        paddingTop: "2.625rem",
+        paddingBottom: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.bottom}rem`,
+        paddingLeft: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.left}rem`,
+        paddingRight: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.right}rem`,
+        paddingTop: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.top}rem`,
       }}
     >
       <DashboardCanvas>
