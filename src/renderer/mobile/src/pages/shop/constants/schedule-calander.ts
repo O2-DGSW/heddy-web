@@ -1,5 +1,5 @@
 export const SHOP_SCHEDULE_WEEK_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
-export const DEFAULT_SHOP_SCHEDULE_DATE = "2026-06-01";
+export const DEFAULT_SHOP_SCHEDULE_DATE = "2026-05-28";
 
 export const SHOP_SCHEDULE_MARKER_MAP: Record<string, number> = {
   "2026-04-26": 1,
@@ -19,10 +19,10 @@ export const SHOP_SCHEDULE_MARKER_MAP: Record<string, number> = {
   "2026-05-24": 2,
   "2026-05-25": 1,
   "2026-05-26": 2,
-  "2026-05-27": 1,
+  [DEFAULT_SHOP_SCHEDULE_DATE]: 1,
   "2026-05-30": 3,
   "2026-05-31": 2,
-  [DEFAULT_SHOP_SCHEDULE_DATE]: 2,
+  "2026-06-01": 2,
   "2026-06-05": 1,
   "2026-06-06": 3,
 };
