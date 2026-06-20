@@ -12,8 +12,14 @@ const HomePage = () => {
   return (
     <div
       data-dashboard-page
-      className="h-full w-full overflow-hidden p-4 sm:p-6 xl:p-10"
-      style={{ backgroundColor: lightTheme.background.alternative }}
+      className="h-full w-full overflow-hidden"
+      style={{
+        backgroundColor: lightTheme.background.alternative,
+        paddingBottom: "2.5625rem",
+        paddingLeft: "2.5625rem",
+        paddingRight: "2.5rem",
+        paddingTop: "2.625rem",
+      }}
     >
       <DashboardCanvas>
         <div className="flex h-full w-full flex-col gap-4">
