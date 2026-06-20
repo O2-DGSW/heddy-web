@@ -45,6 +45,9 @@ const isPublicAuthRequestUrl = (url?: string) => PUBLIC_AUTH_PATHS.includes(getR
 
 const isRefreshTokenRequestUrl = (url?: string) => getRequestPath(url) === REFRESH_TOKEN_PATH;
 
+const requiresAuthToken = (url?: string) =>
+  !isPublicAuthRequestUrl(url) && !isRefreshTokenRequestUrl(url);
+
 const setAuthorizationHeader = (config: InternalAxiosRequestConfig, token: string) => {
   const headers = AxiosHeaders.from(config.headers);
   headers.set("Authorization", `Bearer ${token}`);
@@ -62,9 +65,16 @@ export const setupInterceptor = () => {
 
   requestInterceptorId = api.interceptors.request.use(async (config) => {
     const token = await getAccessToken();
-    if (token && !isPublicAuthRequestUrl(config.url) && !isRefreshTokenRequestUrl(config.url)) {
-      setAuthorizationHeader(config, token);
+    if (!requiresAuthToken(config.url)) {
+      return config;
     }
+
+    if (!token) {
+      redirectToLogin();
+      return Promise.reject(new Error("로그인이 필요한 요청입니다."));
+    }
+
+    setAuthorizationHeader(config, token);
     return config;
   });
 
