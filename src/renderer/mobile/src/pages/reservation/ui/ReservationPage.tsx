@@ -5,6 +5,7 @@ import {
   DEFAULT_SHOP_SCHEDULE_DATE,
   SHOP_SCHEDULE_WEEK_DAYS,
 } from "@/features/reservation/constants/schedule-calander.ts";
+import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 
 export const ReservationPage = () => {
   const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
@@ -22,12 +23,23 @@ export const ReservationPage = () => {
     "18:00",
     "19:00",
   ];
+
+  // 시간대 선택
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+  // 태그 선택
+  const tags = ["레이어드컷", "허쉬컷", "빌드펌", "히피펌", "애즈펌", "다운펌", "쉐도우펌"];
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => (prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]));
+  };
 
   const [storeInfo, setStoreInfo] = useState<{
     selectedDate: string;
     selectedItem: string | null;
     designer: string;
+    tags: string[];
   } | null>(null);
 
   const [errors, setErrors] = useState({
@@ -53,6 +65,7 @@ export const ReservationPage = () => {
       selectedDate,
       selectedItem,
       designer,
+      tags: selectedTags,
     };
 
     console.log(newStoreInfo);
@@ -65,12 +78,13 @@ export const ReservationPage = () => {
 
   const handleCancel = () => {
     setSelectedItem(null);
+    setSelectedTags([]);
     setDesigner("");
     setStoreInfo(null);
   };
 
   return (
-    <>
+    <div className="" style={{ backgroundColor: lightTheme.background.normal }}>
       {/* 헤더 */}
       <p
         className={`${font.headline1.bold} text-center py-[1rem]`}
@@ -193,7 +207,23 @@ export const ReservationPage = () => {
             </p>
           )}
         </div>
+
+        <div className="flex w-[100%] flex-col gap-[0.25rem] mt-[1rem]">
+          <p
+            className={`${font.label.medium} w-full`}
+            style={{ color: lightTheme.label.assistive }}
+          >
+            시술 태그
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {tags.map(tag => (
+              <button key={tag} type="button" onClick={() => toggleTag(tag)}>
+                <CutsTag text={tag} selected={selectedTags.includes(tag)} />
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
