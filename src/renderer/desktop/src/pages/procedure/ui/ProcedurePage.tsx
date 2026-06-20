@@ -2,7 +2,11 @@ import { font, lightTheme } from "@design-tokens";
 
 import {
   PROCEDURE_BODY_HEIGHT_REM,
+  PROCEDURE_CONTENT_BOTTOM_OFFSET_REM,
+  PROCEDURE_CONTENT_TOP_OFFSET_REM,
   PROCEDURE_LEFT_PANEL_WIDTH_REM,
+  PROCEDURE_PAGE_LEFT_PADDING_REM,
+  PROCEDURE_PAGE_RIGHT_PADDING_REM,
 } from "@/pages/procedure/model/Procedure.constant";
 import { useProcedure } from "@/pages/procedure/model/useProcedure";
 
@@ -40,8 +44,14 @@ const ProcedurePage = () => {
   return (
     <div
       ref={pageRef}
-      className="h-full w-full overflow-hidden p-4 sm:p-6 xl:p-10"
-      style={{ backgroundColor: lightTheme.background.alternative }}
+      className="h-full w-full overflow-hidden"
+      style={{
+        backgroundColor: lightTheme.background.alternative,
+        paddingBottom: `${PROCEDURE_CONTENT_BOTTOM_OFFSET_REM}rem`,
+        paddingLeft: `${PROCEDURE_PAGE_LEFT_PADDING_REM}rem`,
+        paddingRight: `${PROCEDURE_PAGE_RIGHT_PADDING_REM}rem`,
+        paddingTop: `${PROCEDURE_CONTENT_TOP_OFFSET_REM}rem`,
+      }}
     >
       <div
         className="shrink-0 overflow-visible"

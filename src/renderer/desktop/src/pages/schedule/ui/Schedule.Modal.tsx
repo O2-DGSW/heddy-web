@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent, MouseEvent } from "react";
 import { lightTheme, palette } from "@design-tokens";
 
-import { parseDateKey } from "@/shared/ui/calendar/model/date";
+import { getTodayDateKey, parseDateKey } from "@/shared/ui/calendar/model/date";
 import dropdownDownIcon from "@/pages/schedule/assets/svg/dropdown-down.svg";
 import dropdownUpIcon from "@/pages/schedule/assets/svg/dropdown-up.svg";
 import modalCloseIcon from "@/pages/schedule/assets/svg/modal-close.svg";
@@ -61,8 +61,9 @@ const TIME_STEP_MINUTES = SCHEDULE_TIME_STEP_MINUTES;
 const MIN_TIME_MINUTES = 0;
 const MAX_TIME_MINUTES = 24 * 60;
 const MAX_START_TIME_MINUTES = MAX_TIME_MINUTES - TIME_STEP_MINUTES;
+const DEFAULT_DURATION_MINUTES = 20;
+const MAX_DEFAULT_START_TIME_MINUTES = MAX_TIME_MINUTES - DEFAULT_DURATION_MINUTES;
 const DEFAULT_START_TIME = "10:00";
-const DEFAULT_END_TIME = "10:10";
 const DEFAULT_COLOR: ScheduleColorKey = "blue";
 const DATE_OPTION_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -87,7 +88,7 @@ const popoverClassName =
   "absolute left-0 top-[2.875rem] z-40 flex max-h-[10.5rem] w-full flex-col overflow-y-auto rounded-[0.625rem] border bg-white py-1 shadow-[0_0.375rem_1rem_rgba(0,0,0,0.12)]";
 
 const optionClassName =
-  "flex h-9 shrink-0 items-center px-[0.9375rem] text-left font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#41BE8E]/35";
+  "flex h-9 shrink-0 cursor-pointer items-center px-[0.9375rem] text-left font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#41BE8E]/35";
 
 const padTimePart = (value: number) => String(value).padStart(2, "0");
 
@@ -110,6 +111,34 @@ const formatTimeFromHour = (hour: number, maxMinutes = MAX_TIME_MINUTES) =>
 
 const getSteppedTime = (time: string, stepMinutes: number, maxMinutes = MAX_TIME_MINUTES) =>
   formatTime(getTimeMinutes(time) + stepMinutes, maxMinutes);
+
+const getCurrentStepCeilMinutes = () => {
+  const now = new Date();
+  const currentMinutes =
+    now.getHours() * 60 +
+    now.getMinutes() +
+    now.getSeconds() / 60 +
+    now.getMilliseconds() / 60000;
+
+  return Math.ceil(currentMinutes / TIME_STEP_MINUTES) * TIME_STEP_MINUTES;
+};
+
+const getDefaultStartTime = (date: string) => {
+  if (date !== getTodayDateKey()) {
+    return DEFAULT_START_TIME;
+  }
+
+  return formatTime(
+    Math.min(
+      MAX_DEFAULT_START_TIME_MINUTES,
+      Math.max(getTimeMinutes(DEFAULT_START_TIME), getCurrentStepCeilMinutes())
+    ),
+    MAX_DEFAULT_START_TIME_MINUTES
+  );
+};
+
+const getDefaultEndTime = (startTime: string) =>
+  formatTime(getTimeMinutes(startTime) + DEFAULT_DURATION_MINUTES);
 
 const getInitialDate = (initialDate: string, visibleWeekDateKeys: string[]) =>
   visibleWeekDateKeys.includes(initialDate) ? initialDate : visibleWeekDateKeys[0];
@@ -143,66 +172,109 @@ const timeOptions = Array.from(
   (_, index) => formatTime(index * TIME_STEP_MINUTES)
 );
 
+const scrollSelectedOptionIntoView = (
+  listElement: HTMLDivElement | null,
+  selectedElement: HTMLButtonElement | null
+) => {
+  if (!listElement || !selectedElement) {
+    return;
+  }
+
+  listElement.scrollTop = Math.max(
+    0,
+    selectedElement.offsetTop - (listElement.clientHeight - selectedElement.offsetHeight) / 2
+  );
+};
+
+const useSelectedOptionScroll = (isOpen: boolean, value: string) => {
+  const listRef = useRef<HTMLDivElement>(null);
+  const selectedOptionRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    scrollSelectedOptionIntoView(listRef.current, selectedOptionRef.current);
+  }, [isOpen, value]);
+
+  return { listRef, selectedOptionRef };
+};
+
 const DateField = ({
   isOpen,
   value,
   visibleWeekDateKeys,
   onSelect,
   onToggle,
-}: DateFieldProps) => (
-  <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
-    <span
-      className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
-      style={labelTextStyle}
-    >
-      예약 날짜
-    </span>
-    <div className="relative w-full">
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        aria-label="예약 날짜 선택"
-        className={fieldButtonClassName}
-        style={{ backgroundColor: lightTheme.background.neutral }}
-        onClick={onToggle}
+}: DateFieldProps) => {
+  const { listRef, selectedOptionRef } = useSelectedOptionScroll(isOpen, value);
+
+  return (
+    <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
+      <span
+        className="h-[1.1875rem] w-[23.25rem] font-['Pretendard'] text-[1rem] font-medium leading-[1.3]"
+        style={labelTextStyle}
       >
-        <span className="flex items-center gap-[0.375rem]">
-          <img src={modalDateIcon} alt="" className="size-[1.3125rem] shrink-0" aria-hidden="true" />
-          <span
-            className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
-            style={valueTextStyle}
-          >
-            {formatDate(value)}
+        예약 날짜
+      </span>
+      <div className="relative w-full">
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-label="예약 날짜 선택"
+          className={fieldButtonClassName}
+          style={{ backgroundColor: lightTheme.background.neutral }}
+          onClick={onToggle}
+        >
+          <span className="flex items-center gap-[0.375rem]">
+            <img
+              src={modalDateIcon}
+              alt=""
+              className="size-[1.3125rem] shrink-0"
+              aria-hidden="true"
+            />
+            <span
+              className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
+              style={valueTextStyle}
+            >
+              {formatDate(value)}
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
 
-      {isOpen && (
-        <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
-          {visibleWeekDateKeys.map(date => {
-            const isSelected = date === value;
+        {isOpen && (
+          <div
+            ref={listRef}
+            className={popoverClassName}
+            style={{ borderColor: lightTheme.line.alternative }}
+          >
+            {visibleWeekDateKeys.map(date => {
+              const isSelected = date === value;
 
-            return (
-              <button
-                key={date}
-                type="button"
-                className={optionClassName}
-                style={{
-                  backgroundColor: isSelected ? lightTheme.background.neutral : "transparent",
-                  color: isSelected ? lightTheme.primary.normal : lightTheme.label.alternative,
-                  ...textStyle,
-                }}
-                onClick={() => onSelect(date)}
-              >
-                {getDateOptionLabel(date)}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              return (
+                <button
+                  key={date}
+                  ref={isSelected ? selectedOptionRef : undefined}
+                  type="button"
+                  className={optionClassName}
+                  style={{
+                    backgroundColor: isSelected ? lightTheme.background.neutral : "transparent",
+                    color: isSelected ? lightTheme.primary.normal : lightTheme.label.alternative,
+                    ...textStyle,
+                  }}
+                  onClick={() => onSelect(date)}
+                >
+                  {getDateOptionLabel(date)}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const TimeField = ({
   isOpen,
@@ -213,6 +285,7 @@ const TimeField = ({
   onChange,
   onToggle,
 }: TimeFieldProps) => {
+  const { listRef, selectedOptionRef } = useSelectedOptionScroll(isOpen, value);
   const options = timeOptions.filter(time => {
     const minutes = getTimeMinutes(time);
 
@@ -272,13 +345,18 @@ const TimeField = ({
         </span>
 
         {isOpen && (
-          <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
+          <div
+            ref={listRef}
+            className={popoverClassName}
+            style={{ borderColor: lightTheme.line.alternative }}
+          >
             {options.map(time => {
               const isSelected = time === value;
 
               return (
                 <button
                   key={time}
+                  ref={isSelected ? selectedOptionRef : undefined}
                   type="button"
                   className={optionClassName}
                   style={{
@@ -300,6 +378,7 @@ const TimeField = ({
 };
 
 const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps) => {
+  const { listRef, selectedOptionRef } = useSelectedOptionScroll(isOpen, value);
   const selectedDesigner =
     SCHEDULE_DESIGNERS.find(designer => designer.id === value) ?? SCHEDULE_DESIGNERS[0];
 
@@ -337,13 +416,18 @@ const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps
         </button>
 
         {isOpen && (
-          <div className={popoverClassName} style={{ borderColor: lightTheme.line.alternative }}>
+          <div
+            ref={listRef}
+            className={popoverClassName}
+            style={{ borderColor: lightTheme.line.alternative }}
+          >
             {SCHEDULE_DESIGNERS.map(designer => {
               const isSelected = designer.id === value;
 
               return (
                 <button
                   key={designer.id}
+                  ref={isSelected ? selectedOptionRef : undefined}
                   type="button"
                   className={optionClassName}
                   style={{
@@ -372,20 +456,22 @@ const ScheduleModal = ({
   onDelete,
   onSave,
 }: ScheduleModalProps) => {
-  const initialForm = useMemo(
-    () => ({
+  const initialForm = useMemo(() => {
+    const defaultDate = editingEvent?.date ?? getInitialDate(initialDate, visibleWeekDateKeys);
+    const defaultStartTime = getDefaultStartTime(defaultDate);
+
+    return {
       color: editingEvent?.color ?? DEFAULT_COLOR,
-      date: editingEvent?.date ?? getInitialDate(initialDate, visibleWeekDateKeys),
+      date: defaultDate,
       designerId: editingEvent?.designerId ?? DEFAULT_SCHEDULE_DESIGNER_ID,
       endTime: editingEvent
         ? formatTimeFromHour(editingEvent.endHour)
-        : DEFAULT_END_TIME,
+        : getDefaultEndTime(defaultStartTime),
       startTime: editingEvent
         ? formatTimeFromHour(editingEvent.startHour, MAX_START_TIME_MINUTES)
-        : DEFAULT_START_TIME,
-    }),
-    [editingEvent, initialDate, visibleWeekDateKeys]
-  );
+        : defaultStartTime,
+    };
+  }, [editingEvent, initialDate, visibleWeekDateKeys]);
   const [openPopover, setOpenPopover] = useState<OpenPopover>(null);
   const [date, setDate] = useState(initialForm.date);
   const [startTime, setStartTime] = useState(initialForm.startTime);
@@ -419,7 +505,7 @@ const ScheduleModal = ({
     setStartTime(nextStartTime);
     setEndTime(currentEndTime =>
       getTimeMinutes(currentEndTime) <= nextStartMinutes
-        ? formatTime(nextStartMinutes + TIME_STEP_MINUTES)
+        ? formatTime(nextStartMinutes + DEFAULT_DURATION_MINUTES)
         : currentEndTime
     );
   };
@@ -487,7 +573,7 @@ const ScheduleModal = ({
                 <button
                   type="button"
                   aria-label="스케줄 모달 닫기"
-                  className="flex size-7 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                  className="flex size-7 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
                   onClick={onClose}
                 >
                   <img src={modalCloseIcon} alt="" className="size-7" aria-hidden="true" />
@@ -567,7 +653,7 @@ const ScheduleModal = ({
             {isEditMode ? (
               <button
                 type="button"
-                  className="flex h-8 w-[3.75rem] cursor-pointer items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
+                className="flex h-8 w-[3.75rem] cursor-pointer items-center justify-center rounded-[0.375rem] px-[0.625rem] py-1 font-['Pretendard'] text-[1rem] font-semibold leading-[1.3] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
                 style={{
                   ...textStyle,
                   backgroundColor: palette.red[60],

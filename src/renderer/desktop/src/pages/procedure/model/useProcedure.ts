@@ -3,12 +3,15 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import {
   DEFAULT_PROCEDURE_DATE,
   MIN_PROCEDURE_SCALE,
+  PROCEDURE_CONTENT_BOTTOM_OFFSET_REM,
   PROCEDURE_CONTENT_HEIGHT_REM,
+  PROCEDURE_CONTENT_TOP_OFFSET_REM,
   PROCEDURE_CONTENT_WIDTH_REM,
   PROCEDURE_CUSTOMERS,
   PROCEDURE_DESIGNERS,
   PROCEDURE_MEMO_MAX_LENGTH,
-  PROCEDURE_PAGE_PADDING_REM,
+  PROCEDURE_PAGE_LEFT_PADDING_REM,
+  PROCEDURE_PAGE_RIGHT_PADDING_REM,
   PROCEDURE_TAGS,
 } from "./Procedure.constant";
 import type { ProcedureUploadSlot } from "./Procedure.types";
@@ -38,8 +41,14 @@ const getRootFontSize = () => {
 const getFallbackContainerSize = (): ProcedureContainerSize => {
   if (typeof window === "undefined") {
     return {
-      width: PROCEDURE_PAGE_PADDING_REM * 2 + PROCEDURE_CONTENT_WIDTH_REM,
-      height: PROCEDURE_PAGE_PADDING_REM * 2 + PROCEDURE_CONTENT_HEIGHT_REM,
+      width:
+        PROCEDURE_PAGE_LEFT_PADDING_REM +
+        PROCEDURE_CONTENT_WIDTH_REM +
+        PROCEDURE_PAGE_RIGHT_PADDING_REM,
+      height:
+        PROCEDURE_CONTENT_TOP_OFFSET_REM +
+        PROCEDURE_CONTENT_HEIGHT_REM +
+        PROCEDURE_CONTENT_BOTTOM_OFFSET_REM,
     };
   }
 
@@ -52,10 +61,10 @@ const getFallbackContainerSize = (): ProcedureContainerSize => {
 };
 
 const getFallbackPadding = (): ProcedureContainerPadding => ({
-  bottom: PROCEDURE_PAGE_PADDING_REM,
-  left: PROCEDURE_PAGE_PADDING_REM,
-  right: PROCEDURE_PAGE_PADDING_REM,
-  top: PROCEDURE_PAGE_PADDING_REM,
+  bottom: PROCEDURE_CONTENT_BOTTOM_OFFSET_REM,
+  left: PROCEDURE_PAGE_LEFT_PADDING_REM,
+  right: PROCEDURE_PAGE_RIGHT_PADDING_REM,
+  top: PROCEDURE_CONTENT_TOP_OFFSET_REM,
 });
 
 const getElementPadding = (
@@ -162,9 +171,11 @@ export const useProcedure = () => {
   }, []);
 
   useEffect(() => {
+    const uploadUrls = uploadUrlsRef.current;
+
     return () => {
-      uploadUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
-      uploadUrlsRef.current.clear();
+      uploadUrls.forEach(url => URL.revokeObjectURL(url));
+      uploadUrls.clear();
     };
   }, []);
 
