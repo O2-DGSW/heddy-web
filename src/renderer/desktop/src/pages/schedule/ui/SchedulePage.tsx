@@ -17,20 +17,31 @@ const SchedulePage = () => {
     scaledLayoutWidthRem,
     scaledLayoutHeightRem,
     selectedDate,
-    selectedColor,
+    calendarMonthDate,
+    calendarMarkerMap,
     summaryItems,
     events,
+    editingEvent,
+    visibleWeekDateKeys,
+    weekLabels,
+    monthLabel,
     isModalOpen,
-    setSelectedDate,
-    setSelectedColor,
+    setCalendarMonthDate,
+    selectDate,
     openModal,
+    openEventModal,
     closeModal,
+    saveSchedule,
+    deleteSchedule,
+    moveToPreviousDay,
+    moveToNextDay,
+    moveToToday,
   } = useSchedule();
 
   return (
     <div
       ref={pageRef}
-      className="h-full w-full overflow-hidden p-4 sm:p-6 xl:p-10"
+      className="h-full w-full overflow-auto p-4 sm:p-6 xl:p-10"
       style={{ backgroundColor: lightTheme.background.alternative }}
     >
       <div
@@ -57,14 +68,25 @@ const SchedulePage = () => {
             }}
           >
             <ScheduleSidebar
+              calendarMarkerMap={calendarMarkerMap}
+              calendarMonthDate={calendarMonthDate}
               selectedDate={selectedDate}
               summaryItems={summaryItems}
-              onSelectDate={setSelectedDate}
+              onChangeCalendarMonth={setCalendarMonthDate}
+              onSelectDate={selectDate}
+              onSelectEvent={openEventModal}
             />
             <ScheduleBoard
               events={events}
+              monthLabel={monthLabel}
               panelWidthRem={rightPanelWidthRem}
+              visibleWeekDateKeys={visibleWeekDateKeys}
+              weekLabels={weekLabels}
+              onMoveNextDay={moveToNextDay}
+              onMovePreviousDay={moveToPreviousDay}
               onOpenModal={openModal}
+              onSelectEvent={openEventModal}
+              onSelectToday={moveToToday}
             />
           </div>
         </div>
@@ -72,8 +94,11 @@ const SchedulePage = () => {
 
       {isModalOpen && (
         <ScheduleModal
-          selectedColor={selectedColor}
-          onSelectColor={setSelectedColor}
+          editingEvent={editingEvent}
+          initialDate={selectedDate}
+          visibleWeekDateKeys={visibleWeekDateKeys}
+          onDelete={deleteSchedule}
+          onSave={saveSchedule}
           onClose={closeModal}
         />
       )}

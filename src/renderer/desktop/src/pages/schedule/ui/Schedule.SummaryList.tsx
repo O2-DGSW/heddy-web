@@ -10,12 +10,13 @@ import { ScheduleEmptyState } from "./Schedule.EmptyState";
 
 interface ScheduleSummaryListProps {
   items: ScheduleSummaryItem[];
+  onSelectItem: (itemId: number) => void;
 }
 
 const lightDropdownFilter =
   "brightness(0) saturate(100%) invert(89%) sepia(2%) saturate(68%) hue-rotate(169deg) brightness(94%) contrast(91%)";
 
-const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
+const ScheduleSummaryList = ({ items, onSelectItem }: ScheduleSummaryListProps) => {
   if (items.length === 0) {
     return <ScheduleEmptyState />;
   }
@@ -23,13 +24,16 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
   return (
     <div className="scrollbar-thin flex h-[17.25rem] w-full flex-col gap-3 overflow-x-hidden overflow-y-auto">
       {items.map(item => (
-        <article
+        <button
           key={item.id}
-          className="relative h-[5.25rem] w-full shrink-0 overflow-hidden rounded-[0.5rem]"
+          type="button"
+          aria-label={`${item.customerName}님 ${item.time} 스케줄 편집`}
+          className="relative h-[5.25rem] w-full shrink-0 cursor-pointer overflow-hidden rounded-[0.5rem] text-left outline-none transition-shadow hover:ring-2 hover:ring-[#41BE8E]/20 focus-visible:ring-2 focus-visible:ring-[#41BE8E]/35"
           style={{
             backgroundColor: lightTheme.background.neutral,
             boxShadow: "0 0 0.375rem rgba(0,0,0,0.02)",
           }}
+          onClick={() => onSelectItem(item.id)}
         >
           <div
             className="absolute left-0 top-0 h-full w-[0.3125rem]"
@@ -63,8 +67,7 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
                   </span>
                 </div>
 
-                <button
-                  type="button"
+                <span
                   className="flex h-[1.375rem] w-[3.9375rem] shrink-0 items-center justify-center gap-[0.125rem] rounded-[1.375rem] bg-white"
                 >
                   <span
@@ -80,7 +83,7 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
                     style={{ filter: lightDropdownFilter }}
                     aria-hidden="true"
                   />
-                </button>
+                </span>
               </div>
 
               <div className="mt-2 flex h-6 items-center justify-between">
@@ -122,7 +125,7 @@ const ScheduleSummaryList = ({ items }: ScheduleSummaryListProps) => {
               </div>
             </div>
           </div>
-        </article>
+        </button>
       ))}
     </div>
   );
