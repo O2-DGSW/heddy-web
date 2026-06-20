@@ -6,6 +6,7 @@ import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   root: resolve(__dirname, "src/renderer/mobile"),
+  envDir: __dirname,
   publicDir: resolve(__dirname, "public"),
   plugins: [react(), tailwindcss(), svgr()],
   resolve: {

@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
+import { useAddProcedureNoteStore } from "@/features/cuts/model/useAddProcedureNoteStore";
 
 const toInputDateValue = (date: Date) => {
   const year = date.getFullYear();
@@ -10,24 +10,28 @@ const toInputDateValue = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
+const createObjectUrl = (file: File | null) => {
+  if (!file) return null;
+  return URL.createObjectURL(file);
+};
+
 export const useAddProcedureNoteForm = () => {
   const navigate = useNavigate();
+  const {
+    title, setTitle,
+    description, setDescription,
+    date, setDate,
+    customer, setCustomer,
+    selectedTags, toggleTag,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
+    reset,
+  } = useAddProcedureNoteStore();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [customer, setCustomer] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const handleSubmit = () => {
+    const beforeImageUrl = createObjectUrl(beforeImageFile);
+    const afterImageUrl = createObjectUrl(afterImageFile);
 
-  const dateValue = toInputDateValue(date);
-
-  const toggleTag = (value: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(value) ? prev.filter((t) => t !== value) : [...prev, value]
-    );
-  };
-
-  const handleSubmit = (beforeImage: File | null) => {
     const newNote: ProcedureNote = {
       id: crypto.randomUUID(),
       customerName: customer || "고객",
@@ -35,17 +39,22 @@ export const useAddProcedureNoteForm = () => {
       description,
       date,
       tags: selectedTags.join(", "),
-      imageUrl: beforeImage ? URL.createObjectURL(beforeImage) : null,
+      imageUrl: beforeImageUrl,
+      afterImageUrl,
     };
+
+    reset();
     navigate("/cuts", { state: { newNote } });
   };
 
   return {
     title, setTitle,
     description, setDescription,
-    dateValue, setDate,
+    dateValue: toInputDateValue(date), setDate,
     customer, setCustomer,
     selectedTags, toggleTag,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
     handleSubmit,
   };
 };

@@ -1,8 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 import { font, lightTheme, palette } from "@design-tokens";
 
 import { CutsTag } from "@/private/shared/ui/cuts-tag/CutsTag.tsx";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types.ts";
 import dateSvg from "@/features/cuts/assets/procedute-note/Date.svg";
+import rightArrowSvg from "@/features/cuts/assets/procedute-note/rightArrow.svg";
+import { formatShortDate } from "@/features/cuts/utils/date";
 
 interface ProcedureNoteItemProps {
   note: ProcedureNote;
@@ -10,26 +14,19 @@ interface ProcedureNoteItemProps {
 }
 
 /**
- * 날짜를 "M/D" 형식으로 변환
- * @param date 변환할 날짜
- */
-const formatShortDate = (date: Date | string) => {
-  const d = new Date(date);
-
-  return Number.isNaN(d.getTime()) ? "" : `${d.getMonth() + 1}/${d.getDate()}`;
-};
-
-/**
  * 시술기록 목록 아이템 컴포넌트
  * @param props {@link ProcedureNoteItemProps}
  */
 export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className="flex items-center gap-3 px-4 py-4 rounded-2xl"
       style={{
         backgroundColor: bgColorGreen ? palette.main[97] : lightTheme.background.normal,
       }}
+      onClick={() => navigate(`/cuts/${note.id}`, { state: { note } })}
     >
       {/* 썸네일 이미지 */}
       <div
@@ -42,7 +39,7 @@ export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps
       </div>
 
       {/* 내용 */}
-      <div className="flex flex-col flex-1 gap-1 min-w-0">
+      <div className="flex flex-col flex-1 gap-1 min-w-0 overflow-hidden">
         {/* 제목 + 고객명 뱃지 */}
         <div className="flex items-center gap-2">
           <span className={font.body.bold} style={{ color: lightTheme.label.neutral }}>
@@ -79,6 +76,9 @@ export const ProcedureNoteItem = ({ note, bgColorGreen }: ProcedureNoteItemProps
           </div>
         )}
       </div>
+
+      {/* 우측 화살표 */}
+      <img src={rightArrowSvg} alt="상세보기" className="w-4 h-4 shrink-0" />
     </div>
   );
 };

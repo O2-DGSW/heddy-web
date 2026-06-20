@@ -1,23 +1,34 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { font, lightTheme } from "@design-tokens";
 import pictureSvg from "@/features/cuts/assets/procedute-note/Picture.svg";
 
 interface ImageUploadAreaProps {
   label: string;
+  initialFile?: File | null;
   onFileChange: (file: File | null) => void;
 }
 
-export const ImageUploadArea = ({ label, onFileChange }: ImageUploadAreaProps) => {
+export const ImageUploadArea = ({ label, initialFile, onFileChange }: ImageUploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!initialFile) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(initialFile);
+    setPreviewUrl(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [initialFile]);
 
   const handleClick = () => inputRef.current?.click();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] ?? null;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(selected ? URL.createObjectURL(selected) : null);
     onFileChange(selected);
   };
 

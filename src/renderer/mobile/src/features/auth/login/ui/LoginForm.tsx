@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useLoginForm } from "@/features/auth/login/model/login";
 
 export const LoginForm = () => {
-  const { id, setId, password, setPassword, handleLogin } = useLoginForm();
+  const { id, setId, password, setPassword, error, isLoading, handleLogin } = useLoginForm();
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -57,15 +57,23 @@ export const LoginForm = () => {
         <Link to="/signup">회원가입</Link>
       </div>
 
+      {error && (
+        <p className={font.caption.regular} style={{ color: lightTheme.status.error }}>
+          {error}
+        </p>
+      )}
+
       <button
         className={`w-full py-4 rounded-2xl mt-4 ${font.headline2.semiBold}`}
         style={{
           backgroundColor: lightTheme.primary.normal,
           color: lightTheme.fill.normal,
+          opacity: isLoading ? 0.6 : 1,
         }}
         onClick={handleLogin}
+        disabled={isLoading}
       >
-        로그인
+        {isLoading ? "로그인 중..." : "로그인"}
       </button>
     </div>
   );

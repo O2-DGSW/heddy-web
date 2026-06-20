@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { font, lightTheme } from "@design-tokens";
@@ -19,10 +19,10 @@ export const AddProcedureNotePage = () => {
     dateValue, setDate,
     customer, setCustomer,
     selectedTags, toggleTag,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
     handleSubmit,
   } = useAddProcedureNoteForm();
-
-  const [beforeImage, setBeforeImage] = useState<File | null>(null);
 
   useEffect(() => {
     const selected = location.state?.selectedCustomer as string | undefined;
@@ -32,7 +32,7 @@ export const AddProcedureNotePage = () => {
     }
   }, []);
 
-  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImage });
+  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImageFile });
 
   const inputClass = `w-full px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`;
   const inputStyle = {
@@ -128,8 +128,8 @@ export const AddProcedureNotePage = () => {
         <div className="flex flex-col gap-2">
           <span className={labelClass} style={{ color: lightTheme.label.normal }}>사진 등록</span>
           <div className="flex gap-3">
-            <ImageUploadArea label="Before 사진" onFileChange={setBeforeImage} />
-            <ImageUploadArea label="After 사진" onFileChange={() => {}} />
+            <ImageUploadArea label="Before 사진" initialFile={beforeImageFile} onFileChange={setBeforeImageFile} />
+            <ImageUploadArea label="After 사진" initialFile={afterImageFile} onFileChange={setAfterImageFile} />
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ export const AddProcedureNotePage = () => {
             color: isValid ? lightTheme.label.buttonText : lightTheme.label.assistive,
           }}
           disabled={!isValid}
-          onClick={() => handleSubmit(beforeImage)}
+          onClick={() => handleSubmit()}
         >
           추가
         </button>

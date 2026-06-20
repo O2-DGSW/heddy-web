@@ -21,6 +21,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       date: new Date("2026-05-20"),
       tags: "커트,레이어드",
       imageUrl: null,
+      afterImageUrl: null,
     },
     {
       id: "2",
@@ -30,6 +31,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       date: new Date("2026-05-22"),
       tags: "커트,투블럭",
       imageUrl: null,
+      afterImageUrl: null,
     },
     {
       id: "3",
@@ -39,6 +41,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       date: new Date("2026-05-23"),
       tags: "펌,볼륨",
       imageUrl: null,
+      afterImageUrl: null,
     },
   ]);
   const [isOpen, setIsOpen] = useState(false);
@@ -109,6 +112,7 @@ export const useAddProcedureNote = (): UseAddProcedureNoteReturn => {
       date: form.date,
       tags: form.tags,
       imageUrl: createImageObjectUrl(form.image),
+      afterImageUrl: null,
     };
     setNotes(prev => [newNote, ...prev]);
     onClose();

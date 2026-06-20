@@ -3,15 +3,29 @@ import { lightTheme } from "@design-tokens";
 import cautionCustomersImage from "@/pages/customer/assets/caution-customers.png";
 import normalCustomersImage from "@/pages/customer/assets/normal-customers.png";
 import riskCustomersImage from "@/pages/customer/assets/risk-customers.png";
+import {
+  DESKTOP_PAGE_CONTENT_BOTTOM_OFFSET_REM,
+  DESKTOP_PAGE_CONTENT_HEIGHT_REM,
+  DESKTOP_PAGE_CONTENT_TOP_OFFSET_REM,
+  DESKTOP_PAGE_CONTENT_WIDTH_REM,
+  DESKTOP_PAGE_LEFT_PADDING_REM,
+  DESKTOP_PAGE_RIGHT_PADDING_REM,
+} from "@/shared/constants/Layout.constant";
 
-import type { CustomerFilter, CustomerRow, CustomerSummary } from "./Customer.types";
+import type {
+  CustomerDesignerOption,
+  CustomerFilter,
+  CustomerRow,
+  CustomerSortOption,
+  CustomerSummary,
+} from "./Customer.types";
 
-export const CUSTOMER_CONTENT_WIDTH_REM = 85.0625;
-export const CUSTOMER_CONTENT_HEIGHT_REM = 51.875;
-export const CUSTOMER_CONTENT_TOP_OFFSET_REM = 2.625;
-export const CUSTOMER_CONTENT_BOTTOM_OFFSET_REM = 2.5625;
-export const CUSTOMER_PAGE_LEFT_PADDING_REM = 2.5625;
-export const CUSTOMER_PAGE_RIGHT_PADDING_REM = 2.5;
+export const CUSTOMER_CONTENT_WIDTH_REM = DESKTOP_PAGE_CONTENT_WIDTH_REM;
+export const CUSTOMER_CONTENT_HEIGHT_REM = DESKTOP_PAGE_CONTENT_HEIGHT_REM;
+export const CUSTOMER_CONTENT_TOP_OFFSET_REM = DESKTOP_PAGE_CONTENT_TOP_OFFSET_REM;
+export const CUSTOMER_CONTENT_BOTTOM_OFFSET_REM = DESKTOP_PAGE_CONTENT_BOTTOM_OFFSET_REM;
+export const CUSTOMER_PAGE_LEFT_PADDING_REM = DESKTOP_PAGE_LEFT_PADDING_REM;
+export const CUSTOMER_PAGE_RIGHT_PADDING_REM = DESKTOP_PAGE_RIGHT_PADDING_REM;
 export const MIN_CUSTOMER_SCALE = 0.32;
 
 export const DROPDOWN_FILTER =
@@ -45,10 +59,21 @@ export const CUSTOMER_SUMMARIES: CustomerSummary[] = [
 ];
 
 export const CUSTOMER_FILTERS: CustomerFilter[] = [
-  { label: "전체", active: true },
-  { label: "정상" },
-  { label: "주의" },
-  { label: "위험" },
+  { key: "all", label: "전체", active: true },
+  { key: "normal", label: "정상" },
+  { key: "caution", label: "주의" },
+  { key: "risk", label: "위험" },
+];
+
+export const CUSTOMER_SORT_OPTIONS: CustomerSortOption[] = [
+  { key: "recent", label: "최근 방문 순" },
+  { key: "oldest", label: "오래된 방문 순" },
+];
+
+export const CUSTOMER_DESIGNER_OPTIONS: CustomerDesignerOption[] = [
+  { id: "oh-yong-jun", name: "오용준" },
+  { id: "kim-seo-yun", name: "김서윤" },
+  { id: "han-ji-min", name: "한지민" },
 ];
 
 export const CUSTOMER_ROWS: CustomerRow[] = [
