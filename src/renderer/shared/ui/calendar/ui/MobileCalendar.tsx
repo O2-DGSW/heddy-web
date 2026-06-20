@@ -28,7 +28,7 @@ const MobileCalendar = ({
   }, [calendarRows, viewMode, selectedDate]);
 
   return (
-    <div className={getClassName("min-h-[394px] w-full overflow-visible bg-white", className)}>
+    <div className={getClassName("w-full overflow-visible bg-white", className)}>
       <div className={"flex flex-col gap-[2rem]"}>
         {tabs ? <CalendarViewModeTabs value={viewMode} onChange={onChangeViewMode} /> : null}
 
