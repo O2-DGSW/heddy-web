@@ -4,7 +4,10 @@ import type { ScheduleColorKey, ScheduleDesigner } from "./Schedule.types";
 
 export const SCHEDULE_CONTENT_WIDTH_REM = 85.0625;
 export const SCHEDULE_CONTENT_HEIGHT_REM = 51.875;
-export const SCHEDULE_PAGE_PADDING_REM = 2.5;
+export const SCHEDULE_CONTENT_TOP_OFFSET_REM = 2.625;
+export const SCHEDULE_CONTENT_BOTTOM_OFFSET_REM = 2.5625;
+export const SCHEDULE_PAGE_LEFT_PADDING_REM = 2.5625;
+export const SCHEDULE_PAGE_RIGHT_PADDING_REM = 2.5;
 export const SCHEDULE_LEFT_PANEL_WIDTH_REM = 26.4375;
 export const SCHEDULE_RIGHT_PANEL_WIDTH_REM = 57.625;
 export const SCHEDULE_PANEL_GAP_REM = 1;
