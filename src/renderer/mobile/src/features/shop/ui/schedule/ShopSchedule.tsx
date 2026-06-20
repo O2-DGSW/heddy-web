@@ -13,7 +13,7 @@ const ShopSchedule = () => {
   const [viewMode, setViewMode] = useState<"month" | "week">("month");
 
   return (
-    <section className="h-full overflow-hidden bg-white">
+    <section className="h-full overflow-hidden bg-white pt-[19px]">
       <Calendar
         initialMonthDate={DEFAULT_SHOP_SCHEDULE_DATE}
         markerMap={SHOP_SCHEDULE_MARKER_MAP}
