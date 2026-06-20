@@ -4,7 +4,10 @@ import type { ProcedureCustomer, ProcedureDesigner, ProcedureTag } from "./Proce
 
 export const PROCEDURE_CONTENT_WIDTH_REM = 85.0625;
 export const PROCEDURE_CONTENT_HEIGHT_REM = 51.875;
-export const PROCEDURE_PAGE_PADDING_REM = 2.5;
+export const PROCEDURE_CONTENT_TOP_OFFSET_REM = 2.625;
+export const PROCEDURE_CONTENT_BOTTOM_OFFSET_REM = 2.5625;
+export const PROCEDURE_PAGE_LEFT_PADDING_REM = 2.5625;
+export const PROCEDURE_PAGE_RIGHT_PADDING_REM = 2.5;
 export const MIN_PROCEDURE_SCALE = 0.32;
 
 export const PROCEDURE_BODY_HEIGHT_REM = 47.875;
