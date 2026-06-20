@@ -1,12 +1,17 @@
 import { refreshTokenApi } from "@/entities/auth/api/authApi";
-import { clearAuthTokens, setAuthTokens } from "@/entities/auth/model/token";
+import { clearAuthTokens, getRefreshToken, setAuthTokens } from "@/entities/auth/model/token";
 
-let refreshTokenRequest: ReturnType<typeof refreshTokenApi> | null = null;
+let refreshTokenRequest: Promise<Awaited<ReturnType<typeof refreshTokenApi>>> | null = null;
 let restoreSessionRequest: Promise<boolean> | null = null;
 
 export const refreshAuthTokens = async () => {
   try {
-    refreshTokenRequest ??= refreshTokenApi();
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) {
+      return null;
+    }
+
+    refreshTokenRequest ??= refreshTokenApi(refreshToken);
     const tokens = await refreshTokenRequest;
     await setAuthTokens(tokens);
     return tokens;
@@ -20,8 +25,8 @@ export const refreshAuthTokens = async () => {
 
 const restoreAuthSessionInternal = async () => {
   try {
-    await refreshAuthTokens();
-    return true;
+    const tokens = await refreshAuthTokens();
+    return Boolean(tokens);
   } catch {
     return false;
   }
