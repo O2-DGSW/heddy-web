@@ -1,7 +1,7 @@
 import { api } from "@/shared/api";
 import { refreshAuthTokens } from "@/entities/auth/model/session";
 import { clearAuthTokens, getAccessToken } from "@/entities/auth/model/token";
-import type { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { AxiosHeaders, type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -16,7 +16,40 @@ const redirectToLogin = () => {
   }
 };
 
-const isAuthRequestUrl = (url?: string) => url?.includes("/auth/") ?? false;
+const REFRESH_TOKEN_PATH = "/auth/token/refresh";
+
+const PUBLIC_AUTH_PATHS = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/signup/owner",
+  "/auth/social/signup",
+  "/auth/social/signup/owner",
+  "/auth/sms/send",
+  "/auth/sms/verify",
+  "/auth/password/reset",
+];
+
+const getRequestPath = (url?: string) => {
+  if (!url) {
+    return "";
+  }
+
+  try {
+    return new URL(url, api.defaults.baseURL).pathname;
+  } catch {
+    return url.split("?")[0] ?? "";
+  }
+};
+
+const isPublicAuthRequestUrl = (url?: string) => PUBLIC_AUTH_PATHS.includes(getRequestPath(url));
+
+const isRefreshTokenRequestUrl = (url?: string) => getRequestPath(url) === REFRESH_TOKEN_PATH;
+
+const setAuthorizationHeader = (config: InternalAxiosRequestConfig, token: string) => {
+  const headers = AxiosHeaders.from(config.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  config.headers = headers;
+};
 
 export const setupInterceptor = () => {
   if (requestInterceptorId != null) {
@@ -29,8 +62,8 @@ export const setupInterceptor = () => {
 
   requestInterceptorId = api.interceptors.request.use(async (config) => {
     const token = await getAccessToken();
-    if (token && !isAuthRequestUrl(config.url)) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (token && !isPublicAuthRequestUrl(config.url) && !isRefreshTokenRequestUrl(config.url)) {
+      setAuthorizationHeader(config, token);
     }
     return config;
   });
@@ -40,9 +73,16 @@ export const setupInterceptor = () => {
     async (error: AxiosError) => {
       const originalRequest = error.config as RetryableRequestConfig | undefined;
       const isUnauthorized = error.response?.status === 401;
-      const isAuthRequest = isAuthRequestUrl(originalRequest?.url);
+      const isPublicAuthRequest = isPublicAuthRequestUrl(originalRequest?.url);
+      const isRefreshTokenRequest = isRefreshTokenRequestUrl(originalRequest?.url);
 
-      if (!originalRequest || !isUnauthorized || originalRequest._retry || isAuthRequest) {
+      if (
+        !originalRequest ||
+        !isUnauthorized ||
+        originalRequest._retry ||
+        isPublicAuthRequest ||
+        isRefreshTokenRequest
+      ) {
         return Promise.reject(error);
       }
 
@@ -56,7 +96,7 @@ export const setupInterceptor = () => {
           return Promise.reject(error);
         }
 
-        originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
+        setAuthorizationHeader(originalRequest, tokens.accessToken);
         return api(originalRequest);
       } catch (refreshError) {
         await clearAuthTokens();
