@@ -1,8 +1,22 @@
 import { refreshTokenApi } from "@/entities/auth/api/authApi";
-import { clearAuthTokens, getRefreshToken, setAuthTokens } from "@/entities/auth/model/token";
+import {
+  clearAuthTokens,
+  getAccessToken,
+  getRefreshToken,
+  setAuthTokens,
+} from "@/entities/auth/model/token";
+import { isAxiosError } from "axios";
 
 let refreshTokenRequest: Promise<Awaited<ReturnType<typeof refreshTokenApi>>> | null = null;
 let restoreSessionRequest: Promise<boolean> | null = null;
+
+export const isRefreshTokenRejectedError = (error: unknown) => {
+  if (isAxiosError(error)) {
+    return error.response?.status === 401;
+  }
+
+  return true;
+};
 
 export const refreshAuthTokens = async () => {
   try {
@@ -13,10 +27,15 @@ export const refreshAuthTokens = async () => {
 
     refreshTokenRequest ??= refreshTokenApi(refreshToken);
     const tokens = await refreshTokenRequest;
-    await setAuthTokens(tokens);
+    await setAuthTokens({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken ?? refreshToken,
+    });
     return tokens;
   } catch (error) {
-    await clearAuthTokens();
+    if (isRefreshTokenRejectedError(error)) {
+      await clearAuthTokens();
+    }
     throw error;
   } finally {
     refreshTokenRequest = null;
@@ -25,6 +44,11 @@ export const refreshAuthTokens = async () => {
 
 const restoreAuthSessionInternal = async () => {
   try {
+    const accessToken = await getAccessToken();
+    if (accessToken) {
+      return true;
+    }
+
     const tokens = await refreshAuthTokens();
     return Boolean(tokens);
   } catch {

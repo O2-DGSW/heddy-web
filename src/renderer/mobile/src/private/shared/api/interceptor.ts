@@ -1,5 +1,5 @@
 import { api } from "@/shared/api";
-import { refreshAuthTokens } from "@/entities/auth/model/session";
+import { isRefreshTokenRejectedError, refreshAuthTokens } from "@/entities/auth/model/session";
 import { clearAuthTokens, getAccessToken } from "@/entities/auth/model/token";
 import { AxiosHeaders, type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
@@ -99,8 +99,9 @@ export const setupInterceptor = () => {
         setAuthorizationHeader(originalRequest, tokens.accessToken);
         return api(originalRequest);
       } catch (refreshError) {
-        await clearAuthTokens();
-        redirectToLogin();
+        if (isRefreshTokenRejectedError(refreshError)) {
+          redirectToLogin();
+        }
         return Promise.reject(refreshError);
       }
     }
