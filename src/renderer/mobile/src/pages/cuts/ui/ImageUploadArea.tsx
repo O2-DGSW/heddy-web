@@ -11,15 +11,19 @@ interface ImageUploadAreaProps {
 
 export const ImageUploadArea = ({ label, initialFile, onFileChange }: ImageUploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(
-    initialFile ? URL.createObjectURL(initialFile) : null
-  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!initialFile) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(initialFile);
+    setPreviewUrl(url);
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      URL.revokeObjectURL(url);
     };
-  }, [previewUrl]);
+  }, [initialFile]);
 
   const handleClick = () => inputRef.current?.click();
 
