@@ -75,7 +75,7 @@ export const createCalendarRows = (
     rows.push(row);
   }
 
-  while (rows.length > 0 && rows[rows.length - 1].every(date => date.muted)) {
+  while (rows[rows.length - 1]?.every(date => date.muted)) {
     rows.pop();
   }
 
