@@ -24,6 +24,7 @@ const ShopSchedule = () => {
         className="mx-auto max-w-[393px]"
         onChangeViewMode={setViewMode}
         onSelectDate={setSelectedDate}
+        tabs={true}
       />
     </section>
   );

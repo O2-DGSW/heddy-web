@@ -17,6 +17,7 @@ const MobileCalendar = ({
   onChangeMonth,
   onChangeViewMode,
   onSelectDate,
+  tabs,
 }: CalendarViewProps) => {
   const displayedRows = useMemo(() => {
     if (viewMode === "week") {
@@ -33,7 +34,7 @@ const MobileCalendar = ({
         className
       )}
     >
-      <CalendarViewModeTabs value={viewMode} onChange={onChangeViewMode} />
+      {tabs ? <CalendarViewModeTabs value={viewMode} onChange={onChangeViewMode} /> : null}
 
       <div className="mx-auto mt-[25px] flex w-[338px] flex-col gap-[23px]">
         <CalendarMonthSelector
