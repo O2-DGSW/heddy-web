@@ -3,7 +3,7 @@ interface AddProcedureNoteFormValues {
   description: string;
   customer: string;
   selectedTags: string[];
-  beforeImageUrl: string | null;
+  beforeImageFile: File | null;
 }
 
 export const validateAddProcedureNoteForm = ({
@@ -11,13 +11,13 @@ export const validateAddProcedureNoteForm = ({
   description,
   customer,
   selectedTags,
-  beforeImageUrl,
+  beforeImageFile,
 }: AddProcedureNoteFormValues): boolean => {
   return (
     title.trim() !== "" &&
     description.trim() !== "" &&
     customer.trim() !== "" &&
     selectedTags.length > 0 &&
-    beforeImageUrl !== null
+    beforeImageFile !== null
   );
 };

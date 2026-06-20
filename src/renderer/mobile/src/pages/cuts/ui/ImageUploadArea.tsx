@@ -1,17 +1,25 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { font, lightTheme } from "@design-tokens";
 import pictureSvg from "@/features/cuts/assets/procedute-note/Picture.svg";
 
 interface ImageUploadAreaProps {
   label: string;
-  initialUrl?: string | null;
-  onFileChange: (dataUrl: string | null) => void;
+  initialFile?: File | null;
+  onFileChange: (file: File | null) => void;
 }
 
-export const ImageUploadArea = ({ label, initialUrl, onFileChange }: ImageUploadAreaProps) => {
+export const ImageUploadArea = ({ label, initialFile, onFileChange }: ImageUploadAreaProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(initialUrl ?? null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    initialFile ? URL.createObjectURL(initialFile) : null
+  );
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleClick = () => inputRef.current?.click();
 
@@ -22,13 +30,9 @@ export const ImageUploadArea = ({ label, initialUrl, onFileChange }: ImageUpload
       onFileChange(null);
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setPreviewUrl(dataUrl);
-      onFileChange(dataUrl);
-    };
-    reader.readAsDataURL(selected);
+    const url = URL.createObjectURL(selected);
+    setPreviewUrl(url);
+    onFileChange(selected);
   };
 
   return (
