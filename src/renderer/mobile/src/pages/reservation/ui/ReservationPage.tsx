@@ -9,26 +9,54 @@ import {
 export const ReservationPage = () => {
   const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
 
-  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const items = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+  ];
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const [storeInfo, setStoreInfo] = useState<{
     selectedDate: string;
-    selectedItem: number | null;
+    selectedItem: string | null;
     designer: string;
   } | null>(null);
+
+  const [errors, setErrors] = useState({
+    time: "",
+    designer: "",
+  });
 
   const [designer, setDesigner] = useState("");
 
   const handleSave = () => {
+    const newErrors = {
+      time: selectedItem ? "" : "예약 시간을 선택해주세요.",
+      designer: designer.trim() ? "" : "디자이너를 입력해주세요.",
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.time || newErrors.designer) {
+      return;
+    }
+
     const newStoreInfo = {
       selectedDate,
       selectedItem,
       designer,
     };
 
+    console.log(newStoreInfo);
     setStoreInfo(newStoreInfo);
-    console.log(newStoreInfo); // 저장할 값
   };
 
   useEffect(() => {
@@ -117,7 +145,7 @@ export const ReservationPage = () => {
                   key={item}
                   type="button"
                   onClick={() => setSelectedItem(item)}
-                  className="flex-shrink-0 px-4 py-2 rounded-lg"
+                  className="flex-shrink-0 px-3 py-1 rounded-lg"
                   style={{
                     backgroundColor: isSelected
                       ? lightTheme.primary.normal
@@ -130,17 +158,41 @@ export const ReservationPage = () => {
               );
             })}
           </div>
+          {errors.time && (
+            <p
+              className={`${font.caption.regular} mt-1`}
+              style={{ color: lightTheme.status.error }}
+            >
+              {errors.time}
+            </p>
+          )}
         </div>
-        <input
-          placeholder="디자이너 찾기"
-          value={designer}
-          onChange={e => setDesigner(e.target.value)}
-          className="w-[90%] p-[0.75rem] rounded-lg"
-          style={{
-            backgroundColor: lightTheme.background.neutral,
-            color: lightTheme.line.normal,
-          }}
-        />
+        <div className="flex w-[100%] flex-col gap-[0.25rem] mt-[1rem]">
+          <p
+            className={`${font.label.medium} w-full`}
+            style={{ color: lightTheme.label.assistive }}
+          >
+            디자이너 찾기
+          </p>
+          <input
+            placeholder="디자이너 찾기"
+            value={designer}
+            onChange={e => setDesigner(e.target.value)}
+            className="w-full p-[0.75rem] rounded-lg"
+            style={{
+              backgroundColor: lightTheme.background.neutral,
+              color: lightTheme.line.normal,
+            }}
+          />
+          {errors.designer && (
+            <p
+              className={`${font.caption.regular} mt-1`}
+              style={{ color: lightTheme.status.error }}
+            >
+              {errors.designer}
+            </p>
+          )}
+        </div>
       </div>
     </>
   );
