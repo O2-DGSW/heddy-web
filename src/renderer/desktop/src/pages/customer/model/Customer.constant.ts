@@ -3,6 +3,14 @@ import { lightTheme } from "@design-tokens";
 import cautionCustomersImage from "@/pages/customer/assets/caution-customers.png";
 import normalCustomersImage from "@/pages/customer/assets/normal-customers.png";
 import riskCustomersImage from "@/pages/customer/assets/risk-customers.png";
+import {
+  DESKTOP_PAGE_CONTENT_BOTTOM_OFFSET_REM,
+  DESKTOP_PAGE_CONTENT_HEIGHT_REM,
+  DESKTOP_PAGE_CONTENT_TOP_OFFSET_REM,
+  DESKTOP_PAGE_CONTENT_WIDTH_REM,
+  DESKTOP_PAGE_LEFT_PADDING_REM,
+  DESKTOP_PAGE_RIGHT_PADDING_REM,
+} from "@/shared/constants/Layout.constant";
 
 import type {
   CustomerDesignerOption,
@@ -12,12 +20,12 @@ import type {
   CustomerSummary,
 } from "./Customer.types";
 
-export const CUSTOMER_CONTENT_WIDTH_REM = 85.0625;
-export const CUSTOMER_CONTENT_HEIGHT_REM = 51.875;
-export const CUSTOMER_CONTENT_TOP_OFFSET_REM = 2.625;
-export const CUSTOMER_CONTENT_BOTTOM_OFFSET_REM = 2.5625;
-export const CUSTOMER_PAGE_LEFT_PADDING_REM = 2.5625;
-export const CUSTOMER_PAGE_RIGHT_PADDING_REM = 2.5;
+export const CUSTOMER_CONTENT_WIDTH_REM = DESKTOP_PAGE_CONTENT_WIDTH_REM;
+export const CUSTOMER_CONTENT_HEIGHT_REM = DESKTOP_PAGE_CONTENT_HEIGHT_REM;
+export const CUSTOMER_CONTENT_TOP_OFFSET_REM = DESKTOP_PAGE_CONTENT_TOP_OFFSET_REM;
+export const CUSTOMER_CONTENT_BOTTOM_OFFSET_REM = DESKTOP_PAGE_CONTENT_BOTTOM_OFFSET_REM;
+export const CUSTOMER_PAGE_LEFT_PADDING_REM = DESKTOP_PAGE_LEFT_PADDING_REM;
+export const CUSTOMER_PAGE_RIGHT_PADDING_REM = DESKTOP_PAGE_RIGHT_PADDING_REM;
 export const MIN_CUSTOMER_SCALE = 0.32;
 
 export const DROPDOWN_FILTER =

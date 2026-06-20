@@ -34,7 +34,7 @@ const RoleBadge = ({ role }: { role: EmployeeRole }) => {
       <DropdownIcon
         aria-hidden="true"
         className="size-5 shrink-0"
-        style={{ color: meta.color, fill: meta.color }}
+        style={{ color: meta.color }}
       />
     </button>
   );

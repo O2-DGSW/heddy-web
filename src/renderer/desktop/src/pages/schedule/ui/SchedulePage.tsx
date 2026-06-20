@@ -1,6 +1,12 @@
 import { lightTheme } from "@design-tokens";
 
-import { SCHEDULE_PANEL_GAP_REM } from "@/pages/schedule/model/Schedule.constant";
+import {
+  SCHEDULE_CONTENT_BOTTOM_OFFSET_REM,
+  SCHEDULE_CONTENT_TOP_OFFSET_REM,
+  SCHEDULE_PAGE_LEFT_PADDING_REM,
+  SCHEDULE_PAGE_RIGHT_PADDING_REM,
+  SCHEDULE_PANEL_GAP_REM,
+} from "@/pages/schedule/model/Schedule.constant";
 import { useSchedule } from "@/pages/schedule/model/useSchedule";
 
 import { ScheduleBoard } from "./Schedule.Board";
@@ -41,8 +47,14 @@ const SchedulePage = () => {
   return (
     <div
       ref={pageRef}
-      className="h-full w-full overflow-auto p-4 sm:p-6 xl:p-10"
-      style={{ backgroundColor: lightTheme.background.alternative }}
+      className="h-full w-full overflow-auto"
+      style={{
+        backgroundColor: lightTheme.background.alternative,
+        paddingBottom: `${SCHEDULE_CONTENT_BOTTOM_OFFSET_REM}rem`,
+        paddingLeft: `${SCHEDULE_PAGE_LEFT_PADDING_REM}rem`,
+        paddingRight: `${SCHEDULE_PAGE_RIGHT_PADDING_REM}rem`,
+        paddingTop: `${SCHEDULE_CONTENT_TOP_OFFSET_REM}rem`,
+      }}
     >
       <div
         className="shrink-0 overflow-visible"
