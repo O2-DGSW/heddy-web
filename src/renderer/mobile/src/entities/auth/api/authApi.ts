@@ -16,8 +16,12 @@ export const loginApi = async (body: LoginRequest): Promise<LoginResponse> => {
   return res.data.data;
 };
 
-export const refreshTokenApi = async (): Promise<LoginResponse> => {
-  const res = await api.post<AuthApiResponse<LoginResponse>>("/auth/token/refresh");
+export const refreshTokenApi = async (refreshToken: string): Promise<LoginResponse> => {
+  const res = await api.post<AuthApiResponse<LoginResponse>>("/auth/token/refresh", undefined, {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`,
+    },
+  });
   if (!res.data.success) {
     throw new Error(res.data.error?.message || res.data.message || "토큰 재발급에 실패했습니다.");
   }
