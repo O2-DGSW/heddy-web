@@ -1,6 +1,6 @@
-import { useState } from "react";
-
 import { Calendar } from "@/shared/ui/calendar";
+
+import { useShopSchedule } from "@/features/shop/model/useShopSchedule.ts";
 
 import {
   DEFAULT_SHOP_SCHEDULE_DATE,
@@ -9,8 +9,7 @@ import {
 } from "@/features/shop/constrants/schedule-calendar";
 
 const ShopSchedule = () => {
-  const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
-  const [viewMode, setViewMode] = useState<"month" | "week">("month");
+  const { selectedDate, setSelectedDate, viewMode, setViewMode } = useShopSchedule();
 
   return (
     <section className="h-full overflow-hidden bg-white">

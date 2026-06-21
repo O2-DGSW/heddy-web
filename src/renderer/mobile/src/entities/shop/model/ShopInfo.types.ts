@@ -5,6 +5,8 @@ export interface ShopInfoResponse {
   phone_number: string;
   description: string;
   open_hours: string;
+  tags: string[];
+  designers: { designerId: number; name: string; profile_image_url: string }[];
   created_at: string;
 }
 
