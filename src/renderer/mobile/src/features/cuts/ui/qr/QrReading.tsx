@@ -10,7 +10,6 @@ export const QrReading = () => {
   return result ? (
     <QRresult key={result.customer_id} result={result} />
   ) : (
-  ) : (
     <div className="flex flex-col items-center p-6">
       <h2 className="mb-6 text-2xl">
         <p className={font.headline2.bold} style={{ color: lightTheme.label.normal }}>
