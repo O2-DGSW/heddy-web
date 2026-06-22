@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query";
@@ -11,21 +11,33 @@ export const useShopSchedule = () => {
 
   const [viewMode, setViewMode] = useState<"month" | "week">("month");
 
+  const [designerId, setDesignerId] = useState<number>();
+
   const { data: myProfileData } = useGetMyProfileQuery();
 
   const shopId = myProfileData?.data?.shopMembers?.[0]?.shopId;
 
-  const { data: shopInfoData } = useShopInfoQuery({ shopId: shopId ?? 0 });
+  const { data: shopInfoData } = useShopInfoQuery({
+    shopId,
+  });
 
-  const designerId = shopInfoData?.designers?.[0]?.designerId;
+  // designerId 값 변경 확인용 코드
+  useEffect(() => {
+    const id = shopInfoData?.designers?.[0]?.designer_id;
+
+    if (id != null) {
+      setDesignerId(id);
+    }
+  }, [shopInfoData]);
 
   const {
     data: shopScheduleData,
     isLoading,
     isError,
   } = useShopScheduleQuery({
-    designerId: designerId ?? 0,
+    designerId,
     date: selectedDate,
+    enabled: designerId != null,
   });
 
   return {
