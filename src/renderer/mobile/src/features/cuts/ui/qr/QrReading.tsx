@@ -5,7 +5,7 @@ import { QRresult } from "./QRresult";
 import { useQRreading } from "@/features/cuts/model/useQRreading";
 
 export const QrReading = () => {
-  const { result, error, handleScan, handleError, tracker } = useQRreading();
+  const { result, error, handleScan, handleError } = useQRreading();
 
   return result ? (
     <QRresult result={result} />
@@ -22,7 +22,7 @@ export const QrReading = () => {
           onScan={handleScan}
           onError={handleError}
           constraints={{ facingMode: "environment" }}
-          components={{ tracker, finder: false }}
+          components={{ finder: false }}
           sound={false}
         />
 
