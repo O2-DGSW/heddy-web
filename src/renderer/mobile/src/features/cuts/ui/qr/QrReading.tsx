@@ -8,7 +8,8 @@ export const QrReading = () => {
   const { result, error, handleScan, handleError } = useQRreading();
 
   return result ? (
-    <QRresult result={result} />
+    <QRresult key={result.customer_id} result={result} />
+  ) : (
   ) : (
     <div className="flex flex-col items-center p-6">
       <h2 className="mb-6 text-2xl">
