@@ -1,3 +1,6 @@
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
 import { lightTheme } from "@design-tokens";
 
 import dateIcon from "@/pages/employee/assets/svg/date.svg";
@@ -16,31 +19,175 @@ import type {
   EmployeeRole,
   EmployeeTableProps,
   PermissionPanelProps,
+  RoleBadgeProps,
 } from "@/pages/employee/model/Employee.types";
 import { useEmployee } from "@/pages/employee/model/useEmployee";
 
 const EMPLOYEE_TABLE_COLUMNS = "54fr 121fr 112fr 115fr 96fr 54fr";
+const EMPLOYEE_ROLE_OPTIONS: EmployeeRole[] = ["director", "designer"];
+const ROLE_MENU_OFFSET_REM = 0.25;
+const ROOT_FONT_SIZE_FALLBACK = 16;
 
-const RoleBadge = ({ role }: { role: EmployeeRole }) => {
-  const meta = roleMeta[role];
+interface RoleMenuPosition {
+  left: number;
+  top: number;
+}
+
+const getRootFontSize = () => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return ROOT_FONT_SIZE_FALLBACK;
+  }
 
   return (
-    <button
-      type="button"
-      className="flex h-8 w-27.5 justify-self-center items-center justify-center gap-0.75 rounded-[0.9375rem] pl-2.5 pr-1.5 font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
-      style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
-    >
-      {meta.label}
-      <DropdownIcon
-        aria-hidden="true"
-        className="size-5 shrink-0"
-        style={{ color: meta.color }}
-      />
-    </button>
+    Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) ||
+    ROOT_FONT_SIZE_FALLBACK
   );
 };
 
-const EmployeeTable = ({ employees }: EmployeeTableProps) => {
+const RoleBadge = ({
+  role,
+  menuPlacement = "bottom",
+  isOpen,
+  onToggle,
+  onSelectRole,
+}: RoleBadgeProps) => {
+  const meta = roleMeta[role];
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const [menuPosition, setMenuPosition] = useState<RoleMenuPosition | null>(null);
+  const [hoveredRole, setHoveredRole] = useState<EmployeeRole | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const updateMenuPosition = () => {
+      const button = buttonRef.current;
+
+      if (!button) {
+        return;
+      }
+
+      const rect = button.getBoundingClientRect();
+      const rootFontSize = getRootFontSize();
+      const offsetPx = ROLE_MENU_OFFSET_REM * rootFontSize;
+
+      setMenuPosition({
+        left: rect.left + rect.width / 2,
+        top: menuPlacement === "top" ? rect.top - offsetPx : rect.bottom + offsetPx,
+      });
+    };
+
+    updateMenuPosition();
+    window.addEventListener("resize", updateMenuPosition);
+    window.addEventListener("scroll", updateMenuPosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [isOpen, menuPlacement]);
+
+  const roleMenu =
+    isOpen && menuPosition && typeof document !== "undefined"
+      ? createPortal(
+          <div
+            role="menu"
+            className="fixed z-[100] flex w-18 flex-col overflow-hidden rounded-md bg-white py-0.25 shadow-[0_0.125rem_0.5rem_rgba(0,0,0,0.1)]"
+            style={{
+              left: `${menuPosition.left}px`,
+              top: `${menuPosition.top}px`,
+              transform: menuPlacement === "top" ? "translate(-50%, -100%)" : "translateX(-50%)",
+              border: `0.0625rem solid ${lightTheme.line.alternative}`,
+            }}
+            onClick={event => event.stopPropagation()}
+            onMouseDown={event => event.stopPropagation()}
+            onMouseLeave={() => setHoveredRole(null)}
+          >
+            {EMPLOYEE_ROLE_OPTIONS.map(optionRole => {
+              const optionMeta = roleMeta[optionRole];
+              const isSelected = role === optionRole;
+              const isHovered = hoveredRole === optionRole;
+
+              return (
+                <button
+                  key={optionRole}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={isSelected}
+                  className={[
+                    "flex h-5.5 items-center justify-center border-b font-['Pretendard'] text-xs",
+                    "font-normal leading-none transition-colors last:border-b-0",
+                  ].join(" ")}
+                  style={{
+                    borderColor: lightTheme.line.alternative,
+                    color: isSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
+                    backgroundColor:
+                      isHovered || isSelected
+                        ? lightTheme.background.neutral
+                        : lightTheme.background.normal,
+                  }}
+                  onMouseDown={event => event.stopPropagation()}
+                  onMouseEnter={() => setHoveredRole(optionRole)}
+                  onMouseLeave={() => setHoveredRole(null)}
+                  onClick={event => {
+                    event.stopPropagation();
+                    setMenuPosition(null);
+                    setHoveredRole(null);
+                    onSelectRole(optionRole);
+                  }}
+                >
+                  {optionMeta.label}
+                </button>
+              );
+            })}
+          </div>,
+          document.body
+        )
+      : null;
+
+  return (
+    <div className="relative justify-self-center">
+      <button
+        ref={buttonRef}
+        type="button"
+        className="flex h-8 w-27.5 items-center justify-center gap-0.75 rounded-[0.9375rem] pl-2.5 pr-1.5 font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
+        style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
+        aria-label={`${meta.label} 권한 선택`}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        onClick={event => {
+          event.stopPropagation();
+          if (isOpen) {
+            setMenuPosition(null);
+            setHoveredRole(null);
+          }
+          onToggle();
+        }}
+      >
+        {meta.label}
+        <DropdownIcon
+          aria-hidden="true"
+          className="size-5 shrink-0"
+          style={{ color: meta.color }}
+        />
+      </button>
+
+      {roleMenu}
+    </div>
+  );
+};
+
+const EmployeeTable = ({
+  employees,
+  searchQuery,
+  openRoleMenuRowId,
+  onChangeSearchQuery,
+  onToggleRoleMenu,
+  onSelectRole,
+  onDeleteEmployee,
+  onStartEditEmployee,
+}: EmployeeTableProps) => {
   return (
     <section className="h-190.5 rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
       <div className="flex h-full flex-col items-center pt-5.75">
@@ -51,10 +198,7 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
           >
             등록 직원
           </h2>
-          <div
-            className="h-px w-full"
-            style={{ backgroundColor: lightTheme.line.alternative }}
-          />
+          <div className="h-px w-full" style={{ backgroundColor: lightTheme.line.alternative }} />
         </div>
 
         <div className="mt-8 flex w-full flex-col items-center gap-5">
@@ -68,11 +212,13 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
                 className="ml-3 min-w-0 flex-1 bg-transparent font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
                 placeholder="검색"
                 style={{ color: lightTheme.label.neutral }}
+                value={searchQuery}
+                onChange={event => onChangeSearchQuery(event.target.value)}
               />
             </label>
           </div>
 
-          <div className="w-full overflow-hidden">
+          <div className="w-full overflow-visible">
             <div
               className="grid h-9 items-center gap-12 px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
               style={{
@@ -90,43 +236,75 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
             </div>
 
             <div>
-              {employees.map(employee => (
-                <div
-                  key={employee.id}
-                  className="h-16 border-b"
-                  style={{ borderColor: lightTheme.background.neutral }}
-                >
+              {employees.map((employee, employeeIndex) => {
+                const isRoleMenuOpen = openRoleMenuRowId === employee.id;
+                const menuPlacement =
+                  employeeIndex >= Math.max(0, employees.length - 2) ? "top" : "bottom";
+
+                return (
                   <div
-                    className="grid h-full items-center gap-12 px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
-                    style={{
-                      gridTemplateColumns: EMPLOYEE_TABLE_COLUMNS,
-                      color: lightTheme.label.assistive,
-                    }}
+                    key={employee.id}
+                    className={["relative h-16 border-b", isRoleMenuOpen ? "z-30" : "z-0"].join(
+                      " "
+                    )}
+                    style={{ borderColor: lightTheme.background.neutral }}
                   >
-                    <span
-                      className="min-w-0 truncate font-bold"
-                      style={{ color: lightTheme.label.alternative }}
+                    <div
+                      className="grid h-full items-center gap-12 px-[2.21875rem] font-['Pretendard'] text-xl font-medium leading-[1.3]"
+                      style={{
+                        gridTemplateColumns: EMPLOYEE_TABLE_COLUMNS,
+                        color: lightTheme.label.assistive,
+                      }}
                     >
-                      {employee.name}
-                    </span>
-                    <span className="min-w-0 truncate text-center">{employee.phone}</span>
-                    <span className="min-w-0 truncate text-center">{employee.accountId}</span>
-                    <span className="flex min-w-0 items-center justify-center gap-2 whitespace-nowrap">
-                      <img src={dateIcon} alt="" className="size-5.5" aria-hidden="true" />
-                      {employee.registeredAt}
-                    </span>
-                    <RoleBadge role={employee.role} />
-                    <span className="flex min-w-0 items-center justify-center gap-1.5">
-                      <button type="button" aria-label="직원 삭제" className="size-6">
-                        <img src={trashIcon} alt="" className="size-full" aria-hidden="true" />
-                      </button>
-                      <button type="button" aria-label="직원 수정" className="size-6">
-                        <img src={editIcon} alt="" className="size-full" aria-hidden="true" />
-                      </button>
-                    </span>
+                      <span
+                        className="min-w-0 truncate font-bold"
+                        style={{ color: lightTheme.label.alternative }}
+                      >
+                        {employee.name}
+                      </span>
+                      <span className="min-w-0 truncate text-center">{employee.phone}</span>
+                      <span className="min-w-0 truncate text-center">{employee.accountId}</span>
+                      <span className="flex min-w-0 items-center justify-center gap-2 whitespace-nowrap">
+                        <img src={dateIcon} alt="" className="size-5.5" aria-hidden="true" />
+                        {employee.registeredAt}
+                      </span>
+                      <RoleBadge
+                        role={employee.role}
+                        menuPlacement={menuPlacement}
+                        isOpen={isRoleMenuOpen}
+                        onToggle={() => onToggleRoleMenu(employee.id)}
+                        onSelectRole={role => onSelectRole(employee.id, role)}
+                      />
+                      <span className="flex min-w-0 items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          aria-label="직원 삭제"
+                          className="size-6"
+                          onClick={() => onDeleteEmployee(employee.id)}
+                        >
+                          <img src={trashIcon} alt="" className="size-full" aria-hidden="true" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="직원 수정"
+                          className="size-6"
+                          onClick={() => onStartEditEmployee(employee)}
+                        >
+                          <img src={editIcon} alt="" className="size-full" aria-hidden="true" />
+                        </button>
+                      </span>
+                    </div>
                   </div>
+                );
+              })}
+              {employees.length === 0 && (
+                <div
+                  className="flex h-64 items-center justify-center font-['Pretendard'] text-xl font-medium leading-[1.3]"
+                  style={{ color: lightTheme.label.assistive }}
+                >
+                  검색 결과가 없습니다
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -135,34 +313,110 @@ const EmployeeTable = ({ employees }: EmployeeTableProps) => {
   );
 };
 
-const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
+const PermissionPanel = ({
+  employeeName,
+  employeePhone,
+  employeeRegisteredAt,
+  accountId,
+  accountIdMessage,
+  isEditingEmployee,
+  permissionOptions,
+  onChangeEmployeeName,
+  onChangeEmployeePhone,
+  onChangeEmployeeRegisteredAt,
+  onChangeAccountId,
+  onCheckAccountId,
+  onSelectPermissionRole,
+  onCancelPermissionForm,
+  onSubmitPermissionForm,
+}: PermissionPanelProps) => {
   return (
     <aside className="h-190.5 rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
-      <div className="flex h-full flex-col px-7.25 pt-6.5">
+      <div className="relative flex h-full flex-col px-7.25 pt-6.5">
         <div className="flex flex-col gap-3">
           <h2
             className="font-['Pretendard'] text-2xl font-bold leading-[1.3]"
             style={{ color: lightTheme.label.alternative }}
           >
-            권한 등록
+            {isEditingEmployee ? "권한 수정" : "권한 등록"}
           </h2>
-          <div
-            className="h-px w-full"
-            style={{ backgroundColor: lightTheme.line.alternative }}
-          />
+          <div className="h-px w-full" style={{ backgroundColor: lightTheme.line.alternative }} />
           <p
             className="font-['Pretendard'] text-lg font-medium leading-[1.3]"
             style={{ color: lightTheme.label.assistive }}
           >
-            *가입된 계정 ID를 조회하여 디자이너 또는 원장 권한을
-            <br />
-            부여합니다.
+            {isEditingEmployee ? (
+              "직원 정보와 권한을 수정합니다."
+            ) : (
+              <>
+                *가입된 계정 ID를 조회하여 디자이너 또는 원장 권한을
+                <br />
+                부여합니다.
+              </>
+            )}
           </p>
         </div>
 
-        <div className="mt-15 flex flex-col">
-          <div className="flex flex-col gap-13.25">
-            <div className="flex flex-col gap-5">
+        <div className="mt-8 flex min-h-0 flex-1 flex-col pb-14">
+          <div className="flex flex-col gap-5">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+              <label className="flex flex-col gap-2">
+                <span
+                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                  style={{ color: lightTheme.label.assistive }}
+                >
+                  이름
+                </span>
+                <input
+                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                  placeholder="이름 입력"
+                  style={{
+                    borderColor: lightTheme.line.alternative,
+                    color: lightTheme.label.neutral,
+                  }}
+                  value={employeeName}
+                  onChange={event => onChangeEmployeeName(event.target.value)}
+                />
+              </label>
+              <label className="flex flex-col gap-2">
+                <span
+                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                  style={{ color: lightTheme.label.assistive }}
+                >
+                  등록일
+                </span>
+                <input
+                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                  placeholder="YYYY.MM.DD"
+                  style={{
+                    borderColor: lightTheme.line.alternative,
+                    color: lightTheme.label.neutral,
+                  }}
+                  value={employeeRegisteredAt}
+                  onChange={event => onChangeEmployeeRegisteredAt(event.target.value)}
+                />
+              </label>
+              <label className="col-span-2 flex flex-col gap-2">
+                <span
+                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                  style={{ color: lightTheme.label.assistive }}
+                >
+                  연락처
+                </span>
+                <input
+                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                  placeholder="연락처 입력"
+                  style={{
+                    borderColor: lightTheme.line.alternative,
+                    color: lightTheme.label.neutral,
+                  }}
+                  value={employeePhone}
+                  onChange={event => onChangeEmployeePhone(event.target.value)}
+                />
+              </label>
+            </div>
+
+            <div className="flex flex-col gap-4">
               <label
                 className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
@@ -177,6 +431,8 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                     borderColor: lightTheme.line.alternative,
                     color: lightTheme.label.neutral,
                   }}
+                  value={accountId}
+                  onChange={event => onChangeAccountId(event.target.value)}
                 />
                 <button
                   type="button"
@@ -185,58 +441,49 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                     backgroundColor: lightTheme.line.alternative,
                     color: lightTheme.line.normal,
                   }}
+                  onClick={onCheckAccountId}
                 >
                   중복 확인
                 </button>
               </div>
+              <p
+                className="h-5.5 overflow-hidden whitespace-nowrap pl-2.75 font-['Pretendard'] text-base font-medium leading-[1.3]"
+                style={{ color: lightTheme.label.assistive }}
+              >
+                {accountIdMessage}
+              </p>
             </div>
 
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-3">
               <span
                 className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
               >
                 권한 선택
               </span>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2.5">
                 {permissionOptions.map(option => (
                   <button
                     key={option.id}
                     type="button"
-                    className="relative flex h-24.75 w-full items-center justify-center rounded-[0.9375rem] border shadow-[0_0_0.25rem_currentColor]"
+                    className="relative flex h-11 w-full items-center rounded-[0.625rem] border px-4 transition-colors hover:bg-[#FAFAFA]"
                     style={{
                       borderColor: option.selected
                         ? lightTheme.primary.normal
-                        : lightTheme.label.disable,
-                      color: option.selected ? lightTheme.primary.normal : lightTheme.label.disable,
+                        : lightTheme.line.alternative,
+                      color: option.selected ? lightTheme.primary.normal : lightTheme.label.neutral,
+                      backgroundColor: option.selected ? "#F5FCF9" : lightTheme.background.normal,
                     }}
+                    onClick={() => onSelectPermissionRole(option.id)}
                   >
-                    <span
-                      className="absolute left-2.75 top-2.75 size-4 rounded-full border-2"
-                      style={{
-                        borderColor: option.selected
-                          ? lightTheme.primary.normal
-                          : lightTheme.line.normal,
-                      }}
-                    >
-                      {option.selected && (
-                        <span
-                          className="absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                          style={{ backgroundColor: lightTheme.primary.normal }}
-                        />
-                      )}
-                    </span>
-                    <span className="grid w-full grid-cols-[10.2rem_0.7fr] items-center">
-                      <span className="flex justify-center">
-                        <img
-                          src={option.image}
-                          alt=""
-                          className="h-14.5 w-15 object-contain object-center"
-                        />
-                      </span>
+                    <span className="min-w-0 flex-1 text-left">
                       <span
-                        className="font-['Pretendard'] text-xl font-semibold leading-[1.3]"
-                        style={{ color: lightTheme.label.alternative }}
+                        className="block truncate font-['Pretendard'] text-lg font-medium leading-[1.3]"
+                        style={{
+                          color: option.selected
+                            ? lightTheme.primary.normal
+                            : lightTheme.label.alternative,
+                        }}
                       >
                         {option.label}
                       </span>
@@ -247,7 +494,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
             </div>
           </div>
 
-          <div className="mt-27 flex justify-end gap-3">
+          <div className="absolute bottom-6 right-7.25 flex justify-end gap-3">
             <button
               type="button"
               className="h-8 w-22.5 rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
@@ -255,6 +502,7 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
                 backgroundColor: lightTheme.background.neutral,
                 color: lightTheme.line.normal,
               }}
+              onClick={onCancelPermissionForm}
             >
               취소
             </button>
@@ -262,8 +510,9 @@ const PermissionPanel = ({ permissionOptions }: PermissionPanelProps) => {
               type="button"
               className="h-8 w-22.5 rounded-md font-['Pretendard'] text-lg font-semibold leading-[1.3]"
               style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
+              onClick={onSubmitPermissionForm}
             >
-              등록
+              {isEditingEmployee ? "수정" : "등록"}
             </button>
           </div>
         </div>
@@ -281,7 +530,29 @@ const EmployeePage = () => {
     scaledLayoutWidthRem,
     scaledLayoutHeightRem,
     employees,
+    totalEmployeeCount,
+    searchQuery,
+    openRoleMenuRowId,
+    employeeName,
+    employeePhone,
+    employeeRegisteredAt,
+    accountId,
+    accountIdMessage,
+    isEditingEmployee,
     permissionOptions,
+    onChangeSearchQuery,
+    onToggleRoleMenu,
+    onSelectRole,
+    onDeleteEmployee,
+    onStartEditEmployee,
+    onChangeEmployeeName,
+    onChangeEmployeePhone,
+    onChangeEmployeeRegisteredAt,
+    onChangeAccountId,
+    onCheckAccountId,
+    onSelectPermissionRole,
+    onCancelPermissionForm,
+    onSubmitPermissionForm,
   } = useEmployee();
 
   return (
@@ -324,22 +595,41 @@ const EmployeePage = () => {
                 직원 권한 관리
               </h1>
               <span
-                className="font-['Pretendard'] text-2xl font-medium leading-[1.3]"
-                style={{ color: lightTheme.label.assistive }}
-              >
-                ·
-              </span>
-              <span
                 className="font-['Pretendard'] text-xl font-medium leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
               >
-                총 직원 128명
+                총 직원 {totalEmployeeCount}명
               </span>
             </div>
 
             <div className="grid flex-1 grid-cols-[minmax(0,1fr)_30.4375rem] gap-4">
-              <EmployeeTable employees={employees} />
-              <PermissionPanel permissionOptions={permissionOptions} />
+              <EmployeeTable
+                employees={employees}
+                searchQuery={searchQuery}
+                openRoleMenuRowId={openRoleMenuRowId}
+                onChangeSearchQuery={onChangeSearchQuery}
+                onToggleRoleMenu={onToggleRoleMenu}
+                onSelectRole={onSelectRole}
+                onDeleteEmployee={onDeleteEmployee}
+                onStartEditEmployee={onStartEditEmployee}
+              />
+              <PermissionPanel
+                employeeName={employeeName}
+                employeePhone={employeePhone}
+                employeeRegisteredAt={employeeRegisteredAt}
+                accountId={accountId}
+                accountIdMessage={accountIdMessage}
+                isEditingEmployee={isEditingEmployee}
+                permissionOptions={permissionOptions}
+                onChangeEmployeeName={onChangeEmployeeName}
+                onChangeEmployeePhone={onChangeEmployeePhone}
+                onChangeEmployeeRegisteredAt={onChangeEmployeeRegisteredAt}
+                onChangeAccountId={onChangeAccountId}
+                onCheckAccountId={onCheckAccountId}
+                onSelectPermissionRole={onSelectPermissionRole}
+                onCancelPermissionForm={onCancelPermissionForm}
+                onSubmitPermissionForm={onSubmitPermissionForm}
+              />
             </div>
           </div>
         </div>
