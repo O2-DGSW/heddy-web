@@ -312,62 +312,64 @@ const PermissionPanel = ({
 
         <div className="mt-8 flex min-h-0 flex-1 flex-col pb-14">
           <div className="flex flex-col gap-5">
-            <div className="grid grid-cols-2 gap-x-3 gap-y-4">
-              <label className="flex flex-col gap-2">
-                <span
-                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
-                  style={{ color: lightTheme.label.assistive }}
-                >
-                  이름
-                </span>
-                <input
-                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
-                  placeholder="이름 입력"
-                  style={{
-                    borderColor: lightTheme.line.alternative,
-                    color: lightTheme.label.neutral,
-                  }}
-                  value={employeeName}
-                  onChange={event => onChangeEmployeeName(event.target.value)}
-                />
-              </label>
-              <label className="flex flex-col gap-2">
-                <span
-                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
-                  style={{ color: lightTheme.label.assistive }}
-                >
-                  등록일
-                </span>
-                <input
-                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
-                  placeholder="YYYY.MM.DD"
-                  style={{
-                    borderColor: lightTheme.line.alternative,
-                    color: lightTheme.label.neutral,
-                  }}
-                  value={employeeRegisteredAt}
-                  onChange={event => onChangeEmployeeRegisteredAt(event.target.value)}
-                />
-              </label>
-              <label className="col-span-2 flex flex-col gap-2">
-                <span
-                  className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
-                  style={{ color: lightTheme.label.assistive }}
-                >
-                  연락처
-                </span>
-                <input
-                  className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
-                  placeholder="연락처 입력"
-                  style={{
-                    borderColor: lightTheme.line.alternative,
-                    color: lightTheme.label.neutral,
-                  }}
-                  value={employeePhone}
-                  onChange={event => onChangeEmployeePhone(event.target.value)}
-                />
-              </label>
-            </div>
+            {isEditingEmployee ? (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-4">
+                <label className="flex flex-col gap-2">
+                  <span
+                    className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                    style={{ color: lightTheme.label.assistive }}
+                  >
+                    이름
+                  </span>
+                  <input
+                    className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                    placeholder="이름 입력"
+                    style={{
+                      borderColor: lightTheme.line.alternative,
+                      color: lightTheme.label.neutral,
+                    }}
+                    value={employeeName}
+                    onChange={event => onChangeEmployeeName(event.target.value)}
+                  />
+                </label>
+                <label className="flex flex-col gap-2">
+                  <span
+                    className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                    style={{ color: lightTheme.label.assistive }}
+                  >
+                    등록일
+                  </span>
+                  <input
+                    className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                    placeholder="YYYY.MM.DD"
+                    style={{
+                      borderColor: lightTheme.line.alternative,
+                      color: lightTheme.label.neutral,
+                    }}
+                    value={employeeRegisteredAt}
+                    onChange={event => onChangeEmployeeRegisteredAt(event.target.value)}
+                  />
+                </label>
+                <label className="col-span-2 flex flex-col gap-2">
+                  <span
+                    className="pl-2.75 font-['Pretendard'] text-lg font-semibold leading-[1.3]"
+                    style={{ color: lightTheme.label.assistive }}
+                  >
+                    연락처
+                  </span>
+                  <input
+                    className="h-10 rounded-[0.625rem] border bg-white px-4 font-['Pretendard'] text-lg font-medium leading-[1.3] outline-none"
+                    placeholder="연락처 입력"
+                    style={{
+                      borderColor: lightTheme.line.alternative,
+                      color: lightTheme.label.neutral,
+                    }}
+                    value={employeePhone}
+                    onChange={event => onChangeEmployeePhone(event.target.value)}
+                  />
+                </label>
+              </div>
+            ) : null}
 
             <div className="flex flex-col gap-4">
               <label
