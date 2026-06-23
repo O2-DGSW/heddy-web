@@ -389,7 +389,7 @@ export const useCustomer = () => {
     totalCustomerCount: dashboard?.metrics.total_customer_count ?? rows.length,
     searchQuery,
     isLoading,
-    emptyMessage,
+    emptyMessage: searchQuery.trim() ? "검색 결과가 없습니다" : emptyMessage,
     sortLabel: selectedSortOption?.label ?? CUSTOMER_SORT_OPTIONS[0].label,
     sortOptions: CUSTOMER_SORT_OPTIONS,
     designerOptions: CUSTOMER_DESIGNER_OPTIONS,
