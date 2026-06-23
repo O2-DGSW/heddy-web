@@ -97,12 +97,23 @@ const updateEmployeeRole = (
 
 const normalizeAccountId = (accountId: string) => accountId.trim().toLowerCase();
 
+const getDesignerAccountId = (designer: DesignerResponse) => {
+  const loginId = designer.login_id?.trim();
+
+  if (loginId) {
+    return loginId;
+  }
+
+  // getShopDetail may not include login_id yet; this fallback is the DB designer ID, not the login ID.
+  return String(designer.designer_id);
+};
+
 const mapDesignerToEmployee = (designer: DesignerResponse): EmployeeRow => ({
   id: designer.designer_id,
   designerId: designer.designer_id,
   name: designer.name || `디자이너 ${designer.designer_id}`,
   phone: "-",
-  accountId: String(designer.designer_id),
+  accountId: getDesignerAccountId(designer),
   registeredAt: "-",
   role: "designer",
 });

@@ -11,6 +11,7 @@ type ApiResponse<T> = {
 
 export type DesignerResponse = {
   designer_id: number;
+  login_id?: string | null;
   name: string;
   profile_image_url?: string | null;
 };
