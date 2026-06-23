@@ -1,5 +1,5 @@
 export interface MyProfileInfoResponse {
-  userId: string;
+  userId: number;
   name: string;
   shopMembers: { shopId: number; shopName: string; memberRole: string }[];
 }

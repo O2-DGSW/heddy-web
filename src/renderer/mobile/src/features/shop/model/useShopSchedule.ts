@@ -15,20 +15,21 @@ export const useShopSchedule = () => {
 
   const { data: myProfileData } = useGetMyProfileQuery();
 
+  const myUserId = myProfileData?.data?.userId;
   const shopId = myProfileData?.data?.shopMembers?.[0]?.shopId;
 
   const { data: shopInfoData } = useShopInfoQuery({
     shopId,
   });
 
-  // designerId 값 변경 확인용 코드
   useEffect(() => {
-    const id = shopInfoData?.designers?.[0]?.designer_id;
+    const id = shopInfoData?.designers?.find((designer) => designer.designer_id === myUserId)
+      ?.designer_id;
 
     if (id != null) {
       setDesignerId(id);
     }
-  }, [shopInfoData]);
+  }, [shopInfoData, myUserId]);
 
   const {
     data: shopScheduleData,
