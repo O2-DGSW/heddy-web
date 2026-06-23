@@ -2,6 +2,7 @@ type EmployeeRole = "director" | "designer";
 
 interface EmployeeRow {
   id: number;
+  designerId?: number;
   name: string;
   phone: string;
   accountId: string;
@@ -27,6 +28,8 @@ interface RoleBadgeProps {
 interface EmployeeTableProps {
   employees: EmployeeRow[];
   searchQuery: string;
+  isLoading: boolean;
+  emptyMessage: string;
   openRoleMenuRowId: number | null;
   onChangeSearchQuery: (query: string) => void;
   onToggleRoleMenu: (employeeId: number) => void;
