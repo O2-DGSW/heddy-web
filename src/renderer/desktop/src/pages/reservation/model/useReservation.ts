@@ -342,11 +342,11 @@ export const useReservation = () => {
     reservationId: number,
     status: ReservationStatusKey,
     changedTime?: string
-  ) => {
+  ): Promise<boolean> => {
     const reservation = reservations.find(item => item.id === reservationId);
 
     if (!reservation) {
-      return;
+      return false;
     }
 
     setErrorMessage("");
@@ -358,8 +358,10 @@ export const useReservation = () => {
       });
 
       replaceReservation(mapReservationResponse(updatedReservation));
+      return true;
     } catch (error) {
       setErrorMessage(getReservationErrorMessage(error, "예약 상태를 변경하지 못했습니다."));
+      return false;
     }
   };
 
@@ -420,8 +422,11 @@ export const useReservation = () => {
       await updateReservationStatus(reservationId, getNextStatus(reservation.status));
     },
     setReservationStatus: async (reservationId: number, status: ReservationStatusKey) => {
-      await updateReservationStatus(reservationId, status);
-      setActiveStatusMenuReservationId(null);
+      const success = await updateReservationStatus(reservationId, status);
+
+      if (success) {
+        setActiveStatusMenuReservationId(null);
+      }
     },
     toggleStatusMenu: (reservationId: number) => {
       setActiveStatusMenuReservationId(current =>
@@ -453,8 +458,11 @@ export const useReservation = () => {
         return;
       }
 
-      await updateReservationStatus(openedReservationId, reservation.status, time);
-      setIsDetailTimeMenuOpen(false);
+      const success = await updateReservationStatus(openedReservationId, reservation.status, time);
+
+      if (success) {
+        setIsDetailTimeMenuOpen(false);
+      }
     },
     openTimeChangeModal: (reservationId: number) => {
       const reservation = reservations.find(item => item.id === reservationId);
@@ -498,10 +506,17 @@ export const useReservation = () => {
         return;
       }
 
-      await updateReservationStatus(timeChangeReservationId, "approved", changedTimeValue);
-      setTimeChangeReservationId(null);
-      setIsCurrentTimeMenuOpen(false);
-      setIsChangedTimeMenuOpen(false);
+      const success = await updateReservationStatus(
+        timeChangeReservationId,
+        "approved",
+        changedTimeValue
+      );
+
+      if (success) {
+        setTimeChangeReservationId(null);
+        setIsCurrentTimeMenuOpen(false);
+        setIsChangedTimeMenuOpen(false);
+      }
     },
   };
 };
