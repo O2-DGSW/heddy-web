@@ -11,12 +11,15 @@ const shouldRestoreAuthSession = () => {
     return false;
   }
 
-  return !["/login", "/signup"].includes(window.location.pathname) && !window.location.pathname.startsWith("/find/");
+  return (
+    !["/login", "/signup"].includes(window.location.pathname) &&
+    !window.location.pathname.startsWith("/find/")
+  );
 };
-  
-<!-- import { setupAuthInterceptor } from "@/entities/auth/model/setupAuthInterceptor";
 
-setupAuthInterceptor(); -->
+import { setupAuthInterceptor } from "@/entities/auth/model/setupAuthInterceptor";
+
+setupAuthInterceptor();
 
 const App = () => {
   useEffect(() => {
