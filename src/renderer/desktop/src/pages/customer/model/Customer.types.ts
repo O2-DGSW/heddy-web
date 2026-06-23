@@ -29,9 +29,11 @@ export interface CustomerDesignerOption {
 
 export interface CustomerRow {
   id: number;
+  customerId: string;
   name: string;
   phone: string;
   lastVisit: string;
+  daysSinceLastVisit: number;
   visitCycle: string;
   riskPercent: number;
   riskLevel: CustomerRiskLevel;
@@ -48,6 +50,8 @@ export interface CustomerTableProps {
   filters: CustomerFilter[];
   rows: CustomerRow[];
   searchQuery: string;
+  isLoading: boolean;
+  emptyMessage: string;
   sortLabel: string;
   sortOptions: CustomerSortOption[];
   designerOptions: CustomerDesignerOption[];
