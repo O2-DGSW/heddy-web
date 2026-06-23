@@ -6,9 +6,23 @@ export const useQrIssue = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let ignore = false;
+
     issueQr()
-      .then(({ qr_token }) => setQrToken(qr_token))
-      .catch((err: Error) => setError(err.message));
+      .then(({ qr_token }) => {
+        if (!ignore) {
+          setQrToken(qr_token);
+        }
+      })
+      .catch((err: Error) => {
+        if (!ignore) {
+          setError(err.message);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return { qrToken, error };
