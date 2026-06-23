@@ -368,17 +368,23 @@ export const useEmployee = () => {
       return;
     }
 
+    if (editingEmployeeId === null && selectedPermissionRole !== "designer") {
+      setAccountIdMessage("서버는 디자이너 초대만 지원합니다.");
+      return;
+    }
+
     if (hasDuplicateAccountId(nextAccountId)) {
       setAccountIdMessage("이미 등록된 계정 ID입니다.");
       return;
     }
 
-    setAccountIdMessage("초대 요청 시 서버에서 계정 ID를 확인합니다.");
+    setAccountIdMessage(
+      editingEmployeeId === null
+        ? "초대 요청 시 서버에서 계정 ID를 확인합니다."
+        : "사용 가능한 계정 ID입니다."
+    );
   };
   const handleSubmitPermissionForm = async () => {
-    const nextEmployeeName = employeeName.trim();
-    const nextEmployeePhone = employeePhone.trim();
-    const nextEmployeeRegisteredAt = employeeRegisteredAt.trim();
     const nextAccountId = accountId.trim();
 
     if (nextAccountId.length === 0) {
@@ -397,6 +403,10 @@ export const useEmployee = () => {
     }
 
     if (editingEmployeeId !== null) {
+      const nextEmployeeName = employeeName.trim();
+      const nextEmployeePhone = employeePhone.trim();
+      const nextEmployeeRegisteredAt = employeeRegisteredAt.trim();
+
       setEmployees(currentEmployees => {
         const updatedEmployees = currentEmployees.map(employee =>
           employee.id === editingEmployeeId
