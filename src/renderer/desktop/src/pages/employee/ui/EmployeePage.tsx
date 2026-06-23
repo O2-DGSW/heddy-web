@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 
 import { lightTheme } from "@design-tokens";
 
@@ -25,24 +24,6 @@ import { useEmployee } from "@/pages/employee/model/useEmployee";
 
 const EMPLOYEE_TABLE_COLUMNS = "54fr 121fr 112fr 115fr 96fr 54fr";
 const EMPLOYEE_ROLE_OPTIONS: EmployeeRole[] = ["director", "designer"];
-const ROLE_MENU_OFFSET_REM = 0.25;
-const ROOT_FONT_SIZE_FALLBACK = 16;
-
-interface RoleMenuPosition {
-  left: number;
-  top: number;
-}
-
-const getRootFontSize = () => {
-  if (typeof window === "undefined" || typeof document === "undefined") {
-    return ROOT_FONT_SIZE_FALLBACK;
-  }
-
-  return (
-    Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) ||
-    ROOT_FONT_SIZE_FALLBACK
-  );
-};
 
 const RoleBadge = ({
   role,
@@ -52,104 +33,11 @@ const RoleBadge = ({
   onSelectRole,
 }: RoleBadgeProps) => {
   const meta = roleMeta[role];
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [menuPosition, setMenuPosition] = useState<RoleMenuPosition | null>(null);
   const [hoveredRole, setHoveredRole] = useState<EmployeeRole | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const updateMenuPosition = () => {
-      const button = buttonRef.current;
-
-      if (!button) {
-        return;
-      }
-
-      const rect = button.getBoundingClientRect();
-      const rootFontSize = getRootFontSize();
-      const offsetPx = ROLE_MENU_OFFSET_REM * rootFontSize;
-
-      setMenuPosition({
-        left: rect.left + rect.width / 2,
-        top: menuPlacement === "top" ? rect.top - offsetPx : rect.bottom + offsetPx,
-      });
-    };
-
-    updateMenuPosition();
-    window.addEventListener("resize", updateMenuPosition);
-    window.addEventListener("scroll", updateMenuPosition, true);
-
-    return () => {
-      window.removeEventListener("resize", updateMenuPosition);
-      window.removeEventListener("scroll", updateMenuPosition, true);
-    };
-  }, [isOpen, menuPlacement]);
-
-  const roleMenu =
-    isOpen && menuPosition && typeof document !== "undefined"
-      ? createPortal(
-          <div
-            role="menu"
-            className="fixed z-[100] flex w-18 flex-col overflow-hidden rounded-md bg-white py-0.25 shadow-[0_0.125rem_0.5rem_rgba(0,0,0,0.1)]"
-            style={{
-              left: `${menuPosition.left}px`,
-              top: `${menuPosition.top}px`,
-              transform: menuPlacement === "top" ? "translate(-50%, -100%)" : "translateX(-50%)",
-              border: `0.0625rem solid ${lightTheme.line.alternative}`,
-            }}
-            onClick={event => event.stopPropagation()}
-            onMouseDown={event => event.stopPropagation()}
-            onMouseLeave={() => setHoveredRole(null)}
-          >
-            {EMPLOYEE_ROLE_OPTIONS.map(optionRole => {
-              const optionMeta = roleMeta[optionRole];
-              const isSelected = role === optionRole;
-              const isHovered = hoveredRole === optionRole;
-
-              return (
-                <button
-                  key={optionRole}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={isSelected}
-                  className={[
-                    "flex h-5.5 items-center justify-center border-b font-['Pretendard'] text-xs",
-                    "font-normal leading-none transition-colors last:border-b-0",
-                  ].join(" ")}
-                  style={{
-                    borderColor: lightTheme.line.alternative,
-                    color: isSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
-                    backgroundColor:
-                      isHovered || isSelected
-                        ? lightTheme.background.neutral
-                        : lightTheme.background.normal,
-                  }}
-                  onMouseDown={event => event.stopPropagation()}
-                  onMouseEnter={() => setHoveredRole(optionRole)}
-                  onMouseLeave={() => setHoveredRole(null)}
-                  onClick={event => {
-                    event.stopPropagation();
-                    setMenuPosition(null);
-                    setHoveredRole(null);
-                    onSelectRole(optionRole);
-                  }}
-                >
-                  {optionMeta.label}
-                </button>
-              );
-            })}
-          </div>,
-          document.body
-        )
-      : null;
 
   return (
     <div className="relative justify-self-center">
       <button
-        ref={buttonRef}
         type="button"
         className="flex h-8 w-27.5 items-center justify-center gap-0.75 rounded-[0.9375rem] pl-2.5 pr-1.5 font-['Pretendard'] text-lg font-medium leading-[1.3] whitespace-nowrap"
         style={{ backgroundColor: meta.backgroundColor, color: meta.color }}
@@ -158,10 +46,6 @@ const RoleBadge = ({
         aria-expanded={isOpen}
         onClick={event => {
           event.stopPropagation();
-          if (isOpen) {
-            setMenuPosition(null);
-            setHoveredRole(null);
-          }
           onToggle();
         }}
       >
@@ -173,7 +57,58 @@ const RoleBadge = ({
         />
       </button>
 
-      {roleMenu}
+      {isOpen && (
+        <div
+          role="menu"
+          className="absolute z-[100] flex w-18 flex-col overflow-hidden rounded-md bg-white py-0.25 shadow-[0_0.125rem_0.5rem_rgba(0,0,0,0.1)]"
+          style={{
+            left: "50%",
+            transform: "translateX(-50%)",
+            ...(menuPlacement === "top"
+              ? { bottom: "calc(100% + 0.25rem)" }
+              : { top: "calc(100% + 0.25rem)" }),
+            border: `0.0625rem solid ${lightTheme.line.alternative}`,
+          }}
+          onClick={event => event.stopPropagation()}
+          onMouseLeave={() => setHoveredRole(null)}
+        >
+          {EMPLOYEE_ROLE_OPTIONS.map(optionRole => {
+            const optionMeta = roleMeta[optionRole];
+            const isSelected = role === optionRole;
+            const isHovered = hoveredRole === optionRole;
+
+            return (
+              <button
+                key={optionRole}
+                type="button"
+                role="menuitemradio"
+                aria-checked={isSelected}
+                className={[
+                  "flex h-5.5 items-center justify-center border-b font-['Pretendard'] text-xs",
+                  "font-normal leading-none transition-colors last:border-b-0",
+                ].join(" ")}
+                style={{
+                  borderColor: lightTheme.line.alternative,
+                  color: isSelected ? lightTheme.primary.normal : lightTheme.label.assistive,
+                  backgroundColor:
+                    isHovered || isSelected
+                      ? lightTheme.background.neutral
+                      : lightTheme.background.normal,
+                }}
+                onMouseEnter={() => setHoveredRole(optionRole)}
+                onMouseLeave={() => setHoveredRole(null)}
+                onClick={event => {
+                  event.stopPropagation();
+                  setHoveredRole(null);
+                  onSelectRole(optionRole);
+                }}
+              >
+                {optionMeta.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

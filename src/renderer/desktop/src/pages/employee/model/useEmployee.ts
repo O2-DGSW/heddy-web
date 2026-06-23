@@ -106,6 +106,8 @@ const updateEmployeeRole = (
   });
 };
 
+const normalizeAccountId = (accountId: string) => accountId.trim().toLowerCase();
+
 export const useEmployee = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(getEmployeeScale);
@@ -163,8 +165,10 @@ export const useEmployee = () => {
       return employees;
     }
 
-    return employees.filter(employee =>
-      [
+    const queryWithoutHyphen = normalizedSearchQuery.replace(/-/g, "");
+
+    return employees.filter(employee => {
+      const searchString = [
         employee.name,
         employee.phone,
         employee.accountId,
@@ -172,25 +176,36 @@ export const useEmployee = () => {
         roleMeta[employee.role].label,
       ]
         .join(" ")
-        .toLowerCase()
-        .includes(normalizedSearchQuery)
-    );
+        .toLowerCase();
+
+      return (
+        searchString.includes(normalizedSearchQuery) ||
+        (queryWithoutHyphen.length > 0 &&
+          searchString.replace(/-/g, "").includes(queryWithoutHyphen))
+      );
+    });
   }, [employees, normalizedSearchQuery]);
   const permissionOptions = PERMISSION_OPTIONS.map(option => ({
     ...option,
     selected: option.id === selectedPermissionRole,
   }));
   const hasDuplicateAccountId = (nextAccountId: string) => {
+    const normalizedNextAccountId = normalizeAccountId(nextAccountId);
     const editingEmployee =
       editingEmployeeId === null
         ? undefined
         : employees.find(employee => employee.id === editingEmployeeId);
 
-    if (editingEmployee?.accountId === nextAccountId) {
+    if (
+      editingEmployee &&
+      normalizeAccountId(editingEmployee.accountId) === normalizedNextAccountId
+    ) {
       return false;
     }
 
-    return employees.some(employee => employee.accountId === nextAccountId);
+    return employees.some(
+      employee => normalizeAccountId(employee.accountId) === normalizedNextAccountId
+    );
   };
   const resetPermissionForm = (message = "") => {
     setEmployeeName("");

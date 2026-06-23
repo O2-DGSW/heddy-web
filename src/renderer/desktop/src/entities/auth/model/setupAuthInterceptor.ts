@@ -15,7 +15,6 @@ export const setupAuthInterceptor = () => {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   });
 };
