@@ -1,32 +1,35 @@
-import { useCallback, useState } from "react";
-import type { TrackFunction } from "@yudiel/react-qr-scanner";
-import { lightTheme } from "@design-tokens";
-
-export type QrSuccessData = {
-  name: string;
-  phone: string;
-  cutsCount: number;
-};
+import { useCallback, useEffect, useRef } from "react";
+import { useNavigationType } from "react-router-dom";
+import { verifyQr } from "@/entities/qr/api/qrApi";
+import { useQrResultStore } from "@/features/cuts/model/useQrResultStore";
 
 type DetectedCode = {
   rawValue: string;
 };
 
-const MOCK_QR_RESULT: QrSuccessData = {
-  name: "오용준",
-  phone: "010-9563-5423",
-  cutsCount: 12,
-};
-
 export const useQRreading = () => {
-  const [result, setResult] = useState<QrSuccessData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { result, error, setResult, setError, reset } = useQrResultStore();
+  const navigationType = useNavigationType();
+  const isVerifying = useRef(false);
+
+  // 탭 클릭 등으로 새로 진입(PUSH)한 경우만 초기화 - 상세 페이지에서 뒤로가기(POP)로 돌아온 경우는 기존 결과 유지
+  useEffect(() => {
+    if (navigationType !== "POP") {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleScan = useCallback((detectedCodes: DetectedCode[]) => {
-    if (detectedCodes.length === 0) return;
-    console.log("QR:", detectedCodes[0].rawValue);
-    setResult(MOCK_QR_RESULT);
-  }, []);
+    if (detectedCodes.length === 0 || isVerifying.current) return;
+    isVerifying.current = true;
+    verifyQr(detectedCodes[0].rawValue)
+      .then((data) => setResult(data))
+      .catch((err: Error) => setError(err.message))
+      .finally(() => {
+        isVerifying.current = false;
+      });
+  }, [setResult, setError]);
 
   const handleError = useCallback((err: unknown) => {
     if (err instanceof Error) {
@@ -34,28 +37,13 @@ export const useQRreading = () => {
       return;
     }
     setError("카메라 접근에 실패했습니다.");
-  }, []);
-
-  const tracker: TrackFunction = useCallback((detectedCodes, ctx) => {
-    detectedCodes.forEach(({ boundingBox, cornerPoints }) => {
-      ctx.strokeStyle = "#00FF00";
-      ctx.lineWidth = 4;
-      ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-      ctx.fillStyle = lightTheme.primary.normal;
-
-      cornerPoints.forEach(({ x, y }) => {
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, 2 * Math.PI);
-        ctx.fill();
-      });
-    });
-  }, []);
+  }, [setError]);
 
   return {
     result,
     error,
     handleScan,
     handleError,
-    tracker,
+    reset,
   };
 };
