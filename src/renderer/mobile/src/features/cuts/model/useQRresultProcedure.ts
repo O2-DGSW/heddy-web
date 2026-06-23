@@ -6,13 +6,15 @@ import type {
   UseAddProcedureNoteReturn,
 } from "./types/AddProcedureNoteModal.types";
 
+const EMPTY_PROCEDURE_NOTES: ProcedureNote[] = [];
+
 /**
  * 시술기록 추가 모달의 상태 및 이벤트 핸들러를 관리하는 훅
  * @returns 모달 open 상태, 폼 데이터, 핸들러 함수들
  */
 export const useQRresultProcedure = (
   customerName: string,
-  initialNotes: ProcedureNote[] = []
+  initialNotes: ProcedureNote[] = EMPTY_PROCEDURE_NOTES
 ): UseAddProcedureNoteReturn => {
   const [notes, setNotes] = useState<ProcedureNote[]>(initialNotes);
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,10 @@ export const useQRresultProcedure = (
       objectUrls.clear();
     };
   }, []);
+
+  useEffect(() => {
+    setNotes(initialNotes);
+  }, [initialNotes]);
 
   const createImageObjectUrl = (file: File | null) => {
     if (!file) return null;
