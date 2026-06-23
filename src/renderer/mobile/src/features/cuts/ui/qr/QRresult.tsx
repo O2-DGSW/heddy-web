@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { font, lightTheme } from "@design-tokens";
 import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import { ProcedureNoteItem } from "@/features/cuts/ui/item/ProcedureNoteItem.tsx";
@@ -12,11 +13,13 @@ interface QRresultProps {
   result: VerifyQrResponse | null;
 }
 
-export const QRresult = ({ result }: QRresultProps) => {
-  if (!result) return null;
-
-  const initialNotes = result.treatment_records.map((record) =>
-    mapTreatmentRecordToProcedureNote(record, result.customer_name)
+const QRresultContent = ({ result }: { result: VerifyQrResponse }) => {
+  const initialNotes = useMemo(
+    () =>
+      result.treatment_records.map(record =>
+        mapTreatmentRecordToProcedureNote(record, result.customer_name)
+      ),
+    [result.treatment_records, result.customer_name]
   );
 
   const {
@@ -46,7 +49,11 @@ export const QRresult = ({ result }: QRresultProps) => {
             style={{ backgroundColor: lightTheme.primary.normal }}
           >
             {result.profile_image_url && (
-              <img src={result.profile_image_url} alt="고객 프로필" className="w-full h-full object-cover" />
+              <img
+                src={result.profile_image_url}
+                alt="고객 프로필"
+                className="w-full h-full object-cover"
+              />
             )}
           </div>
 
@@ -122,4 +129,10 @@ export const QRresult = ({ result }: QRresultProps) => {
       </div>
     </div>
   );
+};
+
+export const QRresult = ({ result }: QRresultProps) => {
+  if (!result) return null;
+
+  return <QRresultContent result={result} />;
 };
