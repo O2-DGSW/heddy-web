@@ -1,8 +1,8 @@
 export interface AiStyleRecommendationItem {
   title: string;
-  imageUrl: string | null;
-  imageSourceName: string | null;
-  imageSourceUrl: string | null;
+  image_url: string | null;
+  image_source_name: string | null;
+  image_source_url: string | null;
   tags: string[];
   summary: string;
 }

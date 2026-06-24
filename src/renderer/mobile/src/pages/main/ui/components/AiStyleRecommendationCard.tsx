@@ -16,8 +16,8 @@ export const AiStyleRecommendationCard = ({ rank, recommendation }: AiStyleRecom
         className="relative w-full aspect-square rounded-xl overflow-hidden flex items-center justify-center"
         style={{ backgroundColor: lightTheme.fill.neutral }}
       >
-        {recommendation.imageUrl ? (
-          <img src={recommendation.imageUrl} alt={recommendation.title} className="w-full h-full object-cover" />
+        {recommendation.image_url ? (
+          <img src={recommendation.image_url} alt={recommendation.title} className="w-full h-full object-cover" />
         ) : (
           <img src={PictureIcon} alt="" className="w-8 h-8 opacity-50" />
         )}
