@@ -96,6 +96,27 @@ export const getCustomerDashboard = async (shopId: number, date?: string) => {
   return res.data.data;
 };
 
+export const getQuarterlySalesPredict = async (
+  shopId: number,
+  params: SalesPredictionParams = {}
+) => {
+  const res = await api.post<ApiResponse<QuarterlySalesPredictResponse>>(
+    `/shops/${shopId}/analytics/sales/beauty-salon/quarterly-predict`,
+    null,
+    {
+      params,
+    }
+  );
+
+  if (!res.data.success) {
+    throw new Error(
+      res.data.error?.message || res.data.message || "매출 예측 정보를 불러오지 못했습니다."
+    );
+  }
+
+  return res.data.data;
+};
+
 export const getShopChurnCustomers = async (shopId: number) => {
   const res = await api.get<ApiResponse<ShopChurnResponse>>(`/shops/${shopId}/analytics/churn`, {
     params: {
