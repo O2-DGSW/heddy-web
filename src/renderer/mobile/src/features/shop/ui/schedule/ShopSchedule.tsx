@@ -36,6 +36,7 @@ const ShopSchedule = () => {
         </p>
         <div className="flex flex-col gap-[1rem]">
           <ScheduleBox
+            title={"용용용"}
             startTime={shopScheduleData?.data?.start_time || "00:00"}
             endTime={shopScheduleData?.data?.end_time || "00:00"}
           />

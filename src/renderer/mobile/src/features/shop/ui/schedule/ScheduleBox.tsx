@@ -1,11 +1,11 @@
 import { lightTheme } from "@design-tokens";
-
-interface ScheduleBox {
+interface ScheduleBoxProps {
+  title?: string;
   startTime: string;
   endTime: string;
 }
 
-export const ScheduleBox = ({ startTime, endTime }: ScheduleBox) => {
+export const ScheduleBox = ({ title, startTime, endTime }: ScheduleBoxProps) => {
   return (
     <div className="flex flex-row w-full items-center">
       <div
@@ -19,7 +19,7 @@ export const ScheduleBox = ({ startTime, endTime }: ScheduleBox) => {
       </div>
 
       <div>
-        용준이 머리깎이기!
+        {title}
         <div className="w-full">
           <span>{startTime.slice(0, 5)}</span> ~ <span>{endTime.slice(0, 5)}</span>
         </div>
