@@ -1,6 +1,6 @@
 import { lightTheme } from "@design-tokens";
 
-import { chartPoints } from "@/pages/home/model/homeDashboardData";
+import type { RevenueChartPoint } from "@/pages/home/model/homeDashboardData";
 import {
   CHART_AREA_END_OPACITY,
   CHART_AREA_START_OPACITY,
@@ -8,10 +8,10 @@ import {
 
 const horizontalGridLines = [6, 47, 88, 129, 170, 211];
 
-const RevenueChartSvg = () => {
-  const firstPoint = chartPoints[0];
-  const lastPoint = chartPoints.at(-1);
-  const linePath = chartPoints
+const RevenueChartSvg = ({ points }: { points: RevenueChartPoint[] }) => {
+  const firstPoint = points[0];
+  const lastPoint = points.at(-1);
+  const linePath = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
   const areaPath =
@@ -75,7 +75,7 @@ const RevenueChartSvg = () => {
           strokeWidth="1"
         />
       )}
-      {chartPoints.map(point => (
+      {points.map(point => (
         <circle
           key={`${point.x}-${point.y}`}
           cx={point.x}
