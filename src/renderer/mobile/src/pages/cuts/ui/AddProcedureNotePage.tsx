@@ -19,8 +19,8 @@ export const AddProcedureNotePage = () => {
     dateValue, setDate,
     customer, setCustomer,
     selectedTags, toggleTag,
-    beforeImageUrl, setBeforeImageUrl,
-    afterImageUrl, setAfterImageUrl,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
     handleSubmit,
   } = useAddProcedureNoteForm();
 
@@ -32,7 +32,7 @@ export const AddProcedureNotePage = () => {
     }
   }, []);
 
-  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImageUrl });
+  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImageFile });
 
   const inputClass = `w-full px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`;
   const inputStyle = {
@@ -128,8 +128,8 @@ export const AddProcedureNotePage = () => {
         <div className="flex flex-col gap-2">
           <span className={labelClass} style={{ color: lightTheme.label.normal }}>사진 등록</span>
           <div className="flex gap-3">
-            <ImageUploadArea label="Before 사진" initialUrl={beforeImageUrl} onFileChange={setBeforeImageUrl} />
-            <ImageUploadArea label="After 사진" initialUrl={afterImageUrl} onFileChange={setAfterImageUrl} />
+            <ImageUploadArea label="Before 사진" initialFile={beforeImageFile} onFileChange={setBeforeImageFile} />
+            <ImageUploadArea label="After 사진" initialFile={afterImageFile} onFileChange={setAfterImageFile} />
           </div>
         </div>
       </div>

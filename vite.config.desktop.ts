@@ -6,6 +6,7 @@ import { resolve } from "path";
 
 export default defineConfig({
   root: resolve(__dirname, "src/renderer/desktop"),
+  envDir: __dirname,
   publicDir: resolve(__dirname, "public"),
   plugins: [react(), tailwindcss(), svgr()],
   resolve: {

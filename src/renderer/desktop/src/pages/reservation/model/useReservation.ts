@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  DEFAULT_RESERVATION_DATE_KEY,
+  getReservations,
+  updateReservationStatus as updateReservationStatusApi,
+  type ReservationApiStatus,
+  type ReservationResponse,
+} from "@/entities/reservation/api/reservationApi";
+import { getMe } from "@/entities/user/api/userApi";
+import {
   MIN_RESERVATION_SCALE,
   RESERVATION_CONTENT_HEIGHT_REM,
   RESERVATION_CONTENT_TOP_OFFSET_REM,
@@ -9,7 +15,6 @@ import {
   RESERVATION_FILTER_STATUS_MAP,
   RESERVATION_FILTER_TAB_DEFINITIONS,
   RESERVATION_PAGE_HORIZONTAL_PADDING_REM,
-  RESERVATION_RECORDS,
   RESERVATION_STATUS_CYCLE,
   RESERVATION_TIME_OPTIONS,
   RESERVATION_WEEK_DAYS,
@@ -73,6 +78,94 @@ const getReservationScale = (containerSize = getFallbackContainerSize()) => {
 
 const getFirstDateKeyOfMonth = (monthKey: string) => `${monthKey}-01`;
 
+const getTodayDateKey = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const date = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${date}`;
+};
+
+const getDateKeyFromDateTime = (dateTime: string) => dateTime.slice(0, 10);
+
+const getTimeFromDateTime = (dateTime?: string | null) => {
+  if (!dateTime) {
+    return "";
+  }
+
+  return dateTime.slice(11, 16);
+};
+
+const getDateLabel = (dateKey: string) => {
+  const [, month, day] = dateKey.split("-");
+
+  return `${Number(month)}월 ${Number(day)}일`;
+};
+
+const toReservationStatusKey = (status: string): ReservationStatusKey => {
+  const normalizedStatus = status.trim().toUpperCase();
+
+  if (normalizedStatus.includes("REJECT")) {
+    return "rejected";
+  }
+
+  if (normalizedStatus.includes("CHANGE")) {
+    return "changeRequest";
+  }
+
+  return "approved";
+};
+
+const toReservationApiStatus = (status: ReservationStatusKey): ReservationApiStatus => {
+  const statusMap: Record<ReservationStatusKey, ReservationApiStatus> = {
+    approved: "APPROVED",
+    rejected: "REJECTED",
+    changeRequest: "CHANGE_REQUEST",
+  };
+
+  return statusMap[status];
+};
+
+const toDateTime = (dateKey: string, time: string) => `${dateKey}T${time}:00`;
+
+const mapReservationResponse = (reservation: ReservationResponse): ReservationRecord => {
+  const dateKey = getDateKeyFromDateTime(reservation.reserved_at);
+  const time = getTimeFromDateTime(reservation.reserved_at);
+  const changedTime = getTimeFromDateTime(reservation.changed_time);
+  const tags = reservation.service_tags.map(tag => (tag.startsWith("#") ? tag : `# ${tag}`));
+  const service =
+    reservation.service_name ?? reservation.service_tags[0]?.replace(/^#\s*/, "") ?? "시술";
+
+  return {
+    id: reservation.reservation_id,
+    customerName:
+      reservation.customer_name ??
+      reservation.customer_phone_number ??
+      `고객 ${reservation.customer_id}`,
+    service,
+    dateKey,
+    dateLabel: getDateLabel(dateKey),
+    time,
+    requestedTime: changedTime && changedTime !== time ? changedTime : undefined,
+    tags,
+    request: reservation.memo || "요청사항 없음",
+    status: toReservationStatusKey(reservation.status),
+  };
+};
+
+const getReservationErrorMessage = (error: unknown, fallbackMessage: string) => {
+  if (!(error instanceof Error)) {
+    return fallbackMessage;
+  }
+
+  if (error.message.includes("401")) {
+    return "로그인 후 예약 정보를 확인해주세요.";
+  }
+
+  return error.message;
+};
+
 const getNextStatus = (status: ReservationStatusKey) => {
   const currentIndex = RESERVATION_STATUS_CYCLE.indexOf(status);
   const nextIndex = (currentIndex + 1) % RESERVATION_STATUS_CYCLE.length;
@@ -84,17 +177,22 @@ export const useReservation = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(getReservationScale);
   const [layoutWidthRem, setLayoutWidthRem] = useState(RESERVATION_CONTENT_WIDTH_REM);
-  const [reservations, setReservations] = useState<ReservationRecord[]>(RESERVATION_RECORDS);
-  const [selectedDateKey, setSelectedDateKey] = useState(DEFAULT_RESERVATION_DATE_KEY);
+  const [shopId, setShopId] = useState<number | null>(null);
+  const [reservations, setReservations] = useState<ReservationRecord[]>([]);
+  const [selectedDateKey, setSelectedDateKey] = useState(getTodayDateKey);
   const [selectedFilterKey, setSelectedFilterKey] = useState<ReservationFilterKey>("all");
   const [openedReservationId, setOpenedReservationId] = useState<number | null>(null);
-  const [activeStatusMenuReservationId, setActiveStatusMenuReservationId] = useState<number | null>(null);
+  const [activeStatusMenuReservationId, setActiveStatusMenuReservationId] = useState<number | null>(
+    null
+  );
   const [timeChangeReservationId, setTimeChangeReservationId] = useState<number | null>(null);
   const [currentTimeValue, setCurrentTimeValue] = useState("");
   const [changedTimeValue, setChangedTimeValue] = useState("");
   const [isCurrentTimeMenuOpen, setIsCurrentTimeMenuOpen] = useState(false);
   const [isChangedTimeMenuOpen, setIsChangedTimeMenuOpen] = useState(false);
   const [isDetailTimeMenuOpen, setIsDetailTimeMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const updateLayout = () => {
@@ -127,6 +225,78 @@ export const useReservation = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let ignore = false;
+
+    const loadMe = async () => {
+      setIsLoading(true);
+
+      try {
+        const me = await getMe();
+        const firstShopId = me.shopMembers[0]?.shopId;
+
+        if (!firstShopId) {
+          throw new Error("연결된 매장을 찾지 못했습니다.");
+        }
+
+        if (!ignore) {
+          setShopId(firstShopId);
+          setErrorMessage("");
+        }
+      } catch (error) {
+        if (!ignore) {
+          setErrorMessage(getReservationErrorMessage(error, "사용자 정보를 불러오지 못했습니다."));
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadMe();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (shopId === null) {
+      return;
+    }
+
+    let ignore = false;
+
+    const loadReservations = async () => {
+      setIsLoading(true);
+      setErrorMessage("");
+
+      try {
+        const reservationResponses = await getReservations({
+          shopId,
+          date: selectedDateKey,
+        });
+
+        if (!ignore) {
+          setReservations(reservationResponses.map(mapReservationResponse));
+        }
+      } catch (error) {
+        if (!ignore) {
+          setReservations([]);
+          setErrorMessage(getReservationErrorMessage(error, "예약 목록을 불러오지 못했습니다."));
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadReservations();
+
+    return () => {
+      ignore = true;
+    };
+  }, [selectedDateKey, shopId]);
+
   const selectedMonthKey = getMonthKey(selectedDateKey);
   const selectedMonthDateKey = getFirstDateKeyOfMonth(selectedMonthKey);
 
@@ -139,7 +309,9 @@ export const useReservation = () => {
   const filteredReservationRows = useMemo(() => {
     const allowedStatuses = RESERVATION_FILTER_STATUS_MAP[selectedFilterKey];
 
-    return reservationsForSelectedDate.filter(reservation => allowedStatuses.includes(reservation.status));
+    return reservationsForSelectedDate.filter(reservation =>
+      allowedStatuses.includes(reservation.status)
+    );
   }, [reservationsForSelectedDate, selectedFilterKey]);
 
   const filterTabs = useMemo(() => {
@@ -150,11 +322,7 @@ export const useReservation = () => {
   }, [selectedFilterKey]);
 
   const setSelectedMonth = (monthKey: string) => {
-    const firstReservationInMonth = reservations.find(
-      reservation => getMonthKey(reservation.dateKey) === monthKey
-    );
-
-    setSelectedDateKey(firstReservationInMonth?.dateKey ?? getFirstDateKeyOfMonth(monthKey));
+    setSelectedDateKey(getFirstDateKeyOfMonth(monthKey));
     setSelectedFilterKey("all");
     setOpenedReservationId(null);
     setActiveStatusMenuReservationId(null);
@@ -162,14 +330,39 @@ export const useReservation = () => {
     setIsDetailTimeMenuOpen(false);
   };
 
-  const updateReservationStatus = (reservationId: number, status: ReservationStatusKey) => {
+  const replaceReservation = (nextReservation: ReservationRecord) => {
     setReservations(currentReservations =>
       currentReservations.map(reservation =>
-        reservation.id === reservationId
-          ? { ...reservation, status }
-          : reservation
+        reservation.id === nextReservation.id ? nextReservation : reservation
       )
     );
+  };
+
+  const updateReservationStatus = async (
+    reservationId: number,
+    status: ReservationStatusKey,
+    changedTime?: string
+  ): Promise<boolean> => {
+    const reservation = reservations.find(item => item.id === reservationId);
+
+    if (!reservation) {
+      return false;
+    }
+
+    setErrorMessage("");
+
+    try {
+      const updatedReservation = await updateReservationStatusApi(reservationId, {
+        status: toReservationApiStatus(status),
+        changed_time: changedTime ? toDateTime(reservation.dateKey, changedTime) : undefined,
+      });
+
+      replaceReservation(mapReservationResponse(updatedReservation));
+      return true;
+    } catch (error) {
+      setErrorMessage(getReservationErrorMessage(error, "예약 상태를 변경하지 못했습니다."));
+      return false;
+    }
   };
 
   const openedReservation = useMemo(() => {
@@ -198,6 +391,8 @@ export const useReservation = () => {
     reservations: reservationsForSelectedDate,
     filterTabs,
     reservationStatusRows: filteredReservationRows,
+    isLoading,
+    errorMessage,
     openedReservation,
     openedTimeChangeReservation,
     timeOptions: RESERVATION_TIME_OPTIONS,
@@ -217,18 +412,21 @@ export const useReservation = () => {
     },
     setSelectedMonth: (monthDate: string) => setSelectedMonth(getMonthKey(monthDate)),
     setSelectedFilterKey,
-    cycleReservationStatus: (reservationId: number) => {
+    cycleReservationStatus: async (reservationId: number) => {
       const reservation = reservations.find(item => item.id === reservationId);
 
       if (!reservation) {
         return;
       }
 
-      updateReservationStatus(reservationId, getNextStatus(reservation.status));
+      await updateReservationStatus(reservationId, getNextStatus(reservation.status));
     },
-    setReservationStatus: (reservationId: number, status: ReservationStatusKey) => {
-      updateReservationStatus(reservationId, status);
-      setActiveStatusMenuReservationId(null);
+    setReservationStatus: async (reservationId: number, status: ReservationStatusKey) => {
+      const success = await updateReservationStatus(reservationId, status);
+
+      if (success) {
+        setActiveStatusMenuReservationId(null);
+      }
     },
     toggleStatusMenu: (reservationId: number) => {
       setActiveStatusMenuReservationId(current =>
@@ -249,22 +447,22 @@ export const useReservation = () => {
     toggleDetailTimeMenu: () => {
       setIsDetailTimeMenuOpen(current => !current);
     },
-    selectDetailTime: (time: string) => {
+    selectDetailTime: async (time: string) => {
       if (openedReservationId === null) {
         return;
       }
 
-      setReservations(currentReservations =>
-        currentReservations.map(reservation =>
-          reservation.id === openedReservationId
-            ? {
-                ...reservation,
-                time,
-              }
-            : reservation
-        )
-      );
-      setIsDetailTimeMenuOpen(false);
+      const reservation = reservations.find(item => item.id === openedReservationId);
+
+      if (!reservation) {
+        return;
+      }
+
+      const success = await updateReservationStatus(openedReservationId, reservation.status, time);
+
+      if (success) {
+        setIsDetailTimeMenuOpen(false);
+      }
     },
     openTimeChangeModal: (reservationId: number) => {
       const reservation = reservations.find(item => item.id === reservationId);
@@ -303,26 +501,22 @@ export const useReservation = () => {
       setChangedTimeValue(time);
       setIsChangedTimeMenuOpen(false);
     },
-    saveTimeChange: () => {
+    saveTimeChange: async () => {
       if (timeChangeReservationId === null) {
         return;
       }
 
-      setReservations(currentReservations =>
-        currentReservations.map(reservation =>
-          reservation.id === timeChangeReservationId
-            ? {
-                ...reservation,
-                time: changedTimeValue,
-                requestedTime: undefined,
-                status: "approved",
-              }
-            : reservation
-        )
+      const success = await updateReservationStatus(
+        timeChangeReservationId,
+        "approved",
+        changedTimeValue
       );
-      setTimeChangeReservationId(null);
-      setIsCurrentTimeMenuOpen(false);
-      setIsChangedTimeMenuOpen(false);
+
+      if (success) {
+        setTimeChangeReservationId(null);
+        setIsCurrentTimeMenuOpen(false);
+        setIsChangedTimeMenuOpen(false);
+      }
     },
   };
 };
