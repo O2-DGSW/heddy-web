@@ -27,9 +27,7 @@ export const useShopSchedule = () => {
       designer => designer.designer_id === myUserId
     )?.designer_id;
 
-    if (id != null) {
-      setDesignerId(id);
-    }
+    setDesignerId(id);
   }, [shopInfoData, myUserId]);
 
   const {
