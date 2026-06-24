@@ -209,7 +209,10 @@ export const RESERVATION_RECORDS: ReservationRecord[] = [
   },
 ];
 
-export const RESERVATION_FILTER_STATUS_MAP: Record<ReservationFilterKey, ReservationStatusKey[]> = {
+export const RESERVATION_FILTER_STATUS_MAP: Record<
+  ReservationFilterKey,
+  ReservationStatusKey[]
+> = {
   all: ["approved", "rejected", "changeRequest"],
   rejected: ["rejected"],
   approved: ["approved"],
