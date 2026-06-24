@@ -22,7 +22,7 @@ const RequireAuth = () => {
     let isMounted = true;
     setAuthStatus("checking");
 
-    void restoreAuthSession().then((isAuthenticated) => {
+    void restoreAuthSession().then(isAuthenticated => {
       if (!isMounted) {
         return;
       }
@@ -33,7 +33,7 @@ const RequireAuth = () => {
     return () => {
       isMounted = false;
     };
-  }, [location.pathname]);
+  }, []);
 
   if (authStatus === "checking") {
     return null;
