@@ -24,10 +24,44 @@ export type CustomerGradeResponse = {
   grade_updated_at: string;
 };
 
+export type TodayReservationResponse = {
+  reservation_id: string;
+  time: string;
+  customer_id: string;
+  customer_name: string;
+  service_name: string;
+  designer_name: string;
+  status: string;
+};
+
 export type DashboardResponse = {
   metrics: MetricsResponse;
   customer_grades: CustomerGradeResponse[];
+  today_reservations: TodayReservationResponse[];
   calculated_at: string;
+};
+
+export type SalesPredictionPeriodType = "DAY" | "MONTH" | "QUARTER";
+
+export type SalesPredictionParams = {
+  periodType?: SalesPredictionPeriodType;
+  predictionCount?: number;
+};
+
+export type SalesChartPoint = {
+  quarter: string;
+  sales: number;
+  order_count: number;
+  point_type: string;
+};
+
+export type QuarterlySalesPredictResponse = {
+  period_type: string;
+  base_quarter: string;
+  predicted_sales_total: number;
+  predicted_order_count_total: number;
+  chart: SalesChartPoint[];
+  basis: string;
 };
 
 export type CustomerChurn = {
@@ -43,8 +77,15 @@ export type ShopChurnResponse = {
   customers: CustomerChurn[];
 };
 
-export const getCustomerDashboard = async (shopId: number) => {
-  const res = await api.get<ApiResponse<DashboardResponse>>(`/shops/${shopId}/analytics/dashboard`);
+export const getCustomerDashboard = async (shopId: number, date?: string) => {
+  const res = await api.get<ApiResponse<DashboardResponse>>(
+    `/shops/${shopId}/analytics/dashboard`,
+    {
+      params: {
+        date,
+      },
+    }
+  );
 
   if (!res.data.success) {
     throw new Error(
