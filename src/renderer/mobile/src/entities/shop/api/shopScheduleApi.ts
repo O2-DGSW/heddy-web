@@ -2,7 +2,8 @@ import type {
   ShopScheduleRequest,
   ShopScheduleResponse,
 } from "@/entities/shop/model/ShopSchedule.types.ts";
-import { api, type ApiResponse } from "@heddy/api";
+import { api } from "@/shared/api";
+import type { ApiResponse } from "@heddy/api";
 
 export const shopScheduleApi = {
   getShopWorkSchedule: async ({ designerId, date }: ShopScheduleRequest) => {

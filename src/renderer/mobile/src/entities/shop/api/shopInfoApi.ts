@@ -1,4 +1,5 @@
-import { api, type ApiResponse } from "@heddy/api";
+import { api } from "@/shared/api";
+import type { ApiResponse } from "@heddy/api";
 import type { ShopInfoRequest, ShopInfoResponse } from "@/entities/shop/model/ShopInfo.types.ts";
 
 export const shopInfoApi = {
