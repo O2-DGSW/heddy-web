@@ -7,10 +7,10 @@ export const setupAuthInterceptor = () => {
   if (isInitialized) return;
   isInitialized = true;
 
-  api.interceptors.request.use(async (config) => {
+  api.interceptors.request.use(config => {
     if (config.url?.includes("/auth/login")) return config;
 
-    const token = await getAccessToken();
+    const token = getAccessToken();
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;

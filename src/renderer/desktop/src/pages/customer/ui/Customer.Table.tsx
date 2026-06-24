@@ -19,6 +19,8 @@ const CustomerTable = ({
   filters,
   rows,
   searchQuery,
+  isLoading,
+  emptyMessage,
   sortLabel,
   sortOptions,
   designerOptions,
@@ -141,7 +143,14 @@ const CustomerTable = ({
         </div>
 
         <div className="flex h-[28.8125rem] flex-col">
-          {rows.length === 0 ? (
+          {isLoading ? (
+            <div
+              className="flex h-full flex-col items-center justify-center gap-[0.875rem] text-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
+              style={{ color: lightTheme.label.assistive }}
+            >
+              고객 정보를 불러오는 중입니다
+            </div>
+          ) : rows.length === 0 ? (
             <div
               className="flex h-full flex-col items-center justify-center gap-[0.875rem] text-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
               style={{ color: lightTheme.label.assistive }}
@@ -152,7 +161,7 @@ const CustomerTable = ({
                 className="size-[5rem] object-contain"
                 aria-hidden="true"
               />
-              검색 결과가 없습니다
+              {emptyMessage}
             </div>
           ) : (
             rows.map(row => (

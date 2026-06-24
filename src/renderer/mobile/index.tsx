@@ -1,14 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { QueryClientProvider } from '@tanstack/react-query'
-import '../../main/global.css'
-import App from './src/app/App'
-import { queryClient } from './src/app/queryClient'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "../../main/global.css";
+import App from "./src/app/App";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./src/app/queryClient";
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error('Root element "#root" was not found.')
+  throw new Error('Root element "#root" was not found.');
 }
 
 createRoot(rootElement).render(
@@ -16,5 +16,5 @@ createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

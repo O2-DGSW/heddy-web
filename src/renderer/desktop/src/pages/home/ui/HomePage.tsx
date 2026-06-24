@@ -7,13 +7,20 @@ import {
   RevenueChart,
   SummaryCards,
 } from "@/pages/home/ui/components";
+import { DESKTOP_PAGE_LAYOUT_OFFSET_REM } from "@/shared/constants/Layout.constant";
 
 const HomePage = () => {
   return (
     <div
       data-dashboard-page
-      className="h-full w-full overflow-hidden p-4 sm:p-6 xl:p-10"
-      style={{ backgroundColor: lightTheme.background.alternative }}
+      className="h-full w-full overflow-hidden"
+      style={{
+        backgroundColor: lightTheme.background.alternative,
+        paddingBottom: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.bottom}rem`,
+        paddingLeft: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.left}rem`,
+        paddingRight: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.right}rem`,
+        paddingTop: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.top}rem`,
+      }}
     >
       <DashboardCanvas>
         <div className="flex h-full w-full flex-col gap-4">

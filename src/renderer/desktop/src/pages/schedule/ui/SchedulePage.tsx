@@ -1,6 +1,12 @@
 import { lightTheme } from "@design-tokens";
 
-import { SCHEDULE_PANEL_GAP_REM } from "@/pages/schedule/model/Schedule.constant";
+import {
+  SCHEDULE_CONTENT_BOTTOM_OFFSET_REM,
+  SCHEDULE_CONTENT_TOP_OFFSET_REM,
+  SCHEDULE_PAGE_LEFT_PADDING_REM,
+  SCHEDULE_PAGE_RIGHT_PADDING_REM,
+  SCHEDULE_PANEL_GAP_REM,
+} from "@/pages/schedule/model/Schedule.constant";
 import { useSchedule } from "@/pages/schedule/model/useSchedule";
 
 import { ScheduleBoard } from "./Schedule.Board";
@@ -17,21 +23,38 @@ const SchedulePage = () => {
     scaledLayoutWidthRem,
     scaledLayoutHeightRem,
     selectedDate,
-    selectedColor,
+    calendarMonthDate,
+    calendarMarkerMap,
     summaryItems,
     events,
+    editingEvent,
+    visibleWeekDateKeys,
+    weekLabels,
+    monthLabel,
     isModalOpen,
-    setSelectedDate,
-    setSelectedColor,
+    setCalendarMonthDate,
+    selectDate,
     openModal,
+    openEventModal,
     closeModal,
+    saveSchedule,
+    deleteSchedule,
+    moveToPreviousDay,
+    moveToNextDay,
+    moveToToday,
   } = useSchedule();
 
   return (
     <div
       ref={pageRef}
-      className="h-full w-full overflow-hidden p-4 sm:p-6 xl:p-10"
-      style={{ backgroundColor: lightTheme.background.alternative }}
+      className="h-full w-full overflow-auto"
+      style={{
+        backgroundColor: lightTheme.background.alternative,
+        paddingBottom: `${SCHEDULE_CONTENT_BOTTOM_OFFSET_REM}rem`,
+        paddingLeft: `${SCHEDULE_PAGE_LEFT_PADDING_REM}rem`,
+        paddingRight: `${SCHEDULE_PAGE_RIGHT_PADDING_REM}rem`,
+        paddingTop: `${SCHEDULE_CONTENT_TOP_OFFSET_REM}rem`,
+      }}
     >
       <div
         className="shrink-0 overflow-visible"
@@ -57,14 +80,25 @@ const SchedulePage = () => {
             }}
           >
             <ScheduleSidebar
+              calendarMarkerMap={calendarMarkerMap}
+              calendarMonthDate={calendarMonthDate}
               selectedDate={selectedDate}
               summaryItems={summaryItems}
-              onSelectDate={setSelectedDate}
+              onChangeCalendarMonth={setCalendarMonthDate}
+              onSelectDate={selectDate}
+              onSelectEvent={openEventModal}
             />
             <ScheduleBoard
               events={events}
+              monthLabel={monthLabel}
               panelWidthRem={rightPanelWidthRem}
+              visibleWeekDateKeys={visibleWeekDateKeys}
+              weekLabels={weekLabels}
+              onMoveNextDay={moveToNextDay}
+              onMovePreviousDay={moveToPreviousDay}
               onOpenModal={openModal}
+              onSelectEvent={openEventModal}
+              onSelectToday={moveToToday}
             />
           </div>
         </div>
@@ -72,8 +106,11 @@ const SchedulePage = () => {
 
       {isModalOpen && (
         <ScheduleModal
-          selectedColor={selectedColor}
-          onSelectColor={setSelectedColor}
+          editingEvent={editingEvent}
+          initialDate={selectedDate}
+          visibleWeekDateKeys={visibleWeekDateKeys}
+          onDelete={deleteSchedule}
+          onSave={saveSchedule}
           onClose={closeModal}
         />
       )}

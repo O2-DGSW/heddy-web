@@ -5,10 +5,19 @@ const padDatePart = (value: number) => String(value).padStart(2, "0");
 export const toDateKey = (date: Date) =>
   `${date.getFullYear()}-${padDatePart(date.getMonth() + 1)}-${padDatePart(date.getDate())}`;
 
+export const getTodayDateKey = () => toDateKey(new Date());
+
 export const parseDateKey = (dateKey: string) => {
   const [year = "0", month = "1", day = "1"] = dateKey.split("-");
 
   return new Date(Number(year), Number(month) - 1, Number(day));
+};
+
+export const addDaysToDateKey = (dateKey: string, amount: number) => {
+  const date = parseDateKey(dateKey);
+  date.setDate(date.getDate() + amount);
+
+  return toDateKey(date);
 };
 
 export const getMonthStartKey = (dateKey: string) => {
@@ -66,8 +75,7 @@ export const createCalendarRows = (
     rows.push(row);
   }
 
-  const lastRow = rows[rows.length - 1];
-  if (lastRow?.every(date => date.muted)) {
+  while (rows[rows.length - 1]?.every(date => date.muted)) {
     rows.pop();
   }
 

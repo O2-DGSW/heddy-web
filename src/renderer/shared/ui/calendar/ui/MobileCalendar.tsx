@@ -28,10 +28,7 @@ const MobileCalendar = ({
 
   return (
     <div
-      className={getClassName(
-        "min-h-[394px] w-full overflow-visible bg-white pt-[19px]",
-        className
-      )}
+      className={getClassName("p-[0.5rem] w-full overflow-visible bg-white pt-[19px]", className)}
     >
       <CalendarViewModeTabs value={viewMode} onChange={onChangeViewMode} />
 
