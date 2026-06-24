@@ -15,16 +15,17 @@ export const useShopSchedule = () => {
 
   const { data: myProfileData } = useGetMyProfileQuery();
 
-  const myUserId = myProfileData?.data?.userId;
-  const shopId = myProfileData?.data?.shopMembers?.[0]?.shopId;
+  const myUserId = myProfileData?.userId;
+  const shopId = myProfileData?.shopMembers?.[0]?.shopId;
 
   const { data: shopInfoData } = useShopInfoQuery({
     shopId,
   });
 
   useEffect(() => {
-    const id = shopInfoData?.designers?.find((designer) => designer.designer_id === myUserId)
-      ?.designer_id;
+    const id = shopInfoData?.designers?.find(
+      designer => designer.designer_id === myUserId
+    )?.designer_id;
 
     if (id != null) {
       setDesignerId(id);

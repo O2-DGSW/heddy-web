@@ -4,7 +4,7 @@ import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query.ts
 export const useShopInfo = () => {
   const { data: myProfileResponse } = useGetMyProfileQuery();
 
-  const shopId = myProfileResponse?.data?.shopMembers?.[0]?.shopId;
+  const shopId = myProfileResponse?.shopMembers?.[0]?.shopId;
 
   const { data: shopInfoResponse } = useShopInfoQuery({
     shopId,
