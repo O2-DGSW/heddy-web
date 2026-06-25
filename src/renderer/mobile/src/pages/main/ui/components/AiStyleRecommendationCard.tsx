@@ -2,6 +2,8 @@ import { font, lightTheme } from "@design-tokens";
 
 import PictureIcon from "@/features/cuts/assets/procedute-note/Picture.svg";
 import BookmarkButton from "@/features/profile/assets/bookmark/bookmark-button.svg";
+import BookmarkButtonActive from "@/pages/main/assets/icons/bookmark-button-active.svg";
+import { useSavedAiStyles } from "@/entities/ai/model/useSavedAiStyles";
 import type { AiStyleRecommendationItem } from "@/entities/ai/model/AiStyleRecommendation.types";
 
 interface AiStyleRecommendationCardProps {
@@ -10,6 +12,9 @@ interface AiStyleRecommendationCardProps {
 }
 
 export const AiStyleRecommendationCard = ({ rank, recommendation }: AiStyleRecommendationCardProps) => {
+  const isSaved = useSavedAiStyles((state) => state.isSaved(recommendation.title));
+  const toggleSaved = useSavedAiStyles((state) => state.toggleSaved);
+
   return (
     <div className="flex flex-col gap-2 min-w-0">
       <div
@@ -21,8 +26,15 @@ export const AiStyleRecommendationCard = ({ rank, recommendation }: AiStyleRecom
         ) : (
           <img src={PictureIcon} alt="" className="w-8 h-8 opacity-50" />
         )}
-        <button type="button" className="absolute top-2 right-2">
-          <img src={BookmarkButton} alt="북마크" className="w-6 h-6" />
+        <button
+          type="button"
+          className="absolute top-2 right-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSaved(recommendation.title);
+          }}
+        >
+          <img src={isSaved ? BookmarkButtonActive : BookmarkButton} alt="북마크" className="w-6 h-6" />
         </button>
       </div>
 
