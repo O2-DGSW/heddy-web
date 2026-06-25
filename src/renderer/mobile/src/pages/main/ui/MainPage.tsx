@@ -35,9 +35,7 @@ export const MainPage = () => {
         <QuickMenuGrid />
       </div>
 
-      <div className="px-5">
-        <AiStyleRecommendation />
-      </div>
+      <AiStyleRecommendation />
     </div>
   );
 };
