@@ -133,7 +133,7 @@ const getRecentDateLabels = (count: number) => {
 
 const createSummaryCards = (
   metrics: DashboardResponse["metrics"] | null | undefined,
-  monthlyExpectedSales: number
+  monthlyExpectedSales?: number | null
 ) => {
   const valueByTitle = new Map([
     ["전체 고객 수", formatInteger(metrics?.total_customer_count)],
@@ -141,7 +141,10 @@ const createSummaryCards = (
     ["오늘 예약자 수", formatInteger(metrics?.today_reservation_count)],
     ["이달의 신규 단골 수", formatInteger(metrics?.monthly_new_regular_customer_count)],
     ["오늘 방문자 수", formatInteger(metrics?.today_visitor_count)],
-    ["이달의 예상 매출", formatInteger(monthlyExpectedSales)],
+    [
+      "이달의 예상 매출",
+      monthlyExpectedSales == null ? "-" : formatInteger(monthlyExpectedSales),
+    ],
   ]);
 
   return summaryCardDefinitions.map(card => ({
@@ -193,7 +196,8 @@ const createCustomerGrades = (
     const percentValue = total > 0 ? Math.round((value / total) * 100) : 0;
     const barWidth =
       value > 0 ? Math.max(32, Math.round((percentValue / 100) * GRADE_BAR_WIDTH)) : 0;
-    const valueLeft = barWidth > 0 ? Math.max(8, Math.min(barWidth - 18, GRADE_BAR_WIDTH - 32)) : 8;
+    const valueLeft =
+      barWidth > 0 ? Math.max(8, Math.min(barWidth - 18, GRADE_BAR_WIDTH - 32)) : 8;
 
     return {
       ...baseGrade,
@@ -210,20 +214,9 @@ const formatReservationTime = (time?: string | null) => {
     return "-";
   }
 
-  if (/^\d{2}:\d{2}/.test(time)) {
-    return time.slice(0, 5);
-  }
+  const timeMatch = time.match(/(?:T|\s|^)(\d{2}:\d{2})/);
 
-  const date = new Date(time);
-
-  if (Number.isNaN(date.getTime())) {
-    return time || "-";
-  }
-
-  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(
-    2,
-    "0"
-  )}`;
+  return timeMatch?.[1] ?? time;
 };
 
 const getReservationStatus = (status?: string | null) => {
@@ -306,7 +299,10 @@ const createRevenueChart = (salesPrediction?: QuarterlySalesPredictResponse): Re
       : zeroPoints;
 
   return {
-    totalValue: formatInteger(salesPrediction?.predicted_sales_total ?? 0),
+    totalValue:
+      salesPrediction?.predicted_sales_total == null
+        ? "-"
+        : formatInteger(salesPrediction.predicted_sales_total),
     axisLabels: Array.from({ length: 6 }, (_, index) =>
       formatAxisLabel(axisMax - (axisMax / 5) * index)
     ),
@@ -337,7 +333,7 @@ const createHomeDashboardViewModel = (
   monthlySales?: QuarterlySalesPredictResponse
 ): HomeDashboardViewModel => {
   const totalCustomerCount = toSafeNumber(dashboard?.metrics?.total_customer_count);
-  const monthlyExpectedSales = toSafeNumber(monthlySales?.predicted_sales_total);
+  const monthlyExpectedSales = monthlySales?.predicted_sales_total ?? undefined;
 
   return {
     summaryCards: createSummaryCards(dashboard?.metrics, monthlyExpectedSales),
@@ -348,16 +344,34 @@ const createHomeDashboardViewModel = (
   };
 };
 
-const getHomeDashboardErrorMessage = (error: unknown) => {
+const getErrorMessage = (error: unknown, fallbackMessage: string) => {
   if (!(error instanceof Error)) {
-    return "대시보드 정보를 불러오지 못했습니다.";
+    return fallbackMessage;
   }
 
   if (error.message.includes("401")) {
     return "로그인 후 대시보드 정보를 확인해주세요.";
   }
 
-  return error.message;
+  return error.message || fallbackMessage;
+};
+
+const getHomeDashboardErrorMessage = (error: unknown) => {
+  return getErrorMessage(error, "대시보드 정보를 불러오지 못했습니다.");
+};
+
+const getSalesPredictionErrorMessage = (
+  ...results: PromiseSettledResult<QuarterlySalesPredictResponse>[]
+) => {
+  const rejectedResult = results.find(
+    (result): result is PromiseRejectedResult => result.status === "rejected"
+  );
+
+  if (!rejectedResult) {
+    return "";
+  }
+
+  return getErrorMessage(rejectedResult.reason, "매출 예측 정보를 불러오지 못했습니다.");
 };
 
 const getFulfilledValue = <T>(result: PromiseSettledResult<T>) => {
@@ -386,15 +400,21 @@ export const useHomeDashboard = () => {
         }
 
         const today = getTodayDateKey();
-        const [dashboardResult, weeklySalesResult, monthlySalesResult] = await Promise.allSettled([
-          getCustomerDashboard(firstShopId, today),
-          getQuarterlySalesPredict(firstShopId, { periodType: "DAY", predictionCount: 7 }),
-          getQuarterlySalesPredict(firstShopId, { periodType: "MONTH", predictionCount: 1 }),
-        ]);
+        const [dashboardResult, weeklySalesResult, monthlySalesResult] =
+          await Promise.allSettled([
+            getCustomerDashboard(firstShopId, today),
+            getQuarterlySalesPredict(firstShopId, { periodType: "DAY", predictionCount: 7 }),
+            getQuarterlySalesPredict(firstShopId, { periodType: "MONTH", predictionCount: 1 }),
+          ]);
 
         if (dashboardResult.status === "rejected") {
           throw dashboardResult.reason;
         }
+
+        const salesPredictionErrorMessage = getSalesPredictionErrorMessage(
+          weeklySalesResult,
+          monthlySalesResult
+        );
 
         if (!ignore) {
           setViewModel(
@@ -404,7 +424,7 @@ export const useHomeDashboard = () => {
               getFulfilledValue(monthlySalesResult)
             )
           );
-          setErrorMessage("");
+          setErrorMessage(salesPredictionErrorMessage);
         }
       } catch (error) {
         if (!ignore) {
