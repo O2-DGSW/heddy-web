@@ -373,7 +373,7 @@ export const useHomeDashboard = () => {
 
       try {
         const me = await getMe();
-        const firstShopId = me.shopMembers[0]?.shopId;
+        const firstShopId = me?.shopMembers?.[0]?.shopId;
 
         if (!firstShopId) {
           throw new Error("연결된 매장이 없습니다.");
