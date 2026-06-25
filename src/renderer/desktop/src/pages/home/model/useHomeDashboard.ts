@@ -29,6 +29,8 @@ type HomeDashboardViewModel = {
 };
 
 const GRADE_LABELS = ["VVIP", "VIP", "골드", "실버", "일반"] as const;
+type GradeLabel = (typeof GRADE_LABELS)[number];
+
 const CHART_TOP_Y = 6;
 const CHART_BOTTOM_Y = 211;
 const CHART_START_X = 52.2;
@@ -130,15 +132,15 @@ const getRecentDateLabels = (count: number) => {
 };
 
 const createSummaryCards = (
-  metrics: DashboardResponse["metrics"],
+  metrics: DashboardResponse["metrics"] | null | undefined,
   monthlyExpectedSales: number
 ) => {
   const valueByTitle = new Map([
-    ["전체 고객 수", formatInteger(metrics.total_customer_count)],
-    ["이탈 위험 고객 수", formatInteger(metrics.churn_risk_customer_count)],
-    ["오늘 예약자 수", formatInteger(metrics.today_reservation_count)],
-    ["이달의 신규 단골 수", formatInteger(metrics.monthly_new_regular_customer_count)],
-    ["오늘 방문자 수", formatInteger(metrics.today_visitor_count)],
+    ["전체 고객 수", formatInteger(metrics?.total_customer_count)],
+    ["이탈 위험 고객 수", formatInteger(metrics?.churn_risk_customer_count)],
+    ["오늘 예약자 수", formatInteger(metrics?.today_reservation_count)],
+    ["이달의 신규 단골 수", formatInteger(metrics?.monthly_new_regular_customer_count)],
+    ["오늘 방문자 수", formatInteger(metrics?.today_visitor_count)],
     ["이달의 예상 매출", formatInteger(monthlyExpectedSales)],
   ]);
 
@@ -148,8 +150,8 @@ const createSummaryCards = (
   }));
 };
 
-const normalizeGradeLabel = (grade: string) => {
-  const normalizedGrade = grade.trim().toLowerCase();
+const normalizeGradeLabel = (grade?: string | null): GradeLabel => {
+  const normalizedGrade = grade?.trim().toLowerCase() ?? "";
 
   if (normalizedGrade.includes("vvip")) {
     return "VVIP";
@@ -174,7 +176,7 @@ const createCustomerGrades = (
   grades: CustomerGradeResponse[],
   totalCustomerCount: number
 ): CustomerGrade[] => {
-  const countsByGrade = new Map<(typeof GRADE_LABELS)[number], number>(
+  const countsByGrade = new Map<GradeLabel, number>(
     GRADE_LABELS.map(label => [label, 0])
   );
 
@@ -203,7 +205,11 @@ const createCustomerGrades = (
   });
 };
 
-const formatReservationTime = (time: string) => {
+const formatReservationTime = (time?: string | null) => {
+  if (!time) {
+    return "-";
+  }
+
   if (/^\d{2}:\d{2}/.test(time)) {
     return time.slice(0, 5);
   }
@@ -220,8 +226,8 @@ const formatReservationTime = (time: string) => {
   )}`;
 };
 
-const getReservationStatus = (status: string) => {
-  const normalizedStatus = status.trim().toUpperCase();
+const getReservationStatus = (status?: string | null) => {
+  const normalizedStatus = status?.trim().toUpperCase() ?? "";
 
   if (normalizedStatus.includes("REJECT")) {
     return {
@@ -326,18 +332,18 @@ const createEmptyDashboard = (): DashboardResponse => ({
 });
 
 const createHomeDashboardViewModel = (
-  dashboard: DashboardResponse,
+  dashboard?: DashboardResponse | null,
   weeklySales?: QuarterlySalesPredictResponse,
   monthlySales?: QuarterlySalesPredictResponse
 ): HomeDashboardViewModel => {
-  const totalCustomerCount = toSafeNumber(dashboard.metrics.total_customer_count);
+  const totalCustomerCount = toSafeNumber(dashboard?.metrics?.total_customer_count);
   const monthlyExpectedSales = toSafeNumber(monthlySales?.predicted_sales_total);
 
   return {
-    summaryCards: createSummaryCards(dashboard.metrics, monthlyExpectedSales),
-    customerGrades: createCustomerGrades(dashboard.customer_grades ?? [], totalCustomerCount),
+    summaryCards: createSummaryCards(dashboard?.metrics, monthlyExpectedSales),
+    customerGrades: createCustomerGrades(dashboard?.customer_grades ?? [], totalCustomerCount),
     totalCustomerCount,
-    reservations: createReservations(dashboard.today_reservations ?? []),
+    reservations: createReservations(dashboard?.today_reservations ?? []),
     revenueChart: createRevenueChart(weeklySales),
   };
 };
