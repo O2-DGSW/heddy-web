@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
-import { useAddProcedureNoteStore } from "@/features/cuts/model/useAddProcedureNoteStore";
+import { useAddProcedureNoteStore } from "@/features/cuts/model/add-procedure/useAddProcedureNoteStore.ts";
 
 const toInputDateValue = (date: Date) => {
   const year = date.getFullYear();
@@ -18,13 +18,20 @@ const createObjectUrl = (file: File | null) => {
 export const useAddProcedureNoteForm = () => {
   const navigate = useNavigate();
   const {
-    title, setTitle,
-    description, setDescription,
-    date, setDate,
-    customer, setCustomer,
-    selectedTags, toggleTag,
-    beforeImageFile, setBeforeImageFile,
-    afterImageFile, setAfterImageFile,
+    title,
+    setTitle,
+    description,
+    setDescription,
+    date,
+    setDate,
+    customer,
+    setCustomer,
+    selectedTags,
+    toggleTag,
+    beforeImageFile,
+    setBeforeImageFile,
+    afterImageFile,
+    setAfterImageFile,
     reset,
   } = useAddProcedureNoteStore();
 
@@ -48,13 +55,20 @@ export const useAddProcedureNoteForm = () => {
   };
 
   return {
-    title, setTitle,
-    description, setDescription,
-    dateValue: toInputDateValue(date), setDate,
-    customer, setCustomer,
-    selectedTags, toggleTag,
-    beforeImageFile, setBeforeImageFile,
-    afterImageFile, setAfterImageFile,
+    title,
+    setTitle,
+    description,
+    setDescription,
+    dateValue: toInputDateValue(date),
+    setDate,
+    customer,
+    setCustomer,
+    selectedTags,
+    toggleTag,
+    beforeImageFile,
+    setBeforeImageFile,
+    afterImageFile,
+    setAfterImageFile,
     handleSubmit,
   };
 };

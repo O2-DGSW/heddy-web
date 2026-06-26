@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { issueQr } from "@/entities/qr/api/qrApi";
+import { issueQr } from "@/entities/qr/api/qrApi.ts";
 
 export const useQrIssue = () => {
   const [qrToken, setQrToken] = useState<string | null>(null);

@@ -2,7 +2,7 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 import { QRresult } from "./QRresult";
-import { useQRreading } from "@/features/cuts/model/useQRreading";
+import { useQRreading } from "@/features/cuts/model/qr/useQRreading.ts";
 
 export const QrReading = () => {
   const { result, error, handleScan, handleError } = useQRreading();

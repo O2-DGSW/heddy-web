@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { VerifyQrResponse } from "@/entities/qr/model/qr.types";
+import type { VerifyQrResponse } from "@/entities/qr/model/qr.types.ts";
 
 type QrResultState = {
   result: VerifyQrResponse | null;
@@ -9,10 +9,10 @@ type QrResultState = {
   reset: () => void;
 };
 
-export const useQrResultStore = create<QrResultState>((set) => ({
+export const useQrResultStore = create<QrResultState>(set => ({
   result: null,
   error: null,
-  setResult: (result) => set({ result, error: null }),
-  setError: (error) => set({ error }),
+  setResult: result => set({ result, error: null }),
+  setError: error => set({ error }),
   reset: () => set({ result: null, error: null }),
 }));

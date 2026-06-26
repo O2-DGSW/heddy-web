@@ -1,6 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 import { font, lightTheme } from "@design-tokens";
-import { useQrIssue } from "@/features/cuts/model/useQrIssue";
+import { useQrIssue } from "@/features/cuts/model/qr/useQrIssue.ts";
 
 interface QrCodeProps {
   size?: number;
