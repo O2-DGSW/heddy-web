@@ -42,6 +42,7 @@ export const Reservation = () => {
           viewMode="month"
           weekDays={SHOP_SCHEDULE_WEEK_DAYS}
           className="mx-auto max-w-[393px]"
+          tabs={false}
           onSelectDate={setSelectedDate}
         />
       </div>
