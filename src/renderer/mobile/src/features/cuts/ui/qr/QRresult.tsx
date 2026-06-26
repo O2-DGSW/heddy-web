@@ -4,7 +4,7 @@ import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import { ProcedureNoteItem } from "@/features/cuts/ui/item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 import { AddProcedureNoteModal } from "@/private/shared/ui/dialog";
-import { useQRresultProcedure } from "@/features/cuts/model/useQRresultProcedure.ts";
+import { useQRresultProcedure } from "@/features/cuts/model/qr/useQRresultProcedure.ts";
 import { mapTreatmentRecordToProcedureNote } from "@/features/cuts/utils/mapTreatmentRecord";
 import { formatShortDate } from "@/features/cuts/utils/date";
 import type { VerifyQrResponse } from "@/entities/qr/model/qr.types";
