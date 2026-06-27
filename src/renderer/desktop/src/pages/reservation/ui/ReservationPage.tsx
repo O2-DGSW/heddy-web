@@ -20,6 +20,8 @@ const ReservationPage = () => {
     reservations,
     filterTabs,
     reservationStatusRows,
+    isLoading,
+    errorMessage,
     openedReservation,
     openedTimeChangeReservation,
     timeOptions,
@@ -92,6 +94,8 @@ const ReservationPage = () => {
             <ReservationStatusPanel
               filterTabs={filterTabs}
               rows={reservationStatusRows}
+              isLoading={isLoading}
+              errorMessage={errorMessage}
               activeStatusMenuReservationId={activeStatusMenuReservationId}
               onSelectFilter={setSelectedFilterKey}
               onToggleStatusMenu={toggleStatusMenu}

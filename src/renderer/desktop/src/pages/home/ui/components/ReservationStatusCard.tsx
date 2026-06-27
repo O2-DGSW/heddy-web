@@ -1,6 +1,6 @@
 import { lightTheme } from "@design-tokens";
 
-import { reservations } from "@/pages/home/model/homeDashboardData";
+import type { ReservationItem } from "@/pages/home/model/homeDashboardData";
 import {
   DashboardCard,
   DropdownIcon,
@@ -8,17 +8,25 @@ import {
   SelectPill,
 } from "@/pages/home/ui/components/DashboardPrimitives";
 
-const StatusButton = () => (
+const StatusButton = ({
+  label,
+  color = lightTheme.status.error,
+  textColor = lightTheme.label.buttonText,
+}: {
+  label: string;
+  color?: string;
+  textColor?: string;
+}) => (
   <button
     type="button"
     className="flex h-[26px] w-[55.714px] items-center justify-center overflow-hidden whitespace-nowrap rounded-[15px] pl-[9.905px] pr-[2.476px] font-['Pretendard'] text-[14.86px] font-medium leading-[1.3] tracking-[-0.2972px]"
     style={{
-      backgroundColor: lightTheme.status.error,
-      color: lightTheme.label.buttonText,
+      backgroundColor: color,
+      color: textColor,
     }}
   >
-    <span className="mr-[-2.476px]">거절</span>
-    <DropdownIcon color={lightTheme.label.buttonText} className="size-[19.81px]" />
+    <span className="mr-[-2.476px]">{label}</span>
+    <DropdownIcon color={textColor} className="size-[19.81px]" />
   </button>
 );
 
@@ -37,7 +45,11 @@ const RadioDot = ({ selected }: { selected: boolean }) => (
   </svg>
 );
 
-const ReservationStatusCard = () => (
+const ReservationStatusCard = ({
+  reservations: reservationItems = [],
+}: {
+  reservations?: ReservationItem[];
+}) => (
   <DashboardCard className="relative h-[407px] w-full overflow-hidden">
     <div className="absolute left-[31px] right-[31px] top-[31px] flex h-[26px] items-center justify-between">
       <h2
@@ -66,35 +78,48 @@ const ReservationStatusCard = () => (
           </div>
         </div>
 
-        {reservations.map((reservation, index) => (
+        {reservationItems.length === 0 ? (
           <div
-            key={`${reservation.time}-${index}`}
-            className="relative h-14 border-b"
-            style={{ borderColor: lightTheme.background.neutral }}
+            className="flex h-[280px] items-center justify-center font-['Pretendard'] text-[18px] font-medium leading-[1.3]"
+            style={{ color: lightTheme.label.assistive }}
           >
+            오늘 예약이 없습니다
+          </div>
+        ) : (
+          reservationItems.map((reservation, index) => (
             <div
-              className="absolute left-[27px] right-[26.286px] top-[15px] grid h-[26px] grid-cols-[72px_48px_225px_78px_55.714px] items-center justify-between gap-x-[60px] font-['Pretendard'] text-[18px] font-semibold leading-[1.3] tracking-[-0.36px]"
-              style={{
-                color: lightTheme.label.assistive,
-              }}
+              key={reservation.id ?? `${reservation.time}-${index}`}
+              className="relative h-14 border-b"
+              style={{ borderColor: lightTheme.background.neutral }}
             >
-              <div className="flex h-[23px] w-[72px] items-center gap-2.5">
-                <RadioDot selected={reservation.selected} />
-                <span className="flex w-12 flex-col justify-center">{reservation.time}</span>
-              </div>
-              <span className="flex w-12 flex-col justify-center">{reservation.customer}</span>
-              <span className="flex w-[225px] flex-col justify-center text-center">
-                {reservation.procedure}
-              </span>
-              <div className="flex w-[78px] justify-center">
-                <SelectPill label={reservation.designer} className="w-[78px]" />
-              </div>
-              <div className="flex w-[55.71px] justify-center">
-                <StatusButton />
+              <div
+                className="absolute left-[27px] right-[26.286px] top-[15px] grid h-[26px] grid-cols-[72px_48px_225px_78px_55.714px] items-center justify-between gap-x-[60px] font-['Pretendard'] text-[18px] font-semibold leading-[1.3] tracking-[-0.36px]"
+                style={{
+                  color: lightTheme.label.assistive,
+                }}
+              >
+                <div className="flex h-[23px] w-[72px] items-center gap-2.5">
+                  <RadioDot selected={reservation.selected} />
+                  <span className="flex w-12 flex-col justify-center">{reservation.time}</span>
+                </div>
+                <span className="flex w-12 flex-col justify-center">{reservation.customer}</span>
+                <span className="flex w-[225px] flex-col justify-center text-center">
+                  {reservation.procedure}
+                </span>
+                <div className="flex w-[78px] justify-center">
+                  <SelectPill label={reservation.designer} className="w-[78px]" />
+                </div>
+                <div className="flex w-[55.71px] justify-center">
+                  <StatusButton
+                    label={reservation.statusLabel}
+                    color={reservation.statusColor}
+                    textColor={reservation.statusTextColor}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   </DashboardCard>

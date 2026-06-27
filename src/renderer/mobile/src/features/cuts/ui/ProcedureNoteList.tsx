@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { lightTheme } from "@design-tokens";
+import { font, lightTheme } from "@design-tokens";
 
 import { useProcedureNotes } from "@/features/cuts/model/useProcedureNotes";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
@@ -12,7 +12,7 @@ import { NotfoundCutsList } from "@/features/cuts/ui/NotfoundCutsList.tsx";
 export const ProcedureNoteList = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { notes, addNote } = useProcedureNotes();
+  const { notes, addNote, isLoading, isError } = useProcedureNotes();
   const processedRef = useRef(false);
 
   useEffect(() => {
@@ -29,7 +29,13 @@ export const ProcedureNoteList = () => {
       className="h-full flex flex-col overflow-hidden pb-20"
       style={{ backgroundColor: lightTheme.fill.normal }}
     >
-      {notes.length === 0 ? (
+      {isLoading ? (
+        <div className="flex-1" />
+      ) : isError ? (
+        <p className={`text-center pt-10 ${font.label.regular}`} style={{ color: lightTheme.label.assistive }}>
+          시술기록을 불러오지 못했어요.
+        </p>
+      ) : notes.length === 0 ? (
         <NotfoundCutsList />
       ) : (
         <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-4 pt-4">

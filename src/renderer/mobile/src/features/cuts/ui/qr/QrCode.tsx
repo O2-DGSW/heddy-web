@@ -1,14 +1,13 @@
 import { QRCodeSVG } from "qrcode.react";
 import { font, lightTheme } from "@design-tokens";
-import { MY_QR_CODE_VALUE } from "@/features/cuts/constrants/qrCode.ts";
+import { useQrIssue } from "@/features/cuts/model/qr/useQrIssue.ts";
 
 interface QrCodeProps {
-  value?: string;
   size?: number;
 }
 
-export const QrCode = ({ value: valueProp, size = 200 }: QrCodeProps) => {
-  const value = valueProp ?? MY_QR_CODE_VALUE;
+export const QrCode = ({ size = 200 }: QrCodeProps) => {
+  const { qrToken, error } = useQrIssue();
 
   return (
     <div className="h-full flex flex-col" style={{ backgroundColor: lightTheme.fill.normal }}>
@@ -21,13 +20,13 @@ export const QrCode = ({ value: valueProp, size = 200 }: QrCodeProps) => {
             border: `0.5px solid ${lightTheme.line.normal}`,
           }}
         >
-          <QRCodeSVG value={value} size={size} level="M" marginSize={1} />
+          {qrToken && <QRCodeSVG value={qrToken} size={size} level="M" marginSize={1} />}
         </div>
         <p
           className={`${font.body.regular} max-w-[240px] break-all text-center`}
-          style={{ color: lightTheme.label.assistive }}
+          style={{ color: error ? lightTheme.status.error : lightTheme.label.assistive }}
         >
-          내 QR코드
+          {error ?? "내 QR코드"}
         </p>
       </div>
     </div>

@@ -2,13 +2,13 @@ import { Scanner } from "@yudiel/react-qr-scanner";
 import { font, lightTheme, palette } from "@design-tokens";
 import PeekkomAgua from "@/features/cuts/assets/qr-reading/peekkom-agua.png";
 import { QRresult } from "./QRresult";
-import { useQRreading } from "@/features/cuts/model/useQRreading";
+import { useQRreading } from "@/features/cuts/model/qr/useQRreading.ts";
 
 export const QrReading = () => {
-  const { result, error, handleScan, handleError, tracker } = useQRreading();
+  const { result, error, handleScan, handleError } = useQRreading();
 
   return result ? (
-    <QRresult result={result} />
+    <QRresult key={result.customer_id} result={result} />
   ) : (
     <div className="flex flex-col items-center p-6">
       <h2 className="mb-6 text-2xl">
@@ -22,7 +22,7 @@ export const QrReading = () => {
           onScan={handleScan}
           onError={handleError}
           constraints={{ facingMode: "environment" }}
-          components={{ tracker, finder: false }}
+          components={{ finder: false }}
           sound={false}
         />
 

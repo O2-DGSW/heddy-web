@@ -22,7 +22,10 @@ const CustomerPage = () => {
     summaries,
     filters,
     rows,
+    totalCustomerCount,
     searchQuery,
+    isLoading,
+    emptyMessage,
     sortLabel,
     sortOptions,
     designerOptions,
@@ -88,7 +91,7 @@ const CustomerPage = () => {
                 className="font-['Pretendard'] text-lg font-medium leading-[1.3]"
                 style={{ color: lightTheme.label.assistive }}
               >
-                총 고객 128명
+                총 고객 {totalCustomerCount}명
               </span>
             </div>
 
@@ -97,6 +100,8 @@ const CustomerPage = () => {
               filters={filters}
               rows={rows}
               searchQuery={searchQuery}
+              isLoading={isLoading}
+              emptyMessage={emptyMessage}
               sortLabel={sortLabel}
               sortOptions={sortOptions}
               designerOptions={designerOptions}
