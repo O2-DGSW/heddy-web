@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast, type ToastOptions } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, type ToastOptions } from "react-toastify";
 
 import { ownerSignupApi, sendSmsApi, verifySmsApi } from "@/entities/auth/api/authApi";
 import { OwnerAccountForm, OwnerShopForm, TermsAgreement } from "@/features/auth/signup";
@@ -280,43 +279,31 @@ const SignupTermsPage = () => {
   }
 
   return (
-    <>
-      <ToastContainer
-        position="top-right"
-        limit={1}
-        newestOnTop={false}
-        theme="light"
-        className="font-['Pretendard']"
-        toastClassName="rounded-[10px] text-sm font-medium leading-[140%] shadow-[0_8px_24px_rgba(0,0,0,0.16)]"
-        progressClassName="opacity-80"
-      />
+    <SignupLayout step={step}>
+      {step === "terms" && <TermsAgreement onNext={() => setStep("account")} />}
 
-      <SignupLayout step={step}>
-        {step === "terms" && <TermsAgreement onNext={() => setStep("account")} />}
+      {step === "account" && (
+        <OwnerAccountForm
+          form={accountForm}
+          isPhoneVerified={isPhoneVerified}
+          isSendingVerification={isSendingVerification}
+          isVerifyingCode={isVerifyingCode}
+          onChange={handleAccountFormChange}
+          onNext={handleAccountNext}
+          onSendVerification={handleSendVerification}
+          onVerifyCode={handleVerifyCode}
+        />
+      )}
 
-        {step === "account" && (
-          <OwnerAccountForm
-            form={accountForm}
-            isPhoneVerified={isPhoneVerified}
-            isSendingVerification={isSendingVerification}
-            isVerifyingCode={isVerifyingCode}
-            onChange={handleAccountFormChange}
-            onNext={handleAccountNext}
-            onSendVerification={handleSendVerification}
-            onVerifyCode={handleVerifyCode}
-          />
-        )}
-
-        {step === "shop" && (
-          <OwnerShopForm
-            form={shopForm}
-            isSubmitting={isSignupSubmitting}
-            onChange={handleShopFormChange}
-            onNext={handleSubmitSignup}
-          />
-        )}
-      </SignupLayout>
-    </>
+      {step === "shop" && (
+        <OwnerShopForm
+          form={shopForm}
+          isSubmitting={isSignupSubmitting}
+          onChange={handleShopFormChange}
+          onNext={handleSubmitSignup}
+        />
+      )}
+    </SignupLayout>
   );
 };
 
