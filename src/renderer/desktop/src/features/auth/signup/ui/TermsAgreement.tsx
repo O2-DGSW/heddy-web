@@ -49,9 +49,9 @@ const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
 
   return (
     <form className="flex w-full flex-col" aria-label="회원가입 이용약관">
-      <div className="flex flex-col gap-[23px]">
+      <div className="flex flex-col gap-[clamp(10px,2vh,23px)]">
         {termsSections.map(({ id, title, required, documentTitle, summary, clauses }) => (
-          <section key={id} className="flex flex-col gap-[9px]">
+          <section key={id} className="flex flex-col gap-[clamp(5px,1.2vh,9px)]">
             <label className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -80,7 +80,7 @@ const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
             </label>
 
             <div
-              className={`box-border h-[139px] w-full overflow-y-auto rounded-[10px] border-[0.8px] bg-white px-[15px] py-[13px] ${scrollStyleByTermId[id]}`}
+              className={`box-border h-[clamp(86px,17vh,139px)] w-full overflow-y-auto rounded-[10px] border-[0.8px] bg-white px-[15px] py-[clamp(8px,1.7vh,13px)] ${scrollStyleByTermId[id]}`}
               style={{ borderColor: lightTheme.line.alternative }}
             >
               <div
@@ -139,11 +139,11 @@ const TermsAgreement = ({ onNext }: TermsAgreementProps) => {
         </label>
       </div>
 
-      <div className="mt-16 flex flex-col items-center gap-[26px] [@media(max-height:900px)]:mt-10 [@media(max-height:900px)]:gap-[18px]">
+      <div className="mt-[clamp(12px,4vh,64px)] flex flex-col items-center gap-[clamp(10px,2.5vh,26px)]">
         <button
           type="button"
           onClick={onNext}
-          className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
+          className="h-[clamp(40px,6vh,48px)] w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
           style={{
             ...primaryRingStyle,
             backgroundColor: lightTheme.primary.normal,
