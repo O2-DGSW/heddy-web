@@ -13,8 +13,6 @@ export interface OwnerAccountFormProps {
   isPhoneVerified: boolean;
   isSendingVerification: boolean;
   isVerifyingCode: boolean;
-  verificationMessage: string | null;
-  verificationMessageTone: SignupFeedbackTone;
   onSendVerification: () => void | Promise<void>;
   onVerifyCode: () => void | Promise<void>;
 }
@@ -73,8 +71,6 @@ export interface PhoneVerificationFieldProps {
   canVerifyCode: boolean;
   isSendingVerification: boolean;
   isVerifyingCode: boolean;
-  verificationMessage: string | null;
-  verificationMessageTone: SignupFeedbackTone;
   onCarrierChange: (carrier: Carrier) => void;
   onPhoneChange: (value: string) => void;
   onVerificationCodeChange: (value: string) => void;
