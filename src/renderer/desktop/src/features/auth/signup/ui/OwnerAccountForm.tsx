@@ -4,25 +4,18 @@ import {
 } from "@/features/auth/signup/ui/SignupFormControls";
 import { PasswordFields } from "@/features/auth/signup/ui/PasswordFields";
 import { PhoneVerificationField } from "@/features/auth/signup/ui/PhoneVerificationField";
-import type {
-  OwnerAccountFormProps,
-  SignupFeedbackTone,
-} from "@/features/auth/signup/ui/types";
+import type { OwnerAccountFormProps } from "@/features/auth/signup/ui/types";
 
 const OwnerAccountForm = ({
   form,
   isPhoneVerified,
   isSendingVerification,
   isVerifyingCode,
-  verificationMessage,
-  verificationMessageTone,
   onChange,
   onNext,
   onSendVerification,
   onVerifyCode,
 }: OwnerAccountFormProps) => {
-  const visibleVerificationMessage = verificationMessage;
-  const visibleVerificationMessageTone: SignupFeedbackTone = verificationMessageTone;
   const canSendVerification = !isPhoneVerified;
   const canVerifyCode = !isPhoneVerified;
 
@@ -64,8 +57,6 @@ const OwnerAccountForm = ({
           canVerifyCode={canVerifyCode}
           isSendingVerification={isSendingVerification}
           isVerifyingCode={isVerifyingCode}
-          verificationMessage={visibleVerificationMessage}
-          verificationMessageTone={visibleVerificationMessageTone}
           onCarrierChange={(carrier) => onChange({ ...form, carrier })}
           onPhoneChange={(phone) => onChange({ ...form, phone })}
           onVerificationCodeChange={(verificationCode) =>
