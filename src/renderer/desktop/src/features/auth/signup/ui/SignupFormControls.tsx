@@ -72,17 +72,16 @@ const SignupInlineButton = ({
 
 const SignupFooter = ({
   disabled,
-  errorMessage,
   isLoading = false,
   label = "다음으로",
   onNext,
 }: SignupFooterProps) => (
-  <div className="mt-8 flex flex-col items-center gap-[26px] [@media(max-height:900px)]:gap-[18px]">
+  <div className="mt-[clamp(10px,3vh,32px)] flex flex-col items-center gap-[clamp(10px,2.5vh,26px)]">
     <button
       type="button"
       disabled={disabled || isLoading}
       onClick={onNext}
-      className="h-12 w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
+      className="h-[clamp(40px,6vh,48px)] w-full rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-ring-color)]/40 focus:ring-offset-2 disabled:cursor-not-allowed"
       style={{
         ...primaryRingStyle,
         backgroundColor: lightTheme.primary.normal,
@@ -92,15 +91,6 @@ const SignupFooter = ({
     >
       {isLoading ? "처리 중..." : label}
     </button>
-
-    {errorMessage && (
-      <p
-        className="-mt-4 text-center font-['Pretendard'] text-xs font-normal leading-[150%]"
-        style={{ color: lightTheme.status.error }}
-      >
-        {errorMessage}
-      </p>
-    )}
 
     <div className="flex items-center gap-6 font-['Pretendard'] text-sm font-medium leading-[130%]">
       <span style={{ color: lightTheme.label.assistive }}>이미 계정이 있으신가요?</span>
