@@ -10,7 +10,7 @@ import {
 import type { CategorySelectFieldProps } from "@/features/auth/signup/ui/types";
 
 const CategorySelectField = ({ value, onChange }: CategorySelectFieldProps) => (
-  <div className="mt-6 flex flex-col gap-1">
+  <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-1">
     <label
       htmlFor="signup-shop-category"
       className={fieldLabelClassName}
