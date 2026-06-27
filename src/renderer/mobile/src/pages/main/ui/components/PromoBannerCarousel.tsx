@@ -17,7 +17,7 @@ export const PromoBannerCarousel = ({ slides }: PromoBannerCarouselProps) => {
 
   const handleScroll = () => {
     const container = scrollRef.current;
-    if (!container) return;
+    if (!container || container.clientWidth === 0) return;
 
     const index = Math.round(container.scrollLeft / container.clientWidth);
     setActiveIndex(index);
