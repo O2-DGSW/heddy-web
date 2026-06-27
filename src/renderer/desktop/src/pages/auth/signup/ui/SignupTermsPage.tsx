@@ -55,17 +55,20 @@ const getErrorMessage = (error: unknown, fallbackMessage: string) => {
 };
 
 const SIGNUP_TOAST_ID = "desktop-signup-toast";
-const TOAST_AUTO_CLOSE_MS = 1500;
+const TOAST_ERROR_AUTO_CLOSE_MS = 1500;
+const TOAST_FEEDBACK_AUTO_CLOSE_MS = 3000;
 
 const toastOptions: ToastOptions = {
   toastId: SIGNUP_TOAST_ID,
-  autoClose: TOAST_AUTO_CLOSE_MS,
   closeButton: false,
   draggable: false,
   hideProgressBar: false,
   pauseOnFocusLoss: false,
   pauseOnHover: false,
 };
+
+const getToastAutoClose = (tone: SignupFeedbackTone) =>
+  tone === "error" ? TOAST_ERROR_AUTO_CLOSE_MS : TOAST_FEEDBACK_AUTO_CLOSE_MS;
 
 const SignupTermsPage = () => {
   const navigate = useNavigate();
@@ -76,16 +79,16 @@ const SignupTermsPage = () => {
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [verificationMessage, setVerificationMessage] = useState<string | null>(null);
-  const [verificationMessageTone, setVerificationMessageTone] =
-    useState<SignupFeedbackTone>("info");
   const [accountForm, setAccountForm] = useState<OwnerAccountFormValues>(initialAccountForm);
   const [shopForm, setShopForm] = useState<OwnerShopFormValues>(initialShopForm);
 
   const showToast = (message: string, tone: SignupFeedbackTone = "error") => {
+    const autoClose = getToastAutoClose(tone);
+
     if (toast.isActive(SIGNUP_TOAST_ID)) {
       toast.update(SIGNUP_TOAST_ID, {
         ...toastOptions,
+        autoClose,
         render: message,
         type: tone,
       });
@@ -94,6 +97,7 @@ const SignupTermsPage = () => {
 
     toast(message, {
       ...toastOptions,
+      autoClose,
       type: tone,
     });
   };
@@ -118,14 +122,8 @@ const SignupTermsPage = () => {
     if (phoneChanged || carrierChanged) {
       setIsVerificationSent(false);
       setIsPhoneVerified(false);
-      setVerificationMessage(null);
-      setVerificationMessageTone("info");
     } else if (verificationCodeChanged) {
       setIsPhoneVerified(false);
-      if (verificationMessageTone === "error" || isPhoneVerified) {
-        setVerificationMessage(null);
-        setVerificationMessageTone("info");
-      }
     }
 
     setAccountForm(nextForm);
@@ -150,8 +148,7 @@ const SignupTermsPage = () => {
       });
       setIsVerificationSent(true);
       setIsPhoneVerified(false);
-      setVerificationMessage("인증번호를 발송했습니다.");
-      setVerificationMessageTone("info");
+      showToast("인증번호를 발송했습니다.", "info");
     } catch (error) {
       showToast(getErrorMessage(error, "인증번호 발송에 실패했습니다."));
     } finally {
@@ -181,8 +178,7 @@ const SignupTermsPage = () => {
         purpose: SMS_PURPOSE,
       });
       setIsPhoneVerified(true);
-      setVerificationMessage("휴대폰 인증이 완료되었습니다.");
-      setVerificationMessageTone("success");
+      showToast("휴대폰 인증이 완료되었습니다.", "success");
     } catch (error) {
       setIsPhoneVerified(false);
       showToast(getErrorMessage(error, "인증번호 확인에 실패했습니다."));
@@ -303,8 +299,6 @@ const SignupTermsPage = () => {
             isPhoneVerified={isPhoneVerified}
             isSendingVerification={isSendingVerification}
             isVerifyingCode={isVerifyingCode}
-            verificationMessage={verificationMessage}
-            verificationMessageTone={verificationMessageTone}
             onChange={handleAccountFormChange}
             onNext={handleAccountNext}
             onSendVerification={handleSendVerification}
