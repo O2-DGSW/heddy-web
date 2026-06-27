@@ -1,11 +1,11 @@
 import { lightTheme } from "@design-tokens";
 
-import { summaryCards } from "@/pages/home/model/homeDashboardData";
+import type { SummaryCardItem } from "@/pages/home/model/homeDashboardData";
 import { DashboardCard } from "@/pages/home/ui/components/DashboardPrimitives";
 
 const SUMMARY_CARD_BASE_WIDTH = 245;
 
-const SummaryCard = ({ card }: { card: (typeof summaryCards)[number] }) => {
+const SummaryCard = ({ card }: { card: SummaryCardItem }) => {
   const isRight = card.align === "right";
   const imageOffset = SUMMARY_CARD_BASE_WIDTH - card.imageStyle.left - card.imageStyle.width;
   const textOffset = SUMMARY_CARD_BASE_WIDTH - card.textStyle.left - card.textStyle.width;
@@ -70,9 +70,9 @@ const SummaryCard = ({ card }: { card: (typeof summaryCards)[number] }) => {
   );
 };
 
-const SummaryCards = () => (
+const SummaryCards = ({ cards }: { cards: SummaryCardItem[] }) => (
   <div className="grid h-[404px] w-full grid-cols-[minmax(245px,1fr)_minmax(245px,1fr)] gap-x-[18px] gap-y-[13px]">
-    {summaryCards.map(card => (
+    {cards.map(card => (
       <SummaryCard key={card.title} card={card} />
     ))}
   </div>
