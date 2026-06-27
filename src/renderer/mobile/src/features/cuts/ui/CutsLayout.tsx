@@ -10,7 +10,7 @@ export const CutsLayout = ({ children }: CutsLayoutProps) => {
         className={`py-2 pt-3 text-center ${font.headline1.bold}`}
         style={{ color: lightTheme.label.neutral }}
       >
-        시술기록
+        나의 시술기록
       </h1>
       <CutsTabBar />
       <div className="relative overflow-hidden">
