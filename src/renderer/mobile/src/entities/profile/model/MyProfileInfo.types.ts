@@ -1,7 +1,7 @@
 export interface MyProfileInfoResponse {
   userId: number;
   name: string;
-  userType: string;
+  userType: "DESIGNER" | "CUSTOMER" | "OWNER";
   reservationCount: number;
   treatmentRecordCount: number;
   savedStyleCount: number;
