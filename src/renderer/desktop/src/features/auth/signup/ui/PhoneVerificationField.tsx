@@ -50,8 +50,6 @@ const PhoneVerificationField = ({
   isVerifyingCode,
   phone,
   verificationCode,
-  verificationMessage,
-  verificationMessageTone,
   onCarrierChange,
   onPhoneChange,
   onSendVerification,
@@ -59,12 +57,6 @@ const PhoneVerificationField = ({
   onVerificationCodeChange,
 }: PhoneVerificationFieldProps) => {
   const isMvnoSelected = isMvnoCarrier(carrier);
-  const messageColor =
-    verificationMessageTone === "success"
-      ? lightTheme.primary.normal
-      : verificationMessageTone === "error"
-        ? lightTheme.status.error
-        : lightTheme.label.assistive;
 
   return (
     <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-[clamp(6px,1.5vh,12px)]">
@@ -164,15 +156,6 @@ const PhoneVerificationField = ({
             확인
           </SignupInlineButton>
         </div>
-
-        {verificationMessage && (
-          <p
-            className="font-['Pretendard'] text-xs font-normal leading-[150%]"
-            style={{ color: messageColor }}
-          >
-            {verificationMessage}
-          </p>
-        )}
       </div>
     </div>
   );
