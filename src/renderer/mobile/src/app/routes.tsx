@@ -11,6 +11,8 @@ import { ProcedureNotePage } from "@/pages/cuts";
 import { ReservationPage } from "@/pages/reservation";
 import { ShopPage } from "@/pages/shop";
 import { AddProcedureNotePage, CustomerSearchPage } from "@/pages/cuts";
+import { AiStyleRecommendationListPage } from "@/pages/ai-style-recommendation/ui/AiStyleRecommendationListPage";
+import { AiStyleRecommendationDetailPage } from "@/pages/ai-style-recommendation/ui/AiStyleRecommendationDetailPage";
 
 type AuthStatus = "checking" | "authenticated" | "unauthenticated";
 
@@ -62,6 +64,8 @@ export const AppRoutes = () => {
           <Route path="/cuts/*" element={<ProcedureNotePage />} />
           <Route path="/reservation" element={<ReservationPage />} />
           <Route path="/shop/*" element={<ShopPage />} />
+          <Route path="/ai-style-recommendation" element={<AiStyleRecommendationListPage />} />
+          <Route path="/ai-style-recommendation/detail" element={<AiStyleRecommendationDetailPage />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
       </Route>

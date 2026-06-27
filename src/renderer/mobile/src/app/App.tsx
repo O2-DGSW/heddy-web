@@ -17,10 +17,6 @@ const shouldRestoreAuthSession = () => {
   );
 };
 
-import { setupAuthInterceptor } from "@/entities/auth/model/setupAuthInterceptor";
-
-setupAuthInterceptor();
-
 const App = () => {
   useEffect(() => {
     if (!shouldRestoreAuthSession()) {
