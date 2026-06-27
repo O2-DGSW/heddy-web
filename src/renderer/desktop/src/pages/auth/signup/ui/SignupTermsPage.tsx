@@ -110,6 +110,7 @@ const SignupTermsPage = () => {
     storeName: shopForm.shopName.trim(),
     roadAddress: shopForm.address.trim(),
     detailAddress: shopForm.addressDetail.trim(),
+    category: shopForm.category,
     landline: toDigits(shopForm.landline),
     businessNumber: toDigits(shopForm.businessNumber),
   });

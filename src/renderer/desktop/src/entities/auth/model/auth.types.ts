@@ -30,6 +30,7 @@ export type OwnerSignupRequest = {
   storeName: string;
   roadAddress: string;
   detailAddress: string;
+  category: string;
   landline: string;
   businessNumber: string;
   storeEmail?: string;
