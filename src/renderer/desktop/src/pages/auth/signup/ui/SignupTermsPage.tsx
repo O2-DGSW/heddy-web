@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, type ToastOptions } from "react-toastify";
 
@@ -71,6 +71,7 @@ const getToastAutoClose = (tone: SignupFeedbackTone) =>
 
 const SignupTermsPage = () => {
   const navigate = useNavigate();
+  const accountFormRef = useRef<OwnerAccountFormValues>(initialAccountForm);
   const [step, setStep] = useState<SignupStep>("terms");
   const [isLoading, setIsLoading] = useState(false);
   const [isSignupSubmitting, setIsSignupSubmitting] = useState(false);
@@ -101,6 +102,28 @@ const SignupTermsPage = () => {
     });
   };
 
+  const isCurrentPhoneRequest = (
+    phoneNumber: string,
+    carrier: OwnerAccountFormValues["carrier"],
+  ) => {
+    const currentForm = accountFormRef.current;
+
+    return toDigits(currentForm.phone) === phoneNumber && currentForm.carrier === carrier;
+  };
+
+  const isCurrentVerificationRequest = (
+    phoneNumber: string,
+    carrier: OwnerAccountFormValues["carrier"],
+    verificationCode: string,
+  ) => {
+    const currentForm = accountFormRef.current;
+
+    return (
+      isCurrentPhoneRequest(phoneNumber, carrier) &&
+      currentForm.verificationCode.trim() === verificationCode
+    );
+  };
+
   const buildSignupRequest = (): OwnerSignupRequest => ({
     loginId: accountForm.id.trim(),
     password: accountForm.password,
@@ -126,6 +149,7 @@ const SignupTermsPage = () => {
       setIsPhoneVerified(false);
     }
 
+    accountFormRef.current = nextForm;
     setAccountForm(nextForm);
   };
 
@@ -140,16 +164,23 @@ const SignupTermsPage = () => {
     }
 
     setIsSendingVerification(true);
+    const verificationPhoneNumber = toDigits(accountForm.phone);
+    const verificationCarrier = accountForm.carrier;
+
     try {
       await sendSmsApi({
-        phoneNumber: toDigits(accountForm.phone),
-        carrier: accountForm.carrier,
+        phoneNumber: verificationPhoneNumber,
+        carrier: verificationCarrier,
         purpose: SMS_PURPOSE,
       });
+      if (!isCurrentPhoneRequest(verificationPhoneNumber, verificationCarrier)) return;
+
       setIsVerificationSent(true);
       setIsPhoneVerified(false);
       showToast("인증번호를 발송했습니다.", "info");
     } catch (error) {
+      if (!isCurrentPhoneRequest(verificationPhoneNumber, verificationCarrier)) return;
+
       showToast(getErrorMessage(error, "인증번호 발송에 실패했습니다."));
     } finally {
       setIsSendingVerification(false);
@@ -171,15 +202,39 @@ const SignupTermsPage = () => {
     }
 
     setIsVerifyingCode(true);
+    const verificationPhoneNumber = toDigits(accountForm.phone);
+    const verificationCarrier = accountForm.carrier;
+    const verificationCode = accountForm.verificationCode.trim();
+
     try {
       await verifySmsApi({
-        phoneNumber: toDigits(accountForm.phone),
-        code: accountForm.verificationCode.trim(),
+        phoneNumber: verificationPhoneNumber,
+        code: verificationCode,
         purpose: SMS_PURPOSE,
       });
+      if (
+        !isCurrentVerificationRequest(
+          verificationPhoneNumber,
+          verificationCarrier,
+          verificationCode,
+        )
+      ) {
+        return;
+      }
+
       setIsPhoneVerified(true);
       showToast("휴대폰 인증이 완료되었습니다.", "success");
     } catch (error) {
+      if (
+        !isCurrentVerificationRequest(
+          verificationPhoneNumber,
+          verificationCarrier,
+          verificationCode,
+        )
+      ) {
+        return;
+      }
+
       setIsPhoneVerified(false);
       showToast(getErrorMessage(error, "인증번호 확인에 실패했습니다."));
     } finally {
