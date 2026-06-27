@@ -6,7 +6,7 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
 import type { CategorySelectFieldProps } from "@/features/auth/signup/ui/types";
 
 const CategorySelectField = ({ value, onChange }: CategorySelectFieldProps) => (
