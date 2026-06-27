@@ -17,7 +17,7 @@ export const AiStyleRecommendationDetailPage = () => {
 
   useEffect(() => {
     if (!recommendation) {
-      navigate(-1);
+      navigate("/ai-style-recommendation", { replace: true });
     }
   }, [recommendation, navigate]);
 
