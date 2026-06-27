@@ -67,7 +67,7 @@ const PhoneVerificationField = ({
         : lightTheme.label.assistive;
 
   return (
-    <div className="mt-6 flex flex-col gap-3">
+    <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-[clamp(6px,1.5vh,12px)]">
       <label
         htmlFor="signup-owner-phone"
         className={fieldLabelClassName}
