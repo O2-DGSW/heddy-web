@@ -9,7 +9,13 @@ import { CategorySelectField } from "@/features/auth/signup/ui/CategorySelectFie
 import { SignupFooter, SignupTextField } from "@/features/auth/signup/ui/SignupFormControls";
 import type { OwnerShopFormProps } from "@/features/auth/signup/ui/types";
 
-const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
+const OwnerShopForm = ({
+  form,
+  errorMessage,
+  isSubmitting = false,
+  onChange,
+  onNext,
+}: OwnerShopFormProps) => {
   const isValid = useMemo(
     () =>
       Boolean(
@@ -72,7 +78,13 @@ const OwnerShopForm = ({ form, onChange, onNext }: OwnerShopFormProps) => {
         </div>
       </div>
 
-      <SignupFooter disabled={!isValid} onNext={onNext} />
+      <SignupFooter
+        disabled={!isValid}
+        errorMessage={errorMessage}
+        isLoading={isSubmitting}
+        label="회원가입"
+        onNext={onNext}
+      />
     </form>
   );
 };
