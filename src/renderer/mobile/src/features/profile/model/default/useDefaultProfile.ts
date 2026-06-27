@@ -9,13 +9,15 @@ const USER_TYPE_LABEL: Record<string, string> = {
 export const useDefaultProfile = () => {
   const { data, isLoading, isError } = useGetMyProfileQuery();
 
-  const profile = {
-    name: data?.name ?? "",
-    role: data ? USER_TYPE_LABEL[data.userType] ?? data.userType : "",
-    reservationCount: data?.reservationCount ?? 0,
-    treatmentRecordCount: data?.treatmentRecordCount ?? 0,
-    savedStyleCount: data?.savedStyleCount ?? 0,
-  };
+  const profile = data
+    ? {
+        name: data.name,
+        role: USER_TYPE_LABEL[data.userType] ?? data.userType,
+        reservationCount: data.reservationCount,
+        treatmentRecordCount: data.treatmentRecordCount,
+        savedStyleCount: data.savedStyleCount,
+      }
+    : undefined;
 
   return { data: profile, isLoading, isError };
 };

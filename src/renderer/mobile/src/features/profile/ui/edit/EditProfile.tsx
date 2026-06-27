@@ -7,8 +7,12 @@ import ArrowIcon from "@/features/profile/assets/edit/Arrow.svg";
 import { useNavigate } from "react-router-dom";
 
 export const EditProfile = () => {
-  const { data } = useDefaultProfile();
+  const { data, isLoading, isError } = useDefaultProfile();
   const navigate = useNavigate();
+
+  if (isLoading || isError || !data) {
+    return <div className="h-full px-[1.25rem] py-[1.75rem]" />;
+  }
 
   return (
     <div className="h-full px-[1.25rem] py-[1.75rem]">

@@ -53,7 +53,11 @@ const StatItem = ({ icon, alt, value, unit, label }: StatItemProps) => {
 };
 
 export const DefaultProfile = () => {
-  const { data } = useDefaultProfile();
+  const { data, isLoading, isError } = useDefaultProfile();
+
+  if (isLoading || isError || !data) {
+    return <div className="h-full px-[1.25rem] py-[1.75rem]" />;
+  }
 
   const stats = [
     {
