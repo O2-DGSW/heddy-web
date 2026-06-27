@@ -20,6 +20,15 @@ const StatItem = ({ icon, alt, value, unit, label }: StatItemProps) => {
     <div className="flex flex-col items-center gap-[0.25rem]">
       <img className="size-[2.25rem]" src={icon} alt={alt} />
 
+      <p
+        className={font.caption.regular}
+        style={{
+          color: lightTheme.label.alternative,
+        }}
+      >
+        {label}
+      </p>
+
       <div className="flex flex-row gap-[0.175rem]">
         <p
           className={font.label.medium}
@@ -39,15 +48,6 @@ const StatItem = ({ icon, alt, value, unit, label }: StatItemProps) => {
           {unit}
         </p>
       </div>
-
-      <p
-        className={font.caption.regular}
-        style={{
-          color: lightTheme.label.alternative,
-        }}
-      >
-        {label}
-      </p>
     </div>
   );
 };
