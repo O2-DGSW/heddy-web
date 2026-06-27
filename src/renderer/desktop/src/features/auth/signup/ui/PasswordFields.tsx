@@ -5,10 +5,11 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
 import type { PasswordFieldsProps } from "@/features/auth/signup/ui/types";
 
 const PasswordFields = ({
+  errorMessage,
   password,
   passwordConfirm,
   onPasswordChange,
@@ -44,6 +45,14 @@ const PasswordFields = ({
         style={{ ...primaryRingStyle, ...inputStyle }}
       />
     </div>
+    {errorMessage && (
+      <p
+        className="font-['Pretendard'] text-xs font-normal leading-[150%]"
+        style={{ color: lightTheme.status.error }}
+      >
+        {errorMessage}
+      </p>
+    )}
   </div>
 );
 
