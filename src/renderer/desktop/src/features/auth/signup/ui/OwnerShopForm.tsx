@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import {
   formatBusinessNumber,
   formatLandline,
@@ -11,24 +9,10 @@ import type { OwnerShopFormProps } from "@/features/auth/signup/ui/types";
 
 const OwnerShopForm = ({
   form,
-  errorMessage,
   isSubmitting = false,
   onChange,
   onNext,
 }: OwnerShopFormProps) => {
-  const isValid = useMemo(
-    () =>
-      Boolean(
-        form.shopName.trim() &&
-          form.address.trim() &&
-          form.addressDetail.trim() &&
-          form.category &&
-          form.landline.trim() &&
-          form.businessNumber.trim(),
-      ),
-    [form],
-  );
-
   return (
     <form className="w-full" aria-label="상점 정보">
       <div className="flex flex-col">
@@ -53,7 +37,7 @@ const OwnerShopForm = ({
           onChange={(category) => onChange({ ...form, category })}
         />
 
-        <div className="mt-6">
+        <div className="mt-[clamp(10px,2.8vh,24px)]">
           <SignupTextField
             id="signup-shop-landline"
             name="landline"
@@ -64,7 +48,7 @@ const OwnerShopForm = ({
           />
         </div>
 
-        <div className="mt-6">
+        <div className="mt-[clamp(10px,2.8vh,24px)]">
           <SignupTextField
             id="signup-shop-business-number"
             name="businessNumber"
@@ -79,8 +63,7 @@ const OwnerShopForm = ({
       </div>
 
       <SignupFooter
-        disabled={!isValid}
-        errorMessage={errorMessage}
+        disabled={false}
         isLoading={isSubmitting}
         label="회원가입"
         onNext={onNext}
