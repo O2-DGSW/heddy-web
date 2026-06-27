@@ -15,7 +15,7 @@ const AddressFields = ({
   onAddressChange,
   onAddressDetailChange,
 }: AddressFieldsProps) => (
-  <div className="mt-6 flex flex-col gap-1">
+  <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-1">
     <label
       htmlFor="signup-shop-address"
       className={fieldLabelClassName}
