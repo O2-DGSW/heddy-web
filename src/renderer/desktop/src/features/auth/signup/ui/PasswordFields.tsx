@@ -9,13 +9,12 @@ import {
 import type { PasswordFieldsProps } from "@/features/auth/signup/ui/types";
 
 const PasswordFields = ({
-  errorMessage,
   password,
   passwordConfirm,
   onPasswordChange,
   onPasswordConfirmChange,
 }: PasswordFieldsProps) => (
-  <div className="mt-6 flex flex-col gap-1">
+  <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-1">
     <label
       htmlFor="signup-owner-password"
       className={fieldLabelClassName}
@@ -45,14 +44,6 @@ const PasswordFields = ({
         style={{ ...primaryRingStyle, ...inputStyle }}
       />
     </div>
-    {errorMessage && (
-      <p
-        className="font-['Pretendard'] text-xs font-normal leading-[150%]"
-        style={{ color: lightTheme.status.error }}
-      >
-        {errorMessage}
-      </p>
-    )}
   </div>
 );
 
