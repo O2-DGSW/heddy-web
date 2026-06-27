@@ -5,8 +5,8 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-  SignupInlineButton,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
+import { SignupInlineButton } from "@/features/auth/signup/ui/SignupFormControls";
 import type { AddressFieldsProps } from "@/features/auth/signup/ui/types";
 
 const AddressFields = ({
