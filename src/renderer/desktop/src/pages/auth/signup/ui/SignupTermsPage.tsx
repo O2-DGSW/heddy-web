@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast, type ToastOptions } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { ownerSignupApi, sendSmsApi, verifySmsApi } from "@/entities/auth/api/authApi";
 import { OwnerAccountForm, OwnerShopForm, TermsAgreement } from "@/features/auth/signup";
@@ -9,6 +11,8 @@ import type {
   SignupStep,
 } from "@/features/auth/signup/model/types";
 import {
+  isValidLoginId,
+  isValidPassword,
   isValidPhoneNumber,
   isValidVerificationCode,
   toDigits,
@@ -17,7 +21,7 @@ import type {
   OwnerSignupRequest,
   SmsPurpose,
 } from "@/entities/auth/model/auth.types";
-import type { VerificationMessageTone } from "@/features/auth/signup/ui/types";
+import type { SignupFeedbackTone } from "@/features/auth/signup/ui/types";
 import { SignupLayout } from "@/features/auth/signup/ui/SignupLayout";
 import { LoadingScreen } from "@/shared/ui/loading";
 
@@ -50,6 +54,19 @@ const getErrorMessage = (error: unknown, fallbackMessage: string) => {
   return fallbackMessage;
 };
 
+const SIGNUP_TOAST_ID = "desktop-signup-toast";
+const TOAST_AUTO_CLOSE_MS = 1500;
+
+const toastOptions: ToastOptions = {
+  toastId: SIGNUP_TOAST_ID,
+  autoClose: TOAST_AUTO_CLOSE_MS,
+  closeButton: false,
+  draggable: false,
+  hideProgressBar: false,
+  pauseOnFocusLoss: false,
+  pauseOnHover: false,
+};
+
 const SignupTermsPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<SignupStep>("terms");
@@ -61,10 +78,25 @@ const SignupTermsPage = () => {
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState<string | null>(null);
   const [verificationMessageTone, setVerificationMessageTone] =
-    useState<VerificationMessageTone>("info");
-  const [signupErrorMessage, setSignupErrorMessage] = useState<string | null>(null);
+    useState<SignupFeedbackTone>("info");
   const [accountForm, setAccountForm] = useState<OwnerAccountFormValues>(initialAccountForm);
   const [shopForm, setShopForm] = useState<OwnerShopFormValues>(initialShopForm);
+
+  const showToast = (message: string, tone: SignupFeedbackTone = "error") => {
+    if (toast.isActive(SIGNUP_TOAST_ID)) {
+      toast.update(SIGNUP_TOAST_ID, {
+        ...toastOptions,
+        render: message,
+        type: tone,
+      });
+      return;
+    }
+
+    toast(message, {
+      ...toastOptions,
+      type: tone,
+    });
+  };
 
   const buildSignupRequest = (): OwnerSignupRequest => ({
     loginId: accountForm.id.trim(),
@@ -83,8 +115,6 @@ const SignupTermsPage = () => {
     const carrierChanged = accountForm.carrier !== nextForm.carrier;
     const verificationCodeChanged = accountForm.verificationCode !== nextForm.verificationCode;
 
-    setSignupErrorMessage(null);
-
     if (phoneChanged || carrierChanged) {
       setIsVerificationSent(false);
       setIsPhoneVerified(false);
@@ -102,18 +132,15 @@ const SignupTermsPage = () => {
   };
 
   const handleShopFormChange = (nextForm: OwnerShopFormValues) => {
-    setSignupErrorMessage(null);
     setShopForm(nextForm);
   };
 
   const handleSendVerification = async () => {
     if (!isValidPhoneNumber(accountForm.phone)) {
-      setVerificationMessage("올바른 휴대폰 번호를 입력해주세요.");
-      setVerificationMessageTone("error");
+      showToast("올바른 휴대폰 번호를 입력해주세요.");
       return;
     }
 
-    setSignupErrorMessage(null);
     setIsSendingVerification(true);
     try {
       await sendSmsApi({
@@ -126,8 +153,7 @@ const SignupTermsPage = () => {
       setVerificationMessage("인증번호를 발송했습니다.");
       setVerificationMessageTone("info");
     } catch (error) {
-      setVerificationMessage(getErrorMessage(error, "인증번호 발송에 실패했습니다."));
-      setVerificationMessageTone("error");
+      showToast(getErrorMessage(error, "인증번호 발송에 실패했습니다."));
     } finally {
       setIsSendingVerification(false);
     }
@@ -135,22 +161,18 @@ const SignupTermsPage = () => {
 
   const handleVerifyCode = async () => {
     if (!isVerificationSent) {
-      setVerificationMessage("인증번호를 먼저 발송해주세요.");
-      setVerificationMessageTone("error");
+      showToast("인증번호를 먼저 발송해주세요.");
       return;
     }
     if (!isValidPhoneNumber(accountForm.phone)) {
-      setVerificationMessage("올바른 휴대폰 번호를 입력해주세요.");
-      setVerificationMessageTone("error");
+      showToast("올바른 휴대폰 번호를 입력해주세요.");
       return;
     }
     if (!isValidVerificationCode(accountForm.verificationCode)) {
-      setVerificationMessage("인증번호 6자리를 입력해주세요.");
-      setVerificationMessageTone("error");
+      showToast("인증번호 6자리를 입력해주세요.");
       return;
     }
 
-    setSignupErrorMessage(null);
     setIsVerifyingCode(true);
     try {
       await verifySmsApi({
@@ -163,27 +185,94 @@ const SignupTermsPage = () => {
       setVerificationMessageTone("success");
     } catch (error) {
       setIsPhoneVerified(false);
-      setVerificationMessage(getErrorMessage(error, "인증번호 확인에 실패했습니다."));
-      setVerificationMessageTone("error");
+      showToast(getErrorMessage(error, "인증번호 확인에 실패했습니다."));
     } finally {
       setIsVerifyingCode(false);
     }
   };
 
+  const validateAccountForm = () => {
+    if (!isValidLoginId(accountForm.id)) {
+      return "아이디는 4자 이상 20자 이하로 입력해주세요.";
+    }
+    if (!isValidPassword(accountForm.password)) {
+      return "비밀번호는 영문, 숫자, 특수문자를 포함해 8자 이상 입력해주세요.";
+    }
+    if (accountForm.password !== accountForm.passwordConfirm) {
+      return "비밀번호가 일치하지 않습니다.";
+    }
+    if (!accountForm.representativeName.trim()) {
+      return "대표자명을 입력해주세요.";
+    }
+    if (!isValidPhoneNumber(accountForm.phone)) {
+      return "올바른 휴대폰 번호를 입력해주세요.";
+    }
+    if (!isVerificationSent) {
+      return "인증번호를 먼저 발송해주세요.";
+    }
+    if (!isValidVerificationCode(accountForm.verificationCode)) {
+      return "인증번호 6자리를 입력해주세요.";
+    }
+    if (!isPhoneVerified) {
+      return "휴대폰 인증을 완료해주세요.";
+    }
+
+    return null;
+  };
+
+  const handleAccountNext = () => {
+    const accountErrorMessage = validateAccountForm();
+    if (accountErrorMessage) {
+      showToast(accountErrorMessage);
+      return;
+    }
+
+    setStep("shop");
+  };
+
+  const validateShopForm = () => {
+    if (!shopForm.shopName.trim()) {
+      return "상점명을 입력해주세요.";
+    }
+    if (!shopForm.address.trim()) {
+      return "주소를 입력해주세요.";
+    }
+    if (!shopForm.addressDetail.trim()) {
+      return "상세주소를 입력해주세요.";
+    }
+    if (!shopForm.category) {
+      return "상점 카테고리를 선택해주세요.";
+    }
+    if (!shopForm.landline.trim()) {
+      return "유선번호를 입력해주세요.";
+    }
+    if (!shopForm.businessNumber.trim()) {
+      return "사업자등록번호를 입력해주세요.";
+    }
+
+    return null;
+  };
+
   const handleSubmitSignup = async () => {
     if (!isPhoneVerified) {
-      setSignupErrorMessage("휴대폰 인증을 완료해주세요.");
+      showToast("휴대폰 인증을 완료해주세요.");
       setStep("account");
       return;
     }
 
-    setSignupErrorMessage(null);
+    const shopErrorMessage = validateShopForm();
+    if (shopErrorMessage) {
+      showToast(shopErrorMessage);
+      return;
+    }
+
     setIsSignupSubmitting(true);
     try {
       await ownerSignupApi(buildSignupRequest());
       setIsLoading(true);
     } catch (error) {
-      setSignupErrorMessage(getErrorMessage(error, "회원가입에 실패했습니다."));
+      const errorMessage = getErrorMessage(error, "회원가입에 실패했습니다.");
+      showToast(errorMessage);
     } finally {
       setIsSignupSubmitting(false);
     }
@@ -194,38 +283,45 @@ const SignupTermsPage = () => {
   }
 
   return (
-    <SignupLayout step={step}>
-      {step === "terms" && <TermsAgreement onNext={() => setStep("account")} />}
+    <>
+      <ToastContainer
+        position="top-right"
+        limit={1}
+        newestOnTop={false}
+        theme="light"
+        className="font-['Pretendard']"
+        toastClassName="rounded-[10px] text-sm font-medium leading-[140%] shadow-[0_8px_24px_rgba(0,0,0,0.16)]"
+        progressClassName="opacity-80"
+      />
 
-      {step === "account" && (
-        <OwnerAccountForm
-          form={accountForm}
-          isPhoneVerified={isPhoneVerified}
-          isVerificationSent={isVerificationSent}
-          isSendingVerification={isSendingVerification}
-          isVerifyingCode={isVerifyingCode}
-          verificationMessage={verificationMessage}
-          verificationMessageTone={verificationMessageTone}
-          onChange={handleAccountFormChange}
-          onNext={() => {
-            setSignupErrorMessage(null);
-            setStep("shop");
-          }}
-          onSendVerification={handleSendVerification}
-          onVerifyCode={handleVerifyCode}
-        />
-      )}
+      <SignupLayout step={step}>
+        {step === "terms" && <TermsAgreement onNext={() => setStep("account")} />}
 
-      {step === "shop" && (
-        <OwnerShopForm
-          form={shopForm}
-          errorMessage={signupErrorMessage}
-          isSubmitting={isSignupSubmitting}
-          onChange={handleShopFormChange}
-          onNext={handleSubmitSignup}
-        />
-      )}
-    </SignupLayout>
+        {step === "account" && (
+          <OwnerAccountForm
+            form={accountForm}
+            isPhoneVerified={isPhoneVerified}
+            isSendingVerification={isSendingVerification}
+            isVerifyingCode={isVerifyingCode}
+            verificationMessage={verificationMessage}
+            verificationMessageTone={verificationMessageTone}
+            onChange={handleAccountFormChange}
+            onNext={handleAccountNext}
+            onSendVerification={handleSendVerification}
+            onVerifyCode={handleVerifyCode}
+          />
+        )}
+
+        {step === "shop" && (
+          <OwnerShopForm
+            form={shopForm}
+            isSubmitting={isSignupSubmitting}
+            onChange={handleShopFormChange}
+            onNext={handleSubmitSignup}
+          />
+        )}
+      </SignupLayout>
+    </>
   );
 };
 
