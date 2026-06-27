@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useMyTreatmentRecordsQuery } from "@/entities/customer/api/query/useMyTreatmentRecords.query";
 import { mapTreatmentRecordToProcedureNote } from "@/features/cuts/utils/mapTreatmentRecord";
@@ -18,10 +18,12 @@ export const useProcedureNotes = () => {
     };
   }, []);
 
-  const fetchedNotes = (treatmentRecords ?? []).map((record) =>
-    mapTreatmentRecordToProcedureNote(record, record.designer_name)
-  );
-  const notes = [...addedNotes, ...fetchedNotes];
+  const notes = useMemo(() => {
+    const fetchedNotes = (treatmentRecords ?? []).map((record) =>
+      mapTreatmentRecordToProcedureNote(record, record.designer_name)
+    );
+    return [...addedNotes, ...fetchedNotes];
+  }, [treatmentRecords, addedNotes]);
 
   const addNote = (note: ProcedureNote) => {
     if (note.imageUrl) objectUrlsRef.current.add(note.imageUrl);
