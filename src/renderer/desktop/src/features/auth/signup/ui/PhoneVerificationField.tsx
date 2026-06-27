@@ -9,8 +9,8 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-  SignupInlineButton,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
+import { SignupInlineButton } from "@/features/auth/signup/ui/SignupFormControls";
 import type {
   CarrierButtonProps,
   PhoneVerificationFieldProps,
@@ -43,14 +43,28 @@ const CarrierButton = ({
 );
 
 const PhoneVerificationField = ({
+  canSendVerification,
+  canVerifyCode,
   carrier,
+  isSendingVerification,
+  isVerifyingCode,
   phone,
   verificationCode,
+  verificationMessage,
+  verificationMessageTone,
   onCarrierChange,
   onPhoneChange,
+  onSendVerification,
+  onVerifyCode,
   onVerificationCodeChange,
 }: PhoneVerificationFieldProps) => {
   const isMvnoSelected = isMvnoCarrier(carrier);
+  const messageColor =
+    verificationMessageTone === "success"
+      ? lightTheme.primary.normal
+      : verificationMessageTone === "error"
+        ? lightTheme.status.error
+        : lightTheme.label.assistive;
 
   return (
     <div className="mt-6 flex flex-col gap-3">
@@ -118,19 +132,47 @@ const PhoneVerificationField = ({
             className={inputClassName}
             style={{ ...primaryRingStyle, ...inputStyle }}
           />
-          <SignupInlineButton>인증번호</SignupInlineButton>
+          <SignupInlineButton
+            disabled={!canSendVerification}
+            isLoading={isSendingVerification}
+            onClick={onSendVerification}
+          >
+            인증번호
+          </SignupInlineButton>
         </div>
 
-        <input
-          id="signup-owner-verification-code"
-          name="verificationCode"
-          type="text"
-          placeholder="인증번호"
-          value={verificationCode}
-          onChange={(event) => onVerificationCodeChange(event.target.value)}
-          className={inputClassName}
-          style={{ ...primaryRingStyle, ...inputStyle }}
-        />
+        <div className="flex gap-2">
+          <input
+            id="signup-owner-verification-code"
+            name="verificationCode"
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            placeholder="인증번호"
+            value={verificationCode}
+            onChange={(event) =>
+              onVerificationCodeChange(event.target.value.replace(/\D/g, "").slice(0, 6))
+            }
+            className={inputClassName}
+            style={{ ...primaryRingStyle, ...inputStyle }}
+          />
+          <SignupInlineButton
+            disabled={!canVerifyCode}
+            isLoading={isVerifyingCode}
+            onClick={onVerifyCode}
+          >
+            확인
+          </SignupInlineButton>
+        </div>
+
+        {verificationMessage && (
+          <p
+            className="font-['Pretendard'] text-xs font-normal leading-[150%]"
+            style={{ color: messageColor }}
+          >
+            {verificationMessage}
+          </p>
+        )}
       </div>
     </div>
   );
