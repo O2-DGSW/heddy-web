@@ -6,6 +6,7 @@ import { useResetPassword } from '@/features/auth/find/model/useResetPassword';
 import type { Carrier, MvnoCarrier } from '@/features/auth/signup/model/types';
 import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/auth/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
+import { PasswordInput } from '@/private/shared/ui/password-input/PasswordInput';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
@@ -52,22 +53,12 @@ export const FindPasswordForm = () => {
             <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>
               새 비밀번호
             </p>
-            <input
-              className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-1 ${font.caption.regular}`}
-              style={inputStyle}
-              placeholder="비밀번호"
-              type="password"
-              value={passwordField.value}
-              onChange={e => passwordField.onChange(e.target.value)}
-            />
-            <input
-              className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-3 ${font.caption.regular}`}
-              style={inputStyle}
-              placeholder="비밀번호 확인"
-              type="password"
-              value={passwordConfirmField.value}
-              onChange={e => passwordConfirmField.onChange(e.target.value)}
-            />
+            <div className="mb-1">
+              <PasswordInput placeholder="비밀번호" value={passwordField.value} onChange={passwordField.onChange} />
+            </div>
+            <div className="mb-3">
+              <PasswordInput placeholder="비밀번호 확인" value={passwordConfirmField.value} onChange={passwordConfirmField.onChange} />
+            </div>
           </div>
         </div>
         <div className="w-full pb-8">
