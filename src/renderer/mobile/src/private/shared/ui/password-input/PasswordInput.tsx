@@ -12,7 +12,6 @@ interface PasswordInputProps {
 
 export const PasswordInput = ({ placeholder = "비밀번호", value, onChange, className = "" }: PasswordInputProps) => {
   const [show, setShow] = useState(false);
-  const [focused, setFocused] = useState(false);
 
   return (
     <div className="relative w-full">
@@ -26,10 +25,8 @@ export const PasswordInput = ({ placeholder = "비밀번호", value, onChange, c
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
       />
-      {focused && (
+      {value && (
         <button
           type="button"
           className="absolute right-4 top-1/2 -translate-y-1/2"
