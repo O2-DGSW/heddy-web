@@ -28,14 +28,12 @@ export default defineConfig(({ command }) => ({
   },
   server: {
     port: 5173,
-    host: true,
     ...(command === "serve" && {
       https: createLocalHttpsConfig(__dirname),
     }),
   },
   preview: {
     port: 4173,
-    host: true,
     ...(command === "serve" && {
       https: createLocalHttpsConfig(__dirname),
     }),

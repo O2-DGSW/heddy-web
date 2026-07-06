@@ -2,7 +2,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const isLive = process.env.CAPACITOR_LIVE === "true";
-const liveServerUrl = process.env.CAPACITOR_SERVER_URL ?? "https://localhost:5174";
+const liveServerUrl = process.env.CAPACITOR_SERVER_URL ?? "http://localhost:5174";
 
 const config: CapacitorConfig = {
   appId: "com.heddy.app",

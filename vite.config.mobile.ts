@@ -5,6 +5,8 @@ import { resolve } from "path";
 import svgr from "vite-plugin-svgr";
 import { createLocalHttpsConfig } from "./vite.https";
 
+const enableHttps = process.env.ENABLE_HTTPS === "true";
+
 export default defineConfig(({ command }) => ({
   root: resolve(__dirname, "src/renderer/mobile"),
   envDir: __dirname,
@@ -29,16 +31,18 @@ export default defineConfig(({ command }) => ({
   server: {
     port: 5174,
     host: true,
-    ...(command === "serve" && {
-      https: createLocalHttpsConfig(__dirname),
-    }),
+    ...(command === "serve" &&
+      enableHttps && {
+        https: createLocalHttpsConfig(__dirname),
+      }),
   },
   preview: {
     port: 4174,
     host: true,
-    ...(command === "serve" && {
-      https: createLocalHttpsConfig(__dirname),
-    }),
+    ...(command === "serve" &&
+      enableHttps && {
+        https: createLocalHttpsConfig(__dirname),
+      }),
   },
   build: {
     outDir: resolve(__dirname, "dist/mobile"),
