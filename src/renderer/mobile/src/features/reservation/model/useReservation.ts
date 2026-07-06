@@ -1,12 +1,20 @@
 import { useState } from "react";
-import { DEFAULT_SHOP_SCHEDULE_DATE } from "@/features/reservation/constants/schedule-calander.ts";
 import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query.ts";
 import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query.ts";
 import { reservationApi } from "@/entities/reservation/api/reservationApi.ts";
 import type { ReservationRequest } from "@/entities/reservation/model/Reservation.types.ts";
 
+const getTodayString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
 export const useReservation = () => {
-  const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayString());
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedDesignerName, setSelectedDesignerName] = useState("");
   const [selectedDesignerId, setSelectedDesignerId] = useState<number | null>(null);
@@ -17,9 +25,7 @@ export const useReservation = () => {
   const shopData = useShopInfoQuery({ shopId: myShopId });
   const designerList = shopData?.data?.designers;
 
-  // API 호출 함수
   const handleSave = async () => {
-    // 필수 데이터 검증 (shopId와 designerId가 없으면 차단)
     if (!myShopId) {
       alert("매장 정보가 존재하지 않습니다.");
       return;
@@ -29,13 +35,12 @@ export const useReservation = () => {
       return;
     }
 
-    // ReservationRequest API 규격에 맞게 객체 생성
     const requestBody: ReservationRequest = {
       shop_id: myShopId,
-      designerId: selectedDesignerId, // API 스펙 문서에 정의된 camelCase 유지
-      reserved_at: new Date(selectedDate).toISOString(), // 날짜 포맷을 ISO 8601 문자열로 변환
+      designerId: selectedDesignerId,
+      reserved_at: new Date(selectedDate).toISOString(),
       service_tags: selectedTags,
-      memo: "", // 현재 UI에 메모 입력란이 없으므로 빈 문자열 처리 (필요시 상태 추가)
+      memo: "",
     };
 
     try {

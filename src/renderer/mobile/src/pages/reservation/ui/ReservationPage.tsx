@@ -2,40 +2,44 @@ import { font, lightTheme } from "@design-tokens";
 import { Calendar } from "@/shared/ui/calendar";
 import { SHOP_SCHEDULE_WEEK_DAYS } from "@/features/reservation/constants/schedule-calander.ts";
 import { useReservation } from "@/features/reservation/model/useReservation.ts";
+import React from "react";
 
-enum HairTag {
-  MALE = "남자",
-  FEMALE = "여성",
-  FIRST_VISIT = "첫방문",
-  CUT = "컷트",
-  BANGS_CUT = "앞머리",
-  LAYERED_CUT = "레이어드",
-  MALE_CUT = "남자컷",
-  PERM = "펌",
-  DOWN_PERM = "다운펌",
-  VOLUME_PERM = "볼륨펌",
-  SETTING_PERM = "셋팅펌",
-  AS_PERM = "애즈펌",
-  IRON_PERM = "아이롱펌",
-  STRAIGHT_PERM = "매직",
-  VOLUME_STRAIGHT = "볼륨매직",
-  COLORING = "염색",
-  ROOT_COLORING = "뿌리염색",
-  TONE_DOWN = "톤다운",
-  BLEACH = "탈색",
-  CLINIC = "클리닉",
-  CARE = "케어",
-  SCALP = "두피",
-  SCALP_CARE = "두피케어",
-  SPA = "스파",
-  RECOVERY = "복구",
-  STYLING = "스타일링",
-  DRY = "드라이",
-  CONSULTATION = "상담",
-  RESERVATION = "예약",
-}
+const HairTag = {
+  MALE: "남자",
+  FEMALE: "여성",
+  FIRST_VISIT: "첫방문",
+  CUT: "컷트",
+  BANGS_CUT: "앞머리",
+  LAYERED_CUT: "레이어드",
+  MALE_CUT: "남자컷",
+  PERM: "펌",
+  DOWN_PERM: "다운펌",
+  VOLUME_PERM: "볼륨펌",
+  SETTING_PERM: "셋팅펌",
+  AS_PERM: "애즈펌",
+  IRON_PERM: "아이롱펌",
+  STRAIGHT_PERM: "매직",
+  VOLUME_STRAIGHT: "볼륨매직",
+  COLORING: "염색",
+  ROOT_COLORING: "뿌리염색",
+  TONE_DOWN: "톤다운",
+  BLEACH: "탈색",
+  CLINIC: "클리닉",
+  CARE: "케어",
+  SCALP: "두피",
+  SCALP_CARE: "두피케어",
+  SPA: "스파",
+  RECOVERY: "복구",
+  STYLING: "스타일링",
+  DRY: "드라이",
+  CONSULTATION: "상담",
+  RESERVATION: "예약",
+} as const;
 
-const HAIR_TAG_ENTRIES = Object.entries(HairTag) as [keyof typeof HairTag, HairTag][];
+// 값 타입을 순수 타입 형태로 안전하게 추출
+type HairTagType = (typeof HairTag)[keyof typeof HairTag];
+
+const HAIR_TAG_ENTRIES = Object.entries(HairTag) as [keyof typeof HairTag, HairTagType][];
 
 export const ReservationPage = () => {
   const {
