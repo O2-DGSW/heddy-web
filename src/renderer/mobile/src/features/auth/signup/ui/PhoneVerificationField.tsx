@@ -32,7 +32,7 @@ export const PhoneVerificationField = ({
   return (
     <div className="flex flex-col gap-2">
       <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>휴대폰 번호</p>
-      <div className="flex items-center gap-9 flex-wrap ml-2">
+      <div className="flex items-center gap-x-5 gap-y-2 flex-wrap ml-2">
         {MAIN_CARRIERS.map(c => (
           <RadioButton
             key={c}

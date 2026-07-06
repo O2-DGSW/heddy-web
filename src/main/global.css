@@ -11,6 +11,11 @@
 }
 
 @layer base {
+  html {
+    /* 390px 기준 16px, 좁을수록 줄어들고 최소 14px */
+    font-size: clamp(14px, 4.1vw, 16px);
+  }
+
   html,
   body,
   #root {
