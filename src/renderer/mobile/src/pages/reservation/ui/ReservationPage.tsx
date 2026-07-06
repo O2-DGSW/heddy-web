@@ -5,40 +5,96 @@ import {
   DEFAULT_SHOP_SCHEDULE_DATE,
   SHOP_SCHEDULE_WEEK_DAYS,
 } from "@/features/reservation/constants/schedule-calander.ts";
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query.ts";
+import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query.ts";
+
+enum HairTag {
+  MALE = "남자",
+  FEMALE = "여성",
+  FIRST_VISIT = "첫방문",
+  CUT = "컷트",
+  BANGS_CUT = "앞머리",
+  LAYERED_CUT = "레이어드",
+  MALE_CUT = "남자컷",
+  PERM = "펌",
+  DOWN_PERM = "다운펌",
+  VOLUME_PERM = "볼륨펌",
+  SETTING_PERM = "셋팅펌",
+  AS_PERM = "애즈펌",
+  IRON_PERM = "아이롱펌",
+  STRAIGHT_PERM = "매직",
+  VOLUME_STRAIGHT = "볼륨매직",
+  COLORING = "염색",
+  ROOT_COLORING = "뿌리염색",
+  TONE_DOWN = "톤다운",
+  BLEACH = "탈색",
+  CLINIC = "클리닉",
+  CARE = "케어",
+  SCALP = "두피",
+  SCALP_CARE = "두피케어",
+  SPA = "스파",
+  RECOVERY = "복구",
+  STYLING = "스타일링",
+  DRY = "드라이",
+  CONSULTATION = "상담",
+  RESERVATION = "예약",
+}
+
+const HAIR_TAG_ENTRIES = Object.entries(HairTag) as [keyof typeof HairTag, HairTag][];
 
 export const ReservationPage = () => {
   const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
+  // 변경 1: 여러 개를 담을 수 있도록 string[] 배열 상태로 변경합니다.
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [designer, setDesigner] = useState("");
 
-  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const myInfo = useGetMyProfileQuery();
+  const myShopId = myInfo?.data?.shopMembers[0].shopId;
+  const shopData = useShopInfoQuery({ shopId: myShopId });
+  const DESIGNER_LIST = shopData?.data?.designers;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [storeInfo, setStoreInfo] = useState<{
     selectedDate: string;
-    selectedItem: number | null;
+    selectedTags: string[];
     designer: string;
   } | null>(null);
-
-  const [designer, setDesigner] = useState("");
 
   const handleSave = () => {
     const newStoreInfo = {
       selectedDate,
-      selectedItem,
+      selectedTags, // 변경 2: 저장할 데이터 구조 업데이트
       designer,
     };
 
     setStoreInfo(newStoreInfo);
-    console.log(newStoreInfo); // 저장할 값
+    console.log(newStoreInfo);
   };
 
   useEffect(() => {
-    console.log("저장값 변경");
+    if (storeInfo) {
+      console.log("저장값 변경:", storeInfo);
+    }
   }, [storeInfo]);
 
   const handleCancel = () => {
-    setSelectedItem(null);
+    setSelectedTags([]); // 변경 3: 취소 시 빈 배열로 초기화
     setDesigner("");
     setStoreInfo(null);
+    setIsDropdownOpen(false);
+  };
+
+  // 변경 4: 다중 선택 토글 핸들러 (클릭한 value가 있으면 빼고, 없으면 넣기)
+  const handleTagClick = (tagValue: string) => {
+    setSelectedTags(prevTags =>
+      prevTags.includes(tagValue) ? prevTags.filter(t => t !== tagValue) : [...prevTags, tagValue]
+    );
+  };
+
+  const handleSelectDesigner = (name: string) => {
+    setDesigner(name);
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -64,7 +120,7 @@ export const ReservationPage = () => {
           initialMonthDate={DEFAULT_SHOP_SCHEDULE_DATE}
           selectedDate={selectedDate}
           variant="mobile"
-          viewMode="week"
+          viewMode="month"
           weekDays={SHOP_SCHEDULE_WEEK_DAYS}
           className="mx-auto max-w-[393px]"
           onSelectDate={setSelectedDate}
@@ -107,17 +163,79 @@ export const ReservationPage = () => {
           </div>
         </div>
         <div className="w-full h-[1.5px]" style={{ backgroundColor: lightTheme.fill.neutral }} />
-        <div className="w-full overflow-x-auto scrollbar-none">
-          <div className="flex w-max gap-2 px-1">
-            {items.map(item => {
-              const isSelected = selectedItem === item;
+
+        <p className={`w-full ${font.label.medium}`} style={{ color: lightTheme.label.assistive }}>
+          디자이너 찾기
+        </p>
+
+        {/* 디자이너 드롭다운 */}
+        <div className="relative w-[100%]">
+          <button
+            type="button"
+            onClick={() => setIsDropdownOpen(prev => !prev)}
+            className="w-full p-[0.75rem] rounded-lg text-left"
+            style={{
+              backgroundColor: lightTheme.background.neutral,
+              color: designer ? lightTheme.label.normal : lightTheme.line.normal,
+            }}
+          >
+            {designer || "디자이너 찾기"}
+          </button>
+
+          {isDropdownOpen && (
+            <div
+              className="absolute left-0 top-[110%] w-full rounded-lg shadow-lg z-50 p-2 border max-h-[200px] overflow-y-auto"
+              style={{
+                backgroundColor: lightTheme.background.neutral,
+                borderColor: lightTheme.fill.neutral,
+              }}
+            >
+              <ul className="flex flex-col gap-1">
+                {DESIGNER_LIST?.map(member => (
+                  <li key={member.designer_id}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectDesigner(member.name)}
+                      className="w-full text-left p-[0.75rem] rounded-lg transition-colors hover:bg-[var(--hover-bg)] hover:text-[var(--hover-text)]"
+                      style={
+                        {
+                          backgroundColor: "transparent",
+                          color: lightTheme.label.normal,
+                          "--hover-bg": lightTheme.primary.normal,
+                          "--hover-text": lightTheme.fill.normal,
+                        } as React.CSSProperties
+                      }
+                    >
+                      {member.name}
+                    </button>
+                  </li>
+                ))}
+
+                {(!DESIGNER_LIST || DESIGNER_LIST.length === 0) && (
+                  <li className="text-center p-4 text-xs" style={{ color: lightTheme.line.normal }}>
+                    소속된 디자이너가 없습니다.
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <p className={`w-full ${font.label.medium}`} style={{ color: lightTheme.label.assistive }}>
+          시술 태그
+        </p>
+
+        <div className="w-full">
+          <div className="flex flex-wrap w-full gap-2 px-1">
+            {HAIR_TAG_ENTRIES.map(([key, value]) => {
+              const isSelected = selectedTags.includes(value);
 
               return (
                 <button
-                  key={item}
+                  key={key}
                   type="button"
-                  onClick={() => setSelectedItem(item)}
-                  className="flex-shrink-0 px-4 py-2 rounded-lg"
+                  onClick={() => handleTagClick(value)}
+                  className="flex-shrink-0 px-4 py-2 rounded-lg transition-colors"
                   style={{
                     backgroundColor: isSelected
                       ? lightTheme.primary.normal
@@ -125,22 +243,12 @@ export const ReservationPage = () => {
                     color: isSelected ? lightTheme.fill.normal : lightTheme.label.normal,
                   }}
                 >
-                  {item}
+                  {value}
                 </button>
               );
             })}
           </div>
         </div>
-        <input
-          placeholder="디자이너 찾기"
-          value={designer}
-          onChange={e => setDesigner(e.target.value)}
-          className="w-[90%] p-[0.75rem] rounded-lg"
-          style={{
-            backgroundColor: lightTheme.background.neutral,
-            color: lightTheme.line.normal,
-          }}
-        />
       </div>
     </>
   );
