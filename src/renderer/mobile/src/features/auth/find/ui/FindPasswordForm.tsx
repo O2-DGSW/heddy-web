@@ -161,7 +161,7 @@ export const FindPasswordForm = () => {
               inputMode="tel"
             />
             <button
-              className={`px-4 py-3 rounded-xl ${font.label.medium}`}
+              className={`shrink-0 w-[4.5rem] py-3 rounded-xl ${font.label.medium}`}
               style={{
                 backgroundColor: phoneField.canRequest && !sms.isSending ? lightTheme.primary.normal : lightTheme.line.alternative,
                 color: phoneField.canRequest && !sms.isSending ? lightTheme.fill.normal : lightTheme.line.normal,
@@ -183,7 +183,7 @@ export const FindPasswordForm = () => {
                 inputMode="numeric"
               />
               <button
-                className={`px-4 py-3 rounded-xl ${font.label.medium}`}
+                className={`shrink-0 w-[4.5rem] py-3 rounded-xl ${font.label.medium}`}
                 style={{
                   backgroundColor: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.primary.normal : lightTheme.line.alternative,
                   color: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.fill.normal : lightTheme.line.normal,
