@@ -59,7 +59,7 @@ const LogoutConfirmDialog = ({
 );
 
 export const DefaultSetting = () => {
-  const { handleNavigation, showLogoutConfirm, handleLogoutCancel, handleLogout } = useDefaultSetting();
+  const { handleNavigate, handleLogoutConfirm, showLogoutConfirm, handleLogoutCancel, handleLogout } = useDefaultSetting();
 
   return (
     <>
@@ -75,17 +75,17 @@ export const DefaultSetting = () => {
             </p>
 
             <div className="flex flex-col gap-[1.5rem]">
-              {SETTING_ITEMS.map((item, index) => (
+              {SETTING_ITEMS.map((item) => (
                 <SettingItem
                   key={item.title}
                   icon={item.icon}
                   alt={item.alt}
                   title={item.title}
-                  onClick={handleNavigation[index]}
+                  onClick={() => handleNavigate(item.alt)}
                 />
               ))}
 
-              <button className="w-full text-left" onClick={handleNavigation[SETTING_ITEMS.length]}>
+              <button className="w-full text-left" onClick={handleLogoutConfirm}>
                 <p className={font.body.medium} style={{ color: lightTheme.status.error }}>
                   로그아웃
                 </p>

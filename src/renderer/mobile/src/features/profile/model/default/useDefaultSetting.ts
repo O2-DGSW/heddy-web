@@ -7,10 +7,22 @@ export const useDefaultSetting = () => {
   const navigate = useNavigate();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  const handleGoToBookmark = () => navigate("/profile/bookmarks/styles");
-  const handleGoToEditInfo = () => navigate("/profile/edit");
-  const handleGoToManagePortfolio = () => navigate("/profile/portfolio");
-  const handleGoToAlarm = () => navigate("/profile/alarm");
+  const handleNavigate = (alt: string) => {
+    switch (alt) {
+      case "bookmark":
+        navigate("/profile/bookmarks/styles");
+        break;
+      case "portfolio":
+        navigate("/profile/portfolio");
+        break;
+      case "setting":
+        navigate("/profile/edit");
+        break;
+      case "alarm":
+        navigate("/profile/alarm");
+        break;
+    }
+  };
 
   const handleLogoutConfirm = () => setShowLogoutConfirm(true);
   const handleLogoutCancel = () => setShowLogoutConfirm(false);
@@ -24,16 +36,9 @@ export const useDefaultSetting = () => {
     navigate("/login", { replace: true });
   };
 
-  const handleNavigation = [
-    handleGoToBookmark,
-    handleGoToManagePortfolio,
-    handleGoToEditInfo,
-    handleGoToAlarm,
-    handleLogoutConfirm,
-  ];
-
   return {
-    handleNavigation,
+    handleNavigate,
+    handleLogoutConfirm,
     showLogoutConfirm,
     handleLogoutCancel,
     handleLogout,
