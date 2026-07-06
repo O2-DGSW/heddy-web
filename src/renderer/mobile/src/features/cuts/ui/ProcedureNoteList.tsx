@@ -18,15 +18,15 @@ export const ProcedureNoteList = () => {
   const { data: profile } = useGetMyProfileQuery();
   const isCustomer = profile?.userType === "CUSTOMER";
   const processedRef = useRef(false);
+  const newNote = location.state?.newNote as ProcedureNote | undefined;
 
   useEffect(() => {
-    const newNote = location.state?.newNote as ProcedureNote | undefined;
     if (newNote && !processedRef.current) {
       processedRef.current = true;
       addNote(newNote);
       navigate("/cuts", { replace: true, state: null });
     }
-  }, []);
+  }, [addNote, navigate, newNote]);
 
   return (
     <div

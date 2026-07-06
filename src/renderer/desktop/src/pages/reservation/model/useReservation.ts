@@ -133,9 +133,9 @@ const mapReservationResponse = (reservation: ReservationResponse): ReservationRe
   const dateKey = getDateKeyFromDateTime(reservation.reserved_at);
   const time = getTimeFromDateTime(reservation.reserved_at);
   const changedTime = getTimeFromDateTime(reservation.changed_time);
-  const tags = reservation.service_tags.map(tag => (tag.startsWith("#") ? tag : `# ${tag}`));
-  const service =
-    reservation.service_name ?? reservation.service_tags[0]?.replace(/^#\s*/, "") ?? "시술";
+  const serviceTags = reservation.service_tags ?? [];
+  const tags = serviceTags.map(tag => (tag.startsWith("#") ? tag : `# ${tag}`));
+  const service = reservation.service_name ?? serviceTags[0]?.replace(/^#\s*/, "") ?? "시술";
 
   return {
     id: reservation.reservation_id,

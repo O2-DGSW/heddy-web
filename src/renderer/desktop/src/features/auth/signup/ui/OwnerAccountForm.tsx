@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import {
   SignupFooter,
   SignupTextField,
@@ -8,20 +6,18 @@ import { PasswordFields } from "@/features/auth/signup/ui/PasswordFields";
 import { PhoneVerificationField } from "@/features/auth/signup/ui/PhoneVerificationField";
 import type { OwnerAccountFormProps } from "@/features/auth/signup/ui/types";
 
-const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => {
-  const isValid = useMemo(
-    () =>
-      Boolean(
-        form.id.trim() &&
-          form.password &&
-          form.passwordConfirm &&
-          form.password === form.passwordConfirm &&
-          form.representativeName.trim() &&
-          form.phone.trim() &&
-          form.verificationCode.trim(),
-      ),
-    [form],
-  );
+const OwnerAccountForm = ({
+  form,
+  isPhoneVerified,
+  isSendingVerification,
+  isVerifyingCode,
+  onChange,
+  onNext,
+  onSendVerification,
+  onVerifyCode,
+}: OwnerAccountFormProps) => {
+  const canSendVerification = !isPhoneVerified;
+  const canVerifyCode = !isPhoneVerified;
 
   return (
     <form className="w-full" aria-label="오너 계정 정보">
@@ -42,7 +38,7 @@ const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => 
           onPasswordConfirmChange={(passwordConfirm) => onChange({ ...form, passwordConfirm })}
         />
 
-        <div className="mt-6">
+        <div className="mt-[clamp(10px,2.8vh,24px)]">
           <SignupTextField
             id="signup-owner-name"
             name="representativeName"
@@ -57,15 +53,21 @@ const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => 
           carrier={form.carrier}
           phone={form.phone}
           verificationCode={form.verificationCode}
+          canSendVerification={canSendVerification}
+          canVerifyCode={canVerifyCode}
+          isSendingVerification={isSendingVerification}
+          isVerifyingCode={isVerifyingCode}
           onCarrierChange={(carrier) => onChange({ ...form, carrier })}
           onPhoneChange={(phone) => onChange({ ...form, phone })}
           onVerificationCodeChange={(verificationCode) =>
             onChange({ ...form, verificationCode })
           }
+          onSendVerification={onSendVerification}
+          onVerifyCode={onVerifyCode}
         />
       </div>
 
-      <SignupFooter disabled={!isValid} onNext={onNext} />
+      <SignupFooter disabled={isSendingVerification || isVerifyingCode} onNext={onNext} />
     </form>
   );
 };

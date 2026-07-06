@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { lightTheme, font } from '@design-tokens';
+import { useEffect, useRef } from "react";
+import { lightTheme, font } from "@design-tokens";
 
 interface AddressSearchModalProps {
   onClose: () => void;
@@ -13,12 +13,12 @@ export const AddressSearchModal = ({ onClose, embedPostcode }: AddressSearchModa
     if (containerRef.current) {
       embedPostcode(containerRef.current);
     }
-  }, []);
+  }, [embedPostcode]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
-      style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
     >
       <div className="flex flex-col bg-white flex-1 mx-4 my-16 rounded-2xl overflow-hidden">
         <div
