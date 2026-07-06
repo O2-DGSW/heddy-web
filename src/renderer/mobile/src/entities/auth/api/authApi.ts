@@ -44,6 +44,13 @@ export const signupOwnerApi = async (body: SignupOwnerRequest): Promise<void> =>
   }
 };
 
+export const logoutApi = async (): Promise<void> => {
+  const res = await api.post<AuthApiResponse<null>>("/auth/logout");
+  if (!res.data.success) {
+    throw new Error(res.data.error?.message || res.data.message || "로그아웃에 실패했습니다.");
+  }
+};
+
 export const resetPasswordApi = async (body: { loginId: string; phoneNumber: string; newPassword: string }): Promise<void> => {
   const res = await api.patch<AuthApiResponse<null>>("/auth/password/reset", body);
   if (!res.data.success) {
