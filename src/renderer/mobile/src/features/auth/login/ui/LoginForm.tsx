@@ -19,7 +19,7 @@ export const LoginForm = () => {
           className={`w-full px-4 py-4 rounded-xl  focus:outline-none ${font.caption.regular}`}
           style={{
             backgroundColor: lightTheme.background.neutral,
-            color: lightTheme.label.assistive,
+            color: lightTheme.label.normal,
           }}
           placeholder="아이디"
           value={id}
