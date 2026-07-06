@@ -10,9 +10,13 @@ import { ProcedureTagChip } from "./ProcedureTagChip";
 const ProcedureRecordPanel = ({
   tags,
   memo,
+  price,
+  isSaving,
+  saveMessage,
   imagePreviews,
   onToggleTag,
   onMemoChange,
+  onPriceChange,
   onImageChange,
   onCancel,
   onSave,
@@ -58,12 +62,40 @@ const ProcedureRecordPanel = ({
         </div>
 
         <div className="mt-5 h-[15.6875rem]">
-          <h2
-            className={`font-['Pretendard'] ${font.headline1.bold}`}
-            style={{ color: lightTheme.label.neutral }}
-          >
-            메모
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2
+              className={`font-['Pretendard'] ${font.headline1.bold}`}
+              style={{ color: lightTheme.label.neutral }}
+            >
+              메모
+            </h2>
+            <label
+              className="flex h-8 w-[13rem] items-center rounded-[1.25rem] bg-white px-3"
+              style={{ border: `1px solid ${lightTheme.line.alternative}` }}
+            >
+              <span
+                className={`shrink-0 font-['Pretendard'] ${font.caption.medium}`}
+                style={{ color: lightTheme.label.assistive }}
+              >
+                금액
+              </span>
+              <input
+                value={price}
+                inputMode="numeric"
+                onChange={event => onPriceChange(event.target.value)}
+                className={`ml-2 min-w-0 flex-1 bg-transparent text-right font-['Pretendard'] ${font.label.medium} outline-none placeholder:text-[#C1C2C3]`}
+                placeholder="0"
+                aria-label="시술 금액"
+                style={{ color: lightTheme.label.neutral }}
+              />
+              <span
+                className={`ml-1 shrink-0 font-['Pretendard'] ${font.caption.medium}`}
+                style={{ color: lightTheme.label.assistive }}
+              >
+                원
+              </span>
+            </label>
+          </div>
           <label className="relative mt-4 block h-[13.25rem]">
             <textarea
               value={memo}
@@ -87,6 +119,18 @@ const ProcedureRecordPanel = ({
         </div>
 
         <div className="mt-5 flex h-8 justify-end gap-3">
+          {saveMessage ? (
+            <p
+              className={`mr-auto flex min-w-0 items-center truncate font-['Pretendard'] ${font.caption.medium}`}
+              style={{
+                color: saveMessage.includes("등록했습니다")
+                  ? lightTheme.primary.normal
+                  : lightTheme.status.error,
+              }}
+            >
+              {saveMessage}
+            </p>
+          ) : null}
           <button
             type="button"
             onClick={onCancel}
@@ -101,13 +145,15 @@ const ProcedureRecordPanel = ({
           <button
             type="button"
             onClick={onSave}
+            disabled={isSaving}
             className={`flex h-8 w-[5.625rem] items-center justify-center rounded-md font-['Pretendard'] ${font.body.semiBold} transition-shadow hover:shadow-[0_0_0.25rem_rgba(0,0,0,0.04)]`}
             style={{
               backgroundColor: lightTheme.primary.normal,
               color: lightTheme.fill.normal,
+              opacity: isSaving ? 0.6 : 1,
             }}
           >
-            저장
+            {isSaving ? "저장 중" : "저장"}
           </button>
         </div>
       </div>
