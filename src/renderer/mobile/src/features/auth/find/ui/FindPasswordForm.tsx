@@ -123,9 +123,9 @@ export const FindPasswordForm = () => {
               ))}
             </select>
           </div>
-          <div className="flex gap-2 mb-1">
+          <div className="flex gap-2 mb-1 w-full overflow-hidden">
             <input
-              className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
+              className={`min-w-0 flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
               style={inputStyle}
               placeholder="전화번호"
               value={phoneField.value}
@@ -144,9 +144,9 @@ export const FindPasswordForm = () => {
             </button>
           </div>
           {sms.isSent && !sms.isVerified && (
-            <div className="flex gap-2 mb-1">
+            <div className="flex gap-2 mb-1 w-full overflow-hidden">
               <input
-                className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
+                className={`min-w-0 flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
                 style={inputStyle}
                 placeholder="인증번호"
                 value={verificationField.value}
