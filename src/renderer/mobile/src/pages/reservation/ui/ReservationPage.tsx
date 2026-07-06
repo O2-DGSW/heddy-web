@@ -1,12 +1,7 @@
 import { font, lightTheme } from "@design-tokens";
 import { Calendar } from "@/shared/ui/calendar";
-import { useEffect, useState } from "react";
-import {
-  DEFAULT_SHOP_SCHEDULE_DATE,
-  SHOP_SCHEDULE_WEEK_DAYS,
-} from "@/features/reservation/constants/schedule-calander.ts";
-import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query.ts";
-import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query.ts";
+import { SHOP_SCHEDULE_WEEK_DAYS } from "@/features/reservation/constants/schedule-calander.ts";
+import { useReservation } from "@/features/reservation/model/useReservation.ts";
 
 enum HairTag {
   MALE = "남자",
@@ -43,63 +38,22 @@ enum HairTag {
 const HAIR_TAG_ENTRIES = Object.entries(HairTag) as [keyof typeof HairTag, HairTag][];
 
 export const ReservationPage = () => {
-  const [selectedDate, setSelectedDate] = useState(DEFAULT_SHOP_SCHEDULE_DATE);
-  // 변경 1: 여러 개를 담을 수 있도록 string[] 배열 상태로 변경합니다.
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [designer, setDesigner] = useState("");
-
-  const myInfo = useGetMyProfileQuery();
-  const myShopId = myInfo?.data?.shopMembers[0].shopId;
-  const shopData = useShopInfoQuery({ shopId: myShopId });
-  const DESIGNER_LIST = shopData?.data?.designers;
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const [storeInfo, setStoreInfo] = useState<{
-    selectedDate: string;
-    selectedTags: string[];
-    designer: string;
-  } | null>(null);
-
-  const handleSave = () => {
-    const newStoreInfo = {
-      selectedDate,
-      selectedTags, // 변경 2: 저장할 데이터 구조 업데이트
-      designer,
-    };
-
-    setStoreInfo(newStoreInfo);
-    console.log(newStoreInfo);
-  };
-
-  useEffect(() => {
-    if (storeInfo) {
-      console.log("저장값 변경:", storeInfo);
-    }
-  }, [storeInfo]);
-
-  const handleCancel = () => {
-    setSelectedTags([]); // 변경 3: 취소 시 빈 배열로 초기화
-    setDesigner("");
-    setStoreInfo(null);
-    setIsDropdownOpen(false);
-  };
-
-  // 변경 4: 다중 선택 토글 핸들러 (클릭한 value가 있으면 빼고, 없으면 넣기)
-  const handleTagClick = (tagValue: string) => {
-    setSelectedTags(prevTags =>
-      prevTags.includes(tagValue) ? prevTags.filter(t => t !== tagValue) : [...prevTags, tagValue]
-    );
-  };
-
-  const handleSelectDesigner = (name: string) => {
-    setDesigner(name);
-    setIsDropdownOpen(false);
-  };
+  const {
+    selectedDate,
+    setSelectedDate,
+    selectedTags,
+    selectedDesignerName,
+    designerList,
+    isDropdownOpen,
+    handleSave,
+    handleCancel,
+    handleTagClick,
+    handleSelectDesigner,
+    toggleDropdown,
+  } = useReservation();
 
   return (
     <>
-      {/* 헤더 */}
       <p
         className={`${font.headline1.bold} text-center py-[1rem]`}
         style={{ color: lightTheme.label.neutral }}
@@ -107,7 +61,6 @@ export const ReservationPage = () => {
         예약하기
       </p>
 
-      {/* 날짜 선택 */}
       <div className={"flex flex-col items-center gap-[1rem] w-full px-[1rem]"}>
         <div className={"flex flex-row items-center justify-between w-full"}>
           <p className={font.headline2.bold} style={{ color: lightTheme.label.neutral }}>
@@ -117,7 +70,7 @@ export const ReservationPage = () => {
         </div>
         <div className="w-full h-[1.5px]" style={{ backgroundColor: lightTheme.fill.neutral }} />
         <Calendar
-          initialMonthDate={DEFAULT_SHOP_SCHEDULE_DATE}
+          initialMonthDate={selectedDate}
           selectedDate={selectedDate}
           variant="mobile"
           viewMode="month"
@@ -132,7 +85,6 @@ export const ReservationPage = () => {
         style={{ backgroundColor: lightTheme.fill.normal }}
       />
 
-      {/* 예약 정보 */}
       <div className={"flex flex-col items-center gap-[1rem] w-full px-[1rem] mt-[2rem]"}>
         <div className={"flex flex-row items-center justify-between w-full"}>
           <p className={font.headline2.bold} style={{ color: lightTheme.label.neutral }}>
@@ -168,18 +120,17 @@ export const ReservationPage = () => {
           디자이너 찾기
         </p>
 
-        {/* 디자이너 드롭다운 */}
         <div className="relative w-[100%]">
           <button
             type="button"
-            onClick={() => setIsDropdownOpen(prev => !prev)}
+            onClick={toggleDropdown}
             className="w-full p-[0.75rem] rounded-lg text-left"
             style={{
               backgroundColor: lightTheme.background.neutral,
-              color: designer ? lightTheme.label.normal : lightTheme.line.normal,
+              color: selectedDesignerName ? lightTheme.label.normal : lightTheme.line.normal,
             }}
           >
-            {designer || "디자이너 찾기"}
+            {selectedDesignerName || "디자이너 찾기"}
           </button>
 
           {isDropdownOpen && (
@@ -191,11 +142,11 @@ export const ReservationPage = () => {
               }}
             >
               <ul className="flex flex-col gap-1">
-                {DESIGNER_LIST?.map(member => (
+                {designerList?.map(member => (
                   <li key={member.designer_id}>
                     <button
                       type="button"
-                      onClick={() => handleSelectDesigner(member.name)}
+                      onClick={() => handleSelectDesigner(member.designer_id, member.name)}
                       className="w-full text-left p-[0.75rem] rounded-lg transition-colors hover:bg-[var(--hover-bg)] hover:text-[var(--hover-text)]"
                       style={
                         {
@@ -211,7 +162,7 @@ export const ReservationPage = () => {
                   </li>
                 ))}
 
-                {(!DESIGNER_LIST || DESIGNER_LIST.length === 0) && (
+                {(!designerList || designerList.length === 0) && (
                   <li className="text-center p-4 text-xs" style={{ color: lightTheme.line.normal }}>
                     소속된 디자이너가 없습니다.
                   </li>
