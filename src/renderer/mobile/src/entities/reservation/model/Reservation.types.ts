@@ -1,6 +1,6 @@
 export interface ReservationRequest {
   shop_id: number;
-  designerId: number;
+  designer_id: number;
   reserved_at: string;
   service_tags: string[];
   memo: string;
