@@ -26,6 +26,7 @@ export const SignupPage = () => {
     nextStep,
     submitSignup,
     isLoading,
+    error,
   } = useSignup();
 
   if (isLoading) {
@@ -46,7 +47,16 @@ export const SignupPage = () => {
 
       {step === "type-select" && <SignupTypeSelect onSelect={selectMemberType} />}
 
-      {step === "terms" && <TermsAgreement onSignup={submitSignup} />}
+      {step === "terms" && (
+        <>
+          <TermsAgreement onSignup={submitSignup} />
+          {error && (
+            <p className={`${font.caption.regular} mt-2 text-center`} style={{ color: lightTheme.status.error }}>
+              {error}
+            </p>
+          )}
+        </>
+      )}
 
       {step === "account" && memberType === "customer" && (
         <CustomerAccountForm form={customerForm} onChange={setCustomerForm} onNext={nextStep} />
