@@ -22,7 +22,6 @@ const RequireAuth = () => {
 
   useEffect(() => {
     let isMounted = true;
-    setAuthStatus("checking");
 
     void restoreAuthSession().then(isAuthenticated => {
       if (!isMounted) {
@@ -65,7 +64,10 @@ export const AppRoutes = () => {
           <Route path="/reservation" element={<ReservationPage />} />
           <Route path="/shop/*" element={<ShopPage />} />
           <Route path="/ai-style-recommendation" element={<AiStyleRecommendationListPage />} />
-          <Route path="/ai-style-recommendation/detail" element={<AiStyleRecommendationDetailPage />} />
+          <Route
+            path="/ai-style-recommendation/detail"
+            element={<AiStyleRecommendationDetailPage />}
+          />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
       </Route>

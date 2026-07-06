@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 import { useShopInfoQuery } from "@/entities/shop/api/query/useShopInfo.query";
@@ -11,8 +11,6 @@ export const useShopSchedule = () => {
 
   const [viewMode, setViewMode] = useState<"month" | "week">("month");
 
-  const [designerId, setDesignerId] = useState<number>();
-
   const { data: myProfileData } = useGetMyProfileQuery();
 
   const myUserId = myProfileData?.userId;
@@ -22,13 +20,9 @@ export const useShopSchedule = () => {
     shopId,
   });
 
-  useEffect(() => {
-    const id = shopInfoData?.designers?.find(
-      designer => designer.designer_id === myUserId
-    )?.designer_id;
-
-    setDesignerId(id);
-  }, [shopInfoData, myUserId]);
+  const designerId = shopInfoData?.designers?.find(
+    designer => designer.designer_id === myUserId
+  )?.designer_id;
 
   const {
     data: shopScheduleData,

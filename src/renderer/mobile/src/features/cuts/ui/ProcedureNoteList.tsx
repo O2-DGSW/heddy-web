@@ -14,15 +14,15 @@ export const ProcedureNoteList = () => {
   const location = useLocation();
   const { notes, addNote, isLoading, isError } = useProcedureNotes();
   const processedRef = useRef(false);
+  const newNote = location.state?.newNote as ProcedureNote | undefined;
 
   useEffect(() => {
-    const newNote = location.state?.newNote as ProcedureNote | undefined;
     if (newNote && !processedRef.current) {
       processedRef.current = true;
       addNote(newNote);
       navigate("/cuts", { replace: true, state: null });
     }
-  }, []);
+  }, [addNote, navigate, newNote]);
 
   return (
     <div
@@ -32,7 +32,10 @@ export const ProcedureNoteList = () => {
       {isLoading ? (
         <div className="flex-1" />
       ) : isError ? (
-        <p className={`text-center pt-10 ${font.label.regular}`} style={{ color: lightTheme.label.assistive }}>
+        <p
+          className={`text-center pt-10 ${font.label.regular}`}
+          style={{ color: lightTheme.label.assistive }}
+        >
           시술기록을 불러오지 못했어요.
         </p>
       ) : notes.length === 0 ? (

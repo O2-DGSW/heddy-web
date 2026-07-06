@@ -14,25 +14,38 @@ export const AddProcedureNotePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {
-    title, setTitle,
-    description, setDescription,
-    dateValue, setDate,
-    customer, setCustomer,
-    selectedTags, toggleTag,
-    beforeImageFile, setBeforeImageFile,
-    afterImageFile, setAfterImageFile,
+    title,
+    setTitle,
+    description,
+    setDescription,
+    dateValue,
+    setDate,
+    customer,
+    setCustomer,
+    selectedTags,
+    toggleTag,
+    beforeImageFile,
+    setBeforeImageFile,
+    afterImageFile,
+    setAfterImageFile,
     handleSubmit,
   } = useAddProcedureNoteForm();
+  const selectedCustomer = location.state?.selectedCustomer as string | undefined;
 
   useEffect(() => {
-    const selected = location.state?.selectedCustomer as string | undefined;
-    if (selected) {
-      setCustomer(selected);
+    if (selectedCustomer) {
+      setCustomer(selectedCustomer);
       navigate("/cuts/add", { replace: true, state: null });
     }
-  }, []);
+  }, [navigate, selectedCustomer, setCustomer]);
 
-  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImageFile });
+  const isValid = validateAddProcedureNoteForm({
+    title,
+    description,
+    customer,
+    selectedTags,
+    beforeImageFile,
+  });
 
   const inputClass = `w-full px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`;
   const inputStyle = {
@@ -63,58 +76,66 @@ export const AddProcedureNotePage = () => {
       <div className="flex-1 overflow-y-auto px-4 flex flex-col gap-4 pb-28">
         {/* 제목 */}
         <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>제목</label>
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>
+            제목
+          </label>
           <input
             className={inputClass}
             style={inputStyle}
             placeholder="제목을 입력해주세요."
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
         </div>
 
         {/* 부가설명 */}
         <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>부가설명</label>
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>
+            부가설명
+          </label>
           <input
             className={inputClass}
             style={inputStyle}
             placeholder="부가설명을 입력해주세요."
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
         </div>
 
         {/* 시술 날짜 */}
         <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>시술 날짜</label>
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>
+            시술 날짜
+          </label>
           <input
             type="date"
             className={`${inputClass} appearance-none`}
             style={inputStyle}
             value={dateValue}
-            onChange={(e) => setDate(new Date(e.target.value))}
+            onChange={e => setDate(new Date(e.target.value))}
           />
         </div>
 
         {/* 고객 찾기 */}
         <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>고객 찾기</label>
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>
+            고객 찾기
+          </label>
           <button
             type="button"
             className={`${inputClass} text-left`}
             style={inputStyle}
             onClick={() => navigate("/cuts/customer-search")}
           >
-            {customer || (
-              <span style={{ color: lightTheme.label.assistive }}>고객 찾기</span>
-            )}
+            {customer || <span style={{ color: lightTheme.label.assistive }}>고객 찾기</span>}
           </button>
         </div>
 
         {/* 시술 태그 */}
         <div className="flex flex-col gap-2">
-          <span className={labelClass} style={{ color: lightTheme.label.assistive }}>시술 태그</span>
+          <span className={labelClass} style={{ color: lightTheme.label.assistive }}>
+            시술 태그
+          </span>
           <div className="flex flex-wrap gap-2">
             {PROCEDURE_TAGS.map(({ label, value }) => (
               <button key={value} type="button" onClick={() => toggleTag(value)}>
@@ -126,16 +147,29 @@ export const AddProcedureNotePage = () => {
 
         {/* 사진 등록 */}
         <div className="flex flex-col gap-2">
-          <span className={labelClass} style={{ color: lightTheme.label.normal }}>사진 등록</span>
+          <span className={labelClass} style={{ color: lightTheme.label.normal }}>
+            사진 등록
+          </span>
           <div className="flex gap-3">
-            <ImageUploadArea label="Before 사진" initialFile={beforeImageFile} onFileChange={setBeforeImageFile} />
-            <ImageUploadArea label="After 사진" initialFile={afterImageFile} onFileChange={setAfterImageFile} />
+            <ImageUploadArea
+              label="Before 사진"
+              initialFile={beforeImageFile}
+              onFileChange={setBeforeImageFile}
+            />
+            <ImageUploadArea
+              label="After 사진"
+              initialFile={afterImageFile}
+              onFileChange={setAfterImageFile}
+            />
           </div>
         </div>
       </div>
 
       {/* 추가 버튼 */}
-      <div className="px-4 py-3 shrink-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 6.25rem)" }}>
+      <div
+        className="px-4 py-3 shrink-0"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 6.25rem)" }}
+      >
         <button
           type="button"
           className={`w-full py-3 rounded-xl ${font.body.bold}`}
