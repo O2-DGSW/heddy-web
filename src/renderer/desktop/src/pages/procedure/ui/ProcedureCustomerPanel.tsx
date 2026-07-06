@@ -97,6 +97,8 @@ const ProcedureCustomerPanel = ({
   customers,
   query,
   selectedCustomerId,
+  isLoading,
+  emptyMessage,
   onQueryChange,
   onSelectCustomer,
 }: ProcedureCustomerPanelProps) => {
@@ -128,14 +130,30 @@ const ProcedureCustomerPanel = ({
         </div>
 
         <div className="mt-9 flex h-[17.625rem] flex-col gap-[0.9375rem] overflow-x-hidden overflow-y-auto">
-          {customers.map(customer => (
-            <CustomerResultCard
-              key={customer.id}
-              customer={customer}
-              selected={customer.id === selectedCustomerId}
-              onSelect={onSelectCustomer}
-            />
-          ))}
+          {isLoading ? (
+            <div
+              className={`flex flex-1 items-center justify-center text-center font-['Pretendard'] ${font.body.medium}`}
+              style={{ color: lightTheme.label.assistive }}
+            >
+              예약 고객 정보를 불러오는 중입니다
+            </div>
+          ) : customers.length === 0 ? (
+            <div
+              className={`flex flex-1 items-center justify-center text-center font-['Pretendard'] ${font.body.medium}`}
+              style={{ color: lightTheme.label.assistive }}
+            >
+              {emptyMessage}
+            </div>
+          ) : (
+            customers.map(customer => (
+              <CustomerResultCard
+                key={customer.id}
+                customer={customer}
+                selected={customer.id === selectedCustomerId}
+                onSelect={onSelectCustomer}
+              />
+            ))
+          )}
         </div>
       </div>
     </ProcedurePanel>

@@ -10,9 +10,19 @@ export const useSmsVerification = (purpose: SmsPurpose, phoneNumber?: string) =>
   const [smsError, setSmsError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsSent(false);
-    setIsVerified(false);
-    setSmsError(null);
+    let isMounted = true;
+
+    void Promise.resolve().then(() => {
+      if (!isMounted) return;
+
+      setIsSent(false);
+      setIsVerified(false);
+      setSmsError(null);
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, [phoneNumber]);
 
   const sendCode = async (phoneNumber: string, carrier: string) => {

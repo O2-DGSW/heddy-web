@@ -12,6 +12,7 @@
 ```
 
 ## 모바일 개발 환경 설정
+
 ```bash
 # iOS 플랫폼 최초 추가
 pnpm ios
@@ -35,6 +36,30 @@ pnpm dev:ios
 
 # Android
 pnpm dev:android
+```
+
+## HTTPS 개발 서버
+
+데스크탑 개발 서버는 HTTPS로 실행됩니다.
+
+```bash
+pnpm dev:desktop
+# https://localhost:5173
+```
+
+모바일 개발 서버와 Capacitor live reload는 WebView의 self-signed 인증서 차단을 피하기 위해 기본적으로 HTTP를 사용합니다. 모바일에서 HTTPS가 꼭 필요하면 환경 변수를 켜서 실행합니다.
+
+```bash
+ENABLE_HTTPS=true pnpm dev:mobile
+# https://localhost:5174
+```
+
+첫 HTTPS 실행 시 로컬 self-signed 인증서가 `certs/`에 자동 생성됩니다. `openssl`이 없는 환경에서는 경고를 출력하고 HTTP로 폴백합니다.
+
+Capacitor live reload URL을 직접 지정해야 하면 다음처럼 실행합니다.
+
+```bash
+CAPACITOR_SERVER_URL=http://<IP>:5174 pnpm dev:ios
 ```
 
 ## 빌드

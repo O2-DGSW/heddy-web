@@ -69,12 +69,13 @@ const ProcedureBasicInfoPanel = ({
                 aria-hidden="true"
               />
               <select
-                value={selectedDesignerId}
-                onChange={event => onDesignerChange(event.target.value)}
+                value={selectedDesignerId ?? ""}
+                onChange={event => onDesignerChange(Number(event.target.value))}
                 className={`ml-2 min-w-0 flex-1 appearance-none bg-transparent font-['Pretendard'] ${font.body.medium} outline-none`}
                 aria-label="디자이너 선택"
                 style={{ color: lightTheme.label.alternative }}
               >
+                {designers.length === 0 ? <option value="">디자이너 없음</option> : null}
                 {designers.map(designer => (
                   <option key={designer.id} value={designer.id}>
                     {designer.name}

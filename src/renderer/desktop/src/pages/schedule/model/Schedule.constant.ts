@@ -9,7 +9,7 @@ import {
   DESKTOP_PAGE_RIGHT_PADDING_REM,
 } from "@/shared/constants/Layout.constant";
 
-import type { ScheduleColorKey, ScheduleDesigner } from "./Schedule.types";
+import type { ScheduleColorKey } from "./Schedule.types";
 
 export const SCHEDULE_CONTENT_WIDTH_REM = DESKTOP_PAGE_CONTENT_WIDTH_REM;
 export const SCHEDULE_CONTENT_HEIGHT_REM = DESKTOP_PAGE_CONTENT_HEIGHT_REM;
@@ -42,14 +42,6 @@ export const SCHEDULE_TIME_LABELS = Array.from(
   { length: SCHEDULE_CHART_END_HOUR - SCHEDULE_CHART_START_HOUR + 1 },
   (_, index) => `${SCHEDULE_CHART_START_HOUR + index}:00`
 );
-
-export const SCHEDULE_DESIGNERS: ScheduleDesigner[] = [
-  { id: "oh-yong-jun", name: "오용준" },
-  { id: "kim-heddy", name: "김헤디" },
-  { id: "lee-designer", name: "이디자이너" },
-];
-
-export const DEFAULT_SCHEDULE_DESIGNER_ID = SCHEDULE_DESIGNERS[0]?.id ?? "";
 
 export const SCHEDULE_COLOR_STYLES: Record<
   ScheduleColorKey,

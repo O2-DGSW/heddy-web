@@ -1,11 +1,19 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { getShopDetail } from "@/entities/employee/api/employeeApi";
+import {
+  getReservations,
+  updateReservationStatus as updateReservationStatusApi,
+  type ReservationResponse,
+} from "@/entities/reservation/api/reservationApi";
+import { getMe } from "@/entities/user/api/userApi";
 import {
   addDaysToDateKey,
   formatMonthLabel,
   getMonthStartKey,
   getTodayDateKey,
   parseDateKey,
+  toDateKey,
 } from "@/shared/ui/calendar/model/date";
 
 import {
@@ -15,7 +23,6 @@ import {
   SCHEDULE_CONTENT_HEIGHT_REM,
   SCHEDULE_CONTENT_TOP_OFFSET_REM,
   SCHEDULE_CONTENT_WIDTH_REM,
-  SCHEDULE_DESIGNERS,
   SCHEDULE_LEFT_PANEL_WIDTH_REM,
   SCHEDULE_PANEL_GAP_REM,
   SCHEDULE_PAGE_LEFT_PADDING_REM,
@@ -24,8 +31,13 @@ import {
   SCHEDULE_TIME_STEP_MINUTES,
   SCHEDULE_WEEK_DAYS,
 } from "./Schedule.constant";
-import { SCHEDULE_EVENTS } from "./Schedule.mock";
-import type { ScheduleEvent, ScheduleFormValues, ScheduleSummaryItem } from "./Schedule.types";
+import type {
+  ScheduleColorKey,
+  ScheduleDesigner,
+  ScheduleEvent,
+  ScheduleFormValues,
+  ScheduleSummaryItem,
+} from "./Schedule.types";
 
 interface ScheduleContainerSize {
   height: number;
@@ -39,8 +51,7 @@ interface ScheduleContainerPadding {
   top: number;
 }
 
-const DEFAULT_CUSTOMER_NAME = "오용준";
-const DEFAULT_TAGS = ["# 남자", "# 다운펌"];
+const DEFAULT_RESERVATION_DURATION_HOURS = 1;
 
 const getRootFontSize = () => {
   if (typeof window === "undefined") {
@@ -143,6 +154,19 @@ const getHourFromTime = (time: string) => {
   return Number(hour) + Number(minute) / 60;
 };
 
+const getTimeFromDateTime = (dateTime?: string | null) => {
+  if (!dateTime) {
+    return "00:00";
+  }
+
+  const timeMatch = dateTime.match(/(?:T|\s)(\d{2}:\d{2})/);
+
+  return timeMatch?.[1] ?? "00:00";
+};
+
+const getDateFromDateTime = (dateTime?: string | null) =>
+  dateTime?.slice(0, 10) || getTodayDateKey();
+
 const formatTimeFromHour = (hour: number) => {
   const totalMinutes =
     Math.round(Math.round(hour * 60) / SCHEDULE_TIME_STEP_MINUTES) * SCHEDULE_TIME_STEP_MINUTES;
@@ -153,36 +177,72 @@ const formatTimeFromHour = (hour: number) => {
   return `${String(timeHour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
+const toDateTime = (date: string, time: string) => `${date}T${time}:00`;
+
 const formatSummaryDate = (date: string) => {
   const [, month = "1", day = "1"] = date.split("-");
 
   return `${Number(month)}/${Number(day)}`;
 };
 
-const getDesigner = (designerId: string) =>
-  SCHEDULE_DESIGNERS.find(item => item.id === designerId) ?? SCHEDULE_DESIGNERS[0];
+const getMonthEndKey = (monthDate: string) => {
+  const date = parseDateKey(monthDate);
 
-const createEventFromValues = (
-  id: number,
-  values: ScheduleFormValues,
+  return toDateKey(new Date(date.getFullYear(), date.getMonth() + 1, 0));
+};
+
+const getScheduleColor = (status: string): ScheduleColorKey => {
+  const normalizedStatus = status.trim().toUpperCase();
+
+  if (normalizedStatus.includes("REJECT")) {
+    return "red";
+  }
+
+  if (normalizedStatus.includes("CHANGE")) {
+    return "yellow";
+  }
+
+  if (normalizedStatus.includes("APPROV") || normalizedStatus.includes("CONFIRM")) {
+    return "green";
+  }
+
+  return "blue";
+};
+
+const formatTag = (tag: string) => {
+  const trimmedTag = tag.trim();
+
+  if (!trimmedTag) {
+    return "";
+  }
+
+  return trimmedTag.startsWith("#") ? trimmedTag : `# ${trimmedTag}`;
+};
+
+const mapReservationToScheduleEvent = (
+  reservation: ReservationResponse,
   visibleWeekDateKeys: string[]
 ): ScheduleEvent => {
-  const designer = getDesigner(values.designerId);
-  const startHour = getHourFromTime(values.startTime);
-  const endHour = Math.max(
-    startHour + SCHEDULE_TIME_STEP_MINUTES / 60,
-    getHourFromTime(values.endTime)
+  const date = getDateFromDateTime(reservation.reserved_at);
+  const startHour = getHourFromTime(
+    getTimeFromDateTime(reservation.changed_time ?? reservation.reserved_at)
   );
-  const dayIndex = visibleWeekDateKeys.indexOf(values.date);
+  const endHour = Math.min(24, startHour + DEFAULT_RESERVATION_DURATION_HOURS);
+  const dayIndex = visibleWeekDateKeys.indexOf(date);
+  const tags = (reservation.service_tags ?? []).map(formatTag).filter(Boolean);
 
   return {
-    id,
-    customerName: DEFAULT_CUSTOMER_NAME,
-    designerId: designer?.id ?? values.designerId,
-    designerName: designer?.name ?? DEFAULT_CUSTOMER_NAME,
-    tags: DEFAULT_TAGS,
-    color: values.color,
-    date: values.date,
+    id: reservation.reservation_id,
+    customerName:
+      reservation.customer_name?.trim() ||
+      reservation.customer_phone_number ||
+      `고객 ${reservation.customer_id}`,
+    designerId: reservation.designer_id,
+    designerName: reservation.designer_name || `디자이너 ${reservation.designer_id}`,
+    reservationStatus: reservation.status,
+    tags,
+    color: getScheduleColor(reservation.status),
+    date,
     dayIndex: dayIndex === -1 ? 0 : dayIndex,
     startHour,
     endHour,
@@ -198,19 +258,44 @@ const createSummaryItem = (event: ScheduleEvent): ScheduleSummaryItem => ({
   tags: event.tags,
 });
 
+const getScheduleErrorMessage = (error: unknown, fallbackMessage: string) => {
+  if (!(error instanceof Error)) {
+    return fallbackMessage;
+  }
+
+  if (error.message.includes("401")) {
+    return "로그인 후 스케줄 정보를 확인해주세요.";
+  }
+
+  if (error.message.includes("404")) {
+    return "요청한 스케줄 API를 찾지 못했습니다.";
+  }
+
+  if (error.message.includes("500")) {
+    return "서버 오류로 스케줄 정보를 불러오지 못했습니다.";
+  }
+
+  return error.message || fallbackMessage;
+};
+
 export const useSchedule = () => {
   const pageRef = useRef<HTMLDivElement>(null);
-  const nextEventIdRef = useRef(SCHEDULE_EVENTS.length + 1);
   const [initialDate] = useState(getTodayDateKey);
   const [scale, setScale] = useState(getScheduleScale);
   const [availableContentWidthRem, setAvailableContentWidthRem] =
     useState(getAvailableContentWidth);
-  const [events, setEvents] = useState(SCHEDULE_EVENTS);
+  const [shopId, setShopId] = useState<number | null>(null);
+  const [designers, setDesigners] = useState<ScheduleDesigner[]>([]);
+  const [events, setEvents] = useState<ScheduleEvent[]>([]);
   const [visibleWeekStartDate, setVisibleWeekStartDate] = useState(initialDate);
   const [calendarMonthDate, setCalendarMonthDate] = useState(getMonthStartKey(initialDate));
   const [selectedDate, setSelectedDate] = useState(initialDate);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEventId, setEditingEventId] = useState<number | null>(null);
+  const [isBootstrapLoading, setIsBootstrapLoading] = useState(true);
+  const [isScheduleLoading, setIsScheduleLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
   const layoutHeightRem = SCHEDULE_CONTENT_HEIGHT_REM;
 
   useLayoutEffect(() => {
@@ -250,10 +335,133 @@ export const useSchedule = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let ignore = false;
+
+    const loadShopContext = async () => {
+      setIsBootstrapLoading(true);
+      setErrorMessage("");
+
+      try {
+        const me = await getMe();
+        const firstShopId = me.shopMembers[0]?.shopId;
+
+        if (!firstShopId) {
+          throw new Error("연결된 매장이 없습니다.");
+        }
+
+        const shop = await getShopDetail(firstShopId);
+        const nextDesigners = shop.designers.map(designer => ({
+          id: designer.designer_id,
+          name: designer.name || `디자이너 ${designer.designer_id}`,
+        }));
+
+        if (!ignore) {
+          setShopId(firstShopId);
+          setDesigners(nextDesigners);
+          setActionMessage(nextDesigners.length === 0 ? "매장에 등록된 디자이너가 없습니다." : "");
+        }
+      } catch (error) {
+        if (!ignore) {
+          setShopId(null);
+          setDesigners([]);
+          setEvents([]);
+          setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+        }
+      } finally {
+        if (!ignore) {
+          setIsBootstrapLoading(false);
+        }
+      }
+    };
+
+    loadShopContext();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   const visibleWeekDateKeys = useMemo(
     () => getWeekDateKeys(visibleWeekStartDate),
     [visibleWeekStartDate]
   );
+
+  const loadCalendarReservations = useCallback(
+    async (monthDate: string, nextVisibleWeekDateKeys = visibleWeekDateKeys) => {
+      if (shopId === null) {
+        return;
+      }
+
+      setIsScheduleLoading(true);
+      setErrorMessage("");
+
+      try {
+        const reservationResponses = await getReservations({
+          shopId,
+          date: getMonthStartKey(monthDate),
+          endDate: getMonthEndKey(monthDate),
+        });
+
+        setEvents(
+          reservationResponses.map(reservation =>
+            mapReservationToScheduleEvent(reservation, nextVisibleWeekDateKeys)
+          )
+        );
+      } catch (error) {
+        setEvents([]);
+        setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+      } finally {
+        setIsScheduleLoading(false);
+      }
+    },
+    [shopId, visibleWeekDateKeys]
+  );
+
+  useEffect(() => {
+    let ignore = false;
+
+    const load = async () => {
+      if (shopId === null) {
+        return;
+      }
+
+      setIsScheduleLoading(true);
+      setErrorMessage("");
+
+      try {
+        const reservationResponses = await getReservations({
+          shopId,
+          date: getMonthStartKey(calendarMonthDate),
+          endDate: getMonthEndKey(calendarMonthDate),
+        });
+
+        if (!ignore) {
+          setEvents(
+            reservationResponses.map(reservation =>
+              mapReservationToScheduleEvent(reservation, visibleWeekDateKeys)
+            )
+          );
+        }
+      } catch (error) {
+        if (!ignore) {
+          setEvents([]);
+          setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+        }
+      } finally {
+        if (!ignore) {
+          setIsScheduleLoading(false);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      ignore = true;
+    };
+  }, [calendarMonthDate, shopId, visibleWeekDateKeys]);
+
   const weekLabels = useMemo(() => getWeekLabels(visibleWeekDateKeys), [visibleWeekDateKeys]);
   const monthLabel = useMemo(() => formatMonthLabel(selectedDate), [selectedDate]);
   const visibleEvents = useMemo(
@@ -290,6 +498,7 @@ export const useSchedule = () => {
 
   const selectDate = useCallback(
     (date: string) => {
+      setActionMessage("");
       focusDate(date);
     },
     [focusDate]
@@ -308,6 +517,7 @@ export const useSchedule = () => {
   }, [focusDate]);
 
   const openModal = useCallback(() => {
+    setActionMessage("");
     setEditingEventId(null);
     setIsModalOpen(true);
   }, []);
@@ -320,6 +530,7 @@ export const useSchedule = () => {
         return;
       }
 
+      setActionMessage("");
       setEditingEventId(event.id);
       focusDate(event.date);
       setIsModalOpen(true);
@@ -332,63 +543,53 @@ export const useSchedule = () => {
     setEditingEventId(null);
   }, []);
 
-  const createSchedule = useCallback(
-    (values: ScheduleFormValues) => {
-      const nextEventId = nextEventIdRef.current;
-
-      nextEventIdRef.current += 1;
-
-      setEvents(currentEvents => [
-        ...currentEvents,
-        createEventFromValues(nextEventId, values, visibleWeekDateKeys),
-      ]);
-      focusDate(values.date);
-      closeModal();
-    },
-    [closeModal, focusDate, visibleWeekDateKeys]
-  );
-
-  const updateSchedule = useCallback(
-    (values: ScheduleFormValues) => {
+  const saveSchedule = useCallback(
+    async (values: ScheduleFormValues) => {
       if (!values.id) {
+        setActionMessage(
+          "예약 생성 API에는 고객/서비스 정보가 필요하지만 현재 스케줄 모달에는 해당 입력이 없어 저장하지 않았습니다."
+        );
         return;
       }
 
-      setEvents(currentEvents =>
-        currentEvents.map(event =>
-          event.id === values.id
-            ? {
-                ...createEventFromValues(values.id, values, visibleWeekDateKeys),
-                customerName: event.customerName,
-                tags: event.tags,
-              }
-            : event
-        )
-      );
-      focusDate(values.date);
-      closeModal();
+      const event = events.find(currentEvent => currentEvent.id === values.id);
+
+      if (!event) {
+        setActionMessage("수정할 예약을 찾지 못했습니다.");
+        return;
+      }
+
+      try {
+        await updateReservationStatusApi(values.id, {
+          status: event.reservationStatus,
+          designer_id: values.designerId,
+          changed_time: toDateTime(values.date, values.startTime),
+        });
+        focusDate(values.date);
+        await loadCalendarReservations(getMonthStartKey(values.date), getWeekDateKeys(values.date));
+        setActionMessage(
+          "예약 시간/디자이너 변경을 저장했습니다. 종료 시간은 서버 API가 없어 반영하지 않았습니다."
+        );
+        closeModal();
+      } catch (error) {
+        setActionMessage(getScheduleErrorMessage(error, "스케줄을 저장하지 못했습니다."));
+      }
     },
-    [closeModal, focusDate, visibleWeekDateKeys]
+    [closeModal, events, focusDate, loadCalendarReservations]
   );
 
   const deleteSchedule = useCallback(
     (eventId: number) => {
-      setEvents(currentEvents => currentEvents.filter(event => event.id !== eventId));
+      const event = events.find(currentEvent => currentEvent.id === eventId);
+
+      setActionMessage(
+        event
+          ? "Swagger에 예약 삭제 API가 없어 서버 데이터를 삭제하지 않았습니다."
+          : "삭제할 예약을 찾지 못했습니다."
+      );
       closeModal();
     },
-    [closeModal]
-  );
-
-  const saveSchedule = useCallback(
-    (values: ScheduleFormValues) => {
-      if (values.id) {
-        updateSchedule(values);
-        return;
-      }
-
-      createSchedule(values);
-    },
-    [createSchedule, updateSchedule]
+    [closeModal, events]
   );
 
   const layoutWidthRem = Math.max(SCHEDULE_CONTENT_WIDTH_REM, availableContentWidthRem / scale);
@@ -410,11 +611,15 @@ export const useSchedule = () => {
     calendarMarkerMap,
     summaryItems,
     events: visibleEvents,
+    designers,
     editingEvent,
     visibleWeekDateKeys,
     weekLabels,
     monthLabel,
     isModalOpen,
+    isLoading: isBootstrapLoading || isScheduleLoading,
+    errorMessage,
+    actionMessage,
     setCalendarMonthDate,
     selectDate,
     openModal,
