@@ -2,6 +2,7 @@ import { font, lightTheme } from '@design-tokens';
 import { Link } from 'react-router-dom';
 import type { OwnerAccountForm as OwnerAccountFormType } from '@/features/auth/signup/model/types';
 import { useAccountForm } from '@/features/auth/signup/model/useAccountForm';
+import { useSmsVerification } from '@/features/auth/signup/model/useSmsVerification';
 import { AccountFormFields } from '@/features/auth/signup/ui/AccountFormFields';
 
 interface OwnerAccountFormProps {
@@ -11,15 +12,9 @@ interface OwnerAccountFormProps {
 }
 
 export const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => {
-  const { isValid, canRequestVerification, showPasswordError, showPhoneError, submitted, handleNext } =
-    useAccountForm(form, !!form.representativeName, onNext);
-
-  const showRepresentativeNameError = submitted && !form.representativeName;
-
-  const inputStyle = {
-    backgroundColor: lightTheme.background.neutral,
-    color: lightTheme.label.normal,
-  };
+  const sms = useSmsVerification("OWNER_SIGNUP", form.phone);
+  const { isValid, canRequestVerification, showPasswordError, showPhoneError, showNameError, handleNext } =
+    useAccountForm(form, sms.isVerified, onNext);
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -27,32 +22,22 @@ export const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormPro
         form={form}
         showPasswordError={showPasswordError}
         showPhoneError={showPhoneError}
+        showNameError={showNameError}
         canRequestVerification={canRequestVerification}
+        nameLabel="대표자명"
+        smsVerification={{
+          ...sms,
+          onSendCode: () => sms.sendCode(form.phone, form.carrier),
+          onVerifyCode: () => sms.verifyCode(form.phone, form.verificationCode),
+        }}
         onChange={v => onChange({ ...form, ...v })}
-        middleSlot={
-          <div className="flex flex-col gap-1">
-            <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>대표자명</p>
-            <input
-              className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
-              style={inputStyle}
-              placeholder="대표자명"
-              value={form.representativeName}
-              onChange={e => onChange({ ...form, representativeName: e.target.value })}
-            />
-            {showRepresentativeNameError && (
-              <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
-                대표자명을 입력해주세요.
-              </p>
-            )}
-          </div>
-        }
       />
 
       <button
         className={`w-full py-4 rounded-2xl mt-2 ${font.headline2.semiBold}`}
         style={{
-          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.fill.neutral,
-          color: isValid ? lightTheme.fill.normal : lightTheme.label.assistive,
+          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.line.alternative,
+          color: isValid ? lightTheme.fill.normal : lightTheme.line.normal,
         }}
         disabled={!isValid}
         onClick={handleNext}

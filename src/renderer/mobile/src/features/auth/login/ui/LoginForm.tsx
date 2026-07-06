@@ -1,6 +1,7 @@
 import { lightTheme, font } from "@design-tokens";
 import { Link } from "react-router-dom";
 import { useLoginForm } from "@/features/auth/login/model/login";
+import { PasswordInput } from "@/private/shared/ui/password-input/PasswordInput";
 
 export const LoginForm = () => {
   const { id, setId, password, setPassword, error, isLoading, handleLogin } = useLoginForm();
@@ -18,7 +19,7 @@ export const LoginForm = () => {
           className={`w-full px-4 py-4 rounded-xl  focus:outline-none ${font.caption.regular}`}
           style={{
             backgroundColor: lightTheme.background.neutral,
-            color: lightTheme.label.assistive,
+            color: lightTheme.label.normal,
           }}
           placeholder="아이디"
           value={id}
@@ -33,17 +34,7 @@ export const LoginForm = () => {
         >
           비밀번호
         </label>
-        <input
-          type="password"
-          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
-          style={{
-            backgroundColor: lightTheme.background.neutral,
-            color: lightTheme.label.assistive,
-          }}
-          placeholder="비밀번호"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
+        <PasswordInput placeholder="비밀번호" value={password} onChange={setPassword} />
       </div>
 
       <div
