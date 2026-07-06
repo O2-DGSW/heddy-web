@@ -55,14 +55,14 @@ export const PhoneVerificationField = ({
       </div>
       <div className="flex gap-2">
         <input
-          className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+          className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
           style={inputStyle}
           placeholder="휴대폰 번호"
           value={phone}
           onChange={e => onPhoneChange(formatPhone(e.target.value))}
         />
         <button
-          className={`w-[5.5rem] shrink-0 py-4 rounded-xl ${font.label.medium}`}
+          className={`w-[4.5rem] shrink-0 py-3 rounded-xl ${font.label.medium}`}
           style={{
             backgroundColor: canSend ? lightTheme.primary.normal : lightTheme.line.alternative,
             color: canSend ? lightTheme.fill.normal : lightTheme.line.normal,
@@ -81,14 +81,14 @@ export const PhoneVerificationField = ({
       {isSent && !isVerified && (
         <div className="flex gap-2">
           <input
-            className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+            className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
             style={inputStyle}
             placeholder="인증번호"
             value={verificationCode}
             onChange={e => onVerificationCodeChange(e.target.value)}
           />
           <button
-            className={`w-[5.5rem] shrink-0 py-4 rounded-xl ${font.label.medium}`}
+            className={`w-[4.5rem] shrink-0 py-3 rounded-xl ${font.label.medium}`}
             style={{
               backgroundColor: verificationCode.length > 0 && !isVerifying ? lightTheme.primary.normal : lightTheme.line.alternative,
               color: verificationCode.length > 0 && !isVerifying ? lightTheme.fill.normal : lightTheme.line.normal,

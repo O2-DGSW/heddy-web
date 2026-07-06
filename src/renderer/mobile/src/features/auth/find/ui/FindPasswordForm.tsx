@@ -125,14 +125,14 @@ export const FindPasswordForm = () => {
           </div>
           <div className="flex gap-2 mb-1">
             <input
-              className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+              className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
               style={inputStyle}
               placeholder="전화번호"
               value={phoneField.value}
               onChange={e => phoneField.onChange(e.target.value)}
             />
             <button
-              className={`px-6 py-4 rounded-xl ${font.label.medium}`}
+              className={`px-4 py-3 rounded-xl ${font.label.medium}`}
               style={{
                 backgroundColor: phoneField.canRequest && !sms.isSending ? lightTheme.primary.normal : lightTheme.line.alternative,
                 color: phoneField.canRequest && !sms.isSending ? lightTheme.fill.normal : lightTheme.line.normal,
@@ -146,14 +146,14 @@ export const FindPasswordForm = () => {
           {sms.isSent && !sms.isVerified && (
             <div className="flex gap-2 mb-1">
               <input
-                className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+                className={`flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
                 style={inputStyle}
                 placeholder="인증번호"
                 value={verificationField.value}
                 onChange={e => verificationField.onChange(e.target.value)}
               />
               <button
-                className={`px-6 py-4 rounded-xl ${font.label.medium}`}
+                className={`px-4 py-3 rounded-xl ${font.label.medium}`}
                 style={{
                   backgroundColor: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.primary.normal : lightTheme.line.alternative,
                   color: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.fill.normal : lightTheme.line.normal,
