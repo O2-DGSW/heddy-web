@@ -44,6 +44,10 @@ export const signupOwnerApi = async (body: SignupOwnerRequest): Promise<void> =>
   }
 };
 
+export const logoutApi = async (): Promise<void> => {
+  await api.post("/auth/logout");
+};
+
 export const resetPasswordApi = async (body: { loginId: string; phoneNumber: string; newPassword: string }): Promise<void> => {
   const res = await api.patch<AuthApiResponse<null>>("/auth/password/reset", body);
   if (!res.data.success) {
