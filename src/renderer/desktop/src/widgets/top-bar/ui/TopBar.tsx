@@ -10,9 +10,9 @@ const TOP_BAR_SHADOW = `0 1px 4px color-mix(in srgb, ${lightTheme.label.strong} 
 
 const AuthTopBar = () => {
   return (
-    <header className="flex h-18 items-start px-5 pt-5 sm:px-10 lg:px-20">
+    <header className="flex h-[clamp(48px,8vh,72px)] items-start px-5 pt-[clamp(10px,2.2vh,20px)] sm:px-10 lg:px-20">
       <Link to="/" aria-label="Heddy home">
-        <img src={heddyLogo} alt="heddy" className="h-8 w-24.5" />
+        <img src={heddyLogo} alt="heddy" className="h-[clamp(22px,3.8vh,32px)] w-auto" />
       </Link>
     </header>
   );
