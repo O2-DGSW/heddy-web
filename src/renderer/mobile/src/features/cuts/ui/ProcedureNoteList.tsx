@@ -7,6 +7,7 @@ import { useProcedureNotes } from "@/features/cuts/model/useProcedureNotes";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import { ProcedureNoteItem } from "./item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
+import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import { NotfoundCutsList } from "@/features/cuts/ui/NotfoundCutsList.tsx";
 import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 
@@ -35,9 +36,14 @@ export const ProcedureNoteList = () => {
       {isLoading ? (
         <div className="flex-1" />
       ) : isError ? (
-        <p className={`text-center pt-10 ${font.label.regular}`} style={{ color: lightTheme.label.assistive }}>
-          시술기록을 불러오지 못했어요.
-        </p>
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
+          <img src={agerSadSvg} alt="오류" className="w-32 h-32" />
+          <p className={`text-center ${font.body.regular}`} style={{ color: lightTheme.label.assistive }}>
+            시술기록을 불러오지
+            <br />
+            못했어요..
+          </p>
+        </div>
       ) : notes.length === 0 ? (
         <NotfoundCutsList />
       ) : (
