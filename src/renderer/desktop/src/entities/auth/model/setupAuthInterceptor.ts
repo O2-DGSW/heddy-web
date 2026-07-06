@@ -1,5 +1,5 @@
 import { api } from "@/shared/api";
-import { getAccessToken } from "@/entities/auth/model/token";
+import { clearAccessToken, getAccessToken } from "@/entities/auth/model/token";
 
 let isInitialized = false;
 
@@ -46,4 +46,15 @@ export const setupAuthInterceptor = () => {
     }
     return config;
   });
+
+  api.interceptors.response.use(
+    response => response,
+    error => {
+      if (error?.response?.status === 401) {
+        clearAccessToken();
+      }
+
+      return Promise.reject(error);
+    }
+  );
 };
