@@ -12,7 +12,7 @@ interface OwnerAccountFormProps {
 }
 
 export const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormProps) => {
-  const sms = useSmsVerification("SIGNUP");
+  const sms = useSmsVerification("OWNER_SIGNUP");
   const { isValid, canRequestVerification, showPasswordError, showPhoneError, showNameError, handleNext } =
     useAccountForm(form, sms.isVerified, onNext);
 
