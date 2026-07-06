@@ -3,6 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { myProfileInfoApi } from "@/entities/profile/api/myProfileInfoApi";
 import { useSmsVerification } from "@/features/auth/signup/model/useSmsVerification";
 import { formatPhone } from "@/private/shared/utils/formatPhone";
+import type { Carrier } from "@/features/auth/signup/model/types";
+import { MAIN_CARRIERS } from "@/features/auth/signup/constants/signup";
 
 export type EditSection = "phone" | null;
 
@@ -11,6 +13,7 @@ export const useEditProfile = () => {
   const [openSection, setOpenSection] = useState<EditSection>(null);
 
   const [newPhone, setNewPhone] = useState("");
+  const [carrier, setCarrier] = useState<Carrier>(MAIN_CARRIERS[0]);
   const [verificationCode, setVerificationCode] = useState("");
   const sms = useSmsVerification("PHONE_CHANGE", newPhone);
 
@@ -47,6 +50,7 @@ export const useEditProfile = () => {
   return {
     openSection, toggleSection,
     newPhone, handlePhoneChange,
+    carrier, setCarrier,
     verificationCode, setVerificationCode,
     sms,
     savePhone,

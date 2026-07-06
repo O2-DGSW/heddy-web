@@ -11,7 +11,7 @@ const shouldRestoreAuthSession = () => {
     return false;
   }
 
-  const path = window.location.hash.replace(/^#/, "") || "/";
+  const path = window.location.hash.replace(/^#/, "").split("?")[0] || "/";
   return (
     !["/login", "/signup"].includes(path) &&
     !path.startsWith("/find/")

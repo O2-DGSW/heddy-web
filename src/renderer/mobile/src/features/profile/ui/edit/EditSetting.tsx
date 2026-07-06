@@ -4,6 +4,8 @@ import ArrowIcon from "@/features/profile/assets/edit/Arrow.svg";
 import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 import { useEditProfile } from "@/features/profile/model/edit/useEditProfile";
 import { formatPhone } from "@/private/shared/utils/formatPhone";
+import { RadioButton } from "@/private/shared/ui/radio/RadioButton";
+import { MAIN_CARRIERS } from "@/features/auth/signup/constants/signup";
 
 const inputStyle = { backgroundColor: lightTheme.background.neutral, color: lightTheme.label.normal };
 const inputClass = (extra = "") =>
@@ -22,6 +24,7 @@ export const EditSetting = () => {
   const {
     openSection, toggleSection,
     newPhone, handlePhoneChange,
+    carrier, setCarrier,
     verificationCode, setVerificationCode,
     sms,
     savePhone,
@@ -72,6 +75,18 @@ export const EditSetting = () => {
 
             {openSection === "phone" && (
               <div className="flex flex-col gap-3">
+                {/* 통신사 선택 */}
+                <div className="flex items-center gap-4 flex-wrap ml-1">
+                  {MAIN_CARRIERS.map(c => (
+                    <RadioButton
+                      key={c}
+                      label={c}
+                      selected={carrier === c}
+                      onClick={() => setCarrier(c)}
+                    />
+                  ))}
+                </div>
+
                 <div className="flex gap-2 w-full overflow-hidden">
                   <input
                     className={inputClass()}
@@ -85,7 +100,7 @@ export const EditSetting = () => {
                     className={btnClass()}
                     style={btnStyle(canSendSms)}
                     disabled={!canSendSms}
-                    onClick={() => sms.sendCode(newPhone, "SKT")}
+                    onClick={() => sms.sendCode(newPhone, carrier)}
                   >
                     {sms.isSending ? "발송 중" : sms.isSent ? "재전송" : "인증번호"}
                   </button>
@@ -136,7 +151,7 @@ export const EditSetting = () => {
             )}
           </div>
 
-          {/* 비밀번호 → 비밀번호 찾기 페이지로 이동 */}
+          {/* 비밀번호 → 비밀번호 변경 페이지로 이동 */}
           <div className="flex flex-row items-center justify-between">
             <span className={font.headline2.medium} style={labelStyle}>비밀번호</span>
             <div className="flex items-center gap-3">

@@ -21,21 +21,19 @@ export const customerApi = {
   },
 
   registerTreatmentRecord: async (params: RegisterTreatmentRecordParams) => {
-    const searchParams = new URLSearchParams();
-    searchParams.set("shop_id", String(params.shopId));
-    searchParams.set("phone_number", params.phoneNumber);
-    searchParams.set("treatment_date", params.treatmentDate);
-    searchParams.set("price", String(params.price));
-    if (params.title) searchParams.set("title", params.title);
-    if (params.memo) searchParams.set("memo", params.memo);
-    params.serviceTags?.forEach(tag => searchParams.append("service_tags", tag));
-
     const formData = new FormData();
+    formData.append("shop_id", String(params.shopId));
+    formData.append("phone_number", params.phoneNumber);
+    formData.append("treatment_date", params.treatmentDate);
+    formData.append("price", String(params.price));
+    if (params.title) formData.append("title", params.title);
+    if (params.memo) formData.append("memo", params.memo);
+    params.serviceTags?.forEach(tag => formData.append("service_tags", tag));
     if (params.beforeImage) formData.append("before_image", params.beforeImage);
     if (params.afterImage) formData.append("after_image", params.afterImage);
 
     const result = await api.post<ApiResponse<unknown>>(
-      `/treatment-records/register?${searchParams.toString()}`,
+      "/treatment-records/register",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
