@@ -33,8 +33,8 @@ export const useSignup = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<SignupStep>("type-select");
   const [memberType, setMemberType] = useState<MemberType | null>(null);
-  const [customerForm, setCustomerForm] = useState<CustomerAccountForm>(INITIAL_ACCOUNT_FORM);
-  const [ownerForm, setOwnerForm] = useState<OwnerAccountForm>(INITIAL_ACCOUNT_FORM);
+  const [customerForm, setCustomerForm] = useState<CustomerAccountForm>({ ...INITIAL_ACCOUNT_FORM });
+  const [ownerForm, setOwnerForm] = useState<OwnerAccountForm>({ ...INITIAL_ACCOUNT_FORM });
   const [shopForm, setShopForm] = useState<ShopForm>(INITIAL_SHOP_FORM);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,9 +63,9 @@ export const useSignup = () => {
           storeName: shopForm.shopName,
           roadAddress: shopForm.address,
           detailAddress: shopForm.addressDetail,
-          landline: shopForm.landline,
+          landline: shopForm.landline.replace(/\D/g, ""),
           storeEmail: shopForm.storeEmail,
-          businessNumber: shopForm.businessNumber,
+          businessNumber: shopForm.businessNumber.replace(/\D/g, ""),
         });
       } else {
         await signupApi({

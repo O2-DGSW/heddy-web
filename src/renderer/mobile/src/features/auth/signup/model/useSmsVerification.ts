@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { smsSendApi, smsVerifyApi } from "@/entities/auth/api/authApi";
 import type { SmsPurpose } from "@/entities/auth/model/auth.types";
 
-export const useSmsVerification = (purpose: SmsPurpose) => {
+export const useSmsVerification = (purpose: SmsPurpose, phoneNumber?: string) => {
   const [isSent, setIsSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [smsError, setSmsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsSent(false);
+    setIsVerified(false);
+    setSmsError(null);
+  }, [phoneNumber]);
 
   const sendCode = async (phoneNumber: string, carrier: string) => {
     setIsSending(true);

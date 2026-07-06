@@ -12,7 +12,7 @@ interface CustomerAccountFormProps {
 }
 
 export const CustomerAccountForm = ({ form, onChange, onNext }: CustomerAccountFormProps) => {
-  const sms = useSmsVerification("SIGNUP");
+  const sms = useSmsVerification("SIGNUP", form.phone);
   const { isValid, canRequestVerification, showPasswordError, showPhoneError, showNameError, handleNext } =
     useAccountForm(form, sms.isVerified, onNext);
 

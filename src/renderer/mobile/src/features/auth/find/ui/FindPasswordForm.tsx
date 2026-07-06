@@ -17,7 +17,7 @@ export const FindPasswordForm = () => {
   const [step, setStep] = useState<1 | 2>(1);
   const { idField, carrierField, phoneField, verificationField, canSubmit: canSubmitBase } = useFindPassword();
   const { passwordField, passwordConfirmField, canSubmit: canReset } = useResetPassword();
-  const sms = useSmsVerification("PASSWORD_RESET");
+  const sms = useSmsVerification("PASSWORD_RESET", phoneField.value);
 
   const canSubmit = canSubmitBase && sms.isVerified;
 

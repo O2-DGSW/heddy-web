@@ -22,7 +22,8 @@ export const ShopForm = ({ form, onChange, onNext }: ShopFormProps) => {
     setShowModal(false);
   });
 
-  const isValid = !!form.shopName && !!form.address && !!form.category && !!form.landline && !!form.storeEmail && !!form.businessNumber;
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValid = !!form.shopName && !!form.address && !!form.category && !!form.landline && isValidEmail(form.storeEmail) && !!form.businessNumber;
 
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
