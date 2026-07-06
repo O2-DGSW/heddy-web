@@ -41,10 +41,9 @@ export const ReservationStatusDropdown = ({ value, onChange }: ReservationStatus
       <button
         className={`flex items-center justify-center gap-1 w-20 py-1 rounded-full ${font.caption.semiBold}`}
         style={{ backgroundColor: bgColor, color: lightTheme.label.buttonText }}
-        onClick={() => setIsOpen((prev) => !prev)}
+        // onClick={() => setIsOpen(prev => !prev)}
       >
         {label}
-        <span className="text-[0.5rem]">▼</span>
       </button>
 
       {isOpen && (
@@ -55,7 +54,7 @@ export const ReservationStatusDropdown = ({ value, onChange }: ReservationStatus
             boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
           }}
         >
-          {DROPDOWN_OPTIONS.map((option) => (
+          {DROPDOWN_OPTIONS.map(option => (
             <li key={option}>
               <button
                 className={`w-full flex items-center gap-1.5 px-4 py-2.5 ${font.label.regular}`}
@@ -65,9 +64,7 @@ export const ReservationStatusDropdown = ({ value, onChange }: ReservationStatus
                   setIsOpen(false);
                 }}
               >
-                {value === option && (
-                  <span style={{ color: lightTheme.primary.normal }}>✓</span>
-                )}
+                {value === option && <span style={{ color: lightTheme.primary.normal }}>✓</span>}
                 {STATUS_CONFIG[option].label}
               </button>
             </li>

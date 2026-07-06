@@ -57,9 +57,7 @@ export const ReservationCard = ({ reservation, status, onStatusChange }: Reserva
       <div
         className="w-12 h-12 shrink-0 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold"
         style={{ color: lightTheme.label.assistive }}
-      >
-        User
-      </div>
+      ></div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
