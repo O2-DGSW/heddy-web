@@ -101,7 +101,7 @@ export const PhoneVerificationField = ({
         </div>
       )}
       {isVerified && (
-        <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.positive }}>
+        <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.success }}>
           인증이 완료되었습니다.
         </p>
       )}

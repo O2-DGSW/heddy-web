@@ -166,7 +166,7 @@ export const FindPasswordForm = () => {
             </div>
           )}
           {sms.isVerified && (
-            <p className={`${font.caption.regular} pl-2 mb-1`} style={{ color: lightTheme.status.positive }}>
+            <p className={`${font.caption.regular} pl-2 mb-1`} style={{ color: lightTheme.status.success }}>
               인증이 완료되었습니다.
             </p>
           )}

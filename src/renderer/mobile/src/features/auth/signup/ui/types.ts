@@ -1,4 +1,3 @@
-import type React from 'react';
 import type { BaseAccountForm, Carrier } from '@/features/auth/signup/model/types';
 
 export interface SmsVerificationState {
