@@ -8,11 +8,14 @@ import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNote
 import { ProcedureNoteItem } from "./item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
 import { NotfoundCutsList } from "@/features/cuts/ui/NotfoundCutsList.tsx";
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 
 export const ProcedureNoteList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { notes, addNote, isLoading, isError } = useProcedureNotes();
+  const { data: profile } = useGetMyProfileQuery();
+  const isCustomer = profile?.userType === "CUSTOMER";
   const processedRef = useRef(false);
 
   useEffect(() => {
@@ -45,16 +48,18 @@ export const ProcedureNoteList = () => {
         </div>
       )}
 
-      <button
-        className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
-        style={{
-          bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
-          backgroundColor: lightTheme.primary.normal,
-        }}
-        onClick={() => navigate("/cuts/add")}
-      >
-        <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
-      </button>
+      {!isCustomer && (
+        <button
+          className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+          style={{
+            bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
+            backgroundColor: lightTheme.primary.normal,
+          }}
+          onClick={() => navigate("/cuts/add")}
+        >
+          <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
+        </button>
+      )}
     </div>
   );
 };

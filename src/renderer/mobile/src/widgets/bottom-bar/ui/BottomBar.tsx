@@ -3,10 +3,14 @@ import { NAV_ITEMS } from "../constrants/nav-items.ts";
 import { getBarItemState } from "../model/focusEffect";
 import { BarItem } from "./BarItem";
 import { lightTheme } from "@design-tokens";
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 
 export const BottomBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { data: profile } = useGetMyProfileQuery();
+  const isCustomer = profile?.userType === "CUSTOMER";
+  const visibleItems = isCustomer ? NAV_ITEMS.filter(item => item.to !== "/shop") : NAV_ITEMS;
 
   return (
     <div
@@ -17,7 +21,7 @@ export const BottomBar = () => {
       "
       style={{ backgroundColor: lightTheme.background.normal }}
     >
-      {NAV_ITEMS.map(({ Icon, title, to }) => {
+      {visibleItems.map(({ Icon, title, to }) => {
         const state = getBarItemState(location.pathname, to);
 
         return (
