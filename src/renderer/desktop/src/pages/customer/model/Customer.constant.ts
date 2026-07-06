@@ -12,13 +12,7 @@ import {
   DESKTOP_PAGE_RIGHT_PADDING_REM,
 } from "@/shared/constants/Layout.constant";
 
-import type {
-  CustomerDesignerOption,
-  CustomerFilter,
-  CustomerRow,
-  CustomerSortOption,
-  CustomerSummary,
-} from "./Customer.types";
+import type { CustomerFilter, CustomerSortOption, CustomerSummary } from "./Customer.types";
 
 export const CUSTOMER_CONTENT_WIDTH_REM = DESKTOP_PAGE_CONTENT_WIDTH_REM;
 export const CUSTOMER_CONTENT_HEIGHT_REM = DESKTOP_PAGE_CONTENT_HEIGHT_REM;
@@ -35,7 +29,7 @@ export const CUSTOMER_SUMMARIES: CustomerSummary[] = [
   {
     id: "normal",
     title: "정상 고객 수",
-    count: 12,
+    count: 0,
     image: normalCustomersImage,
     color: lightTheme.primary.normal,
     shadowColor: lightTheme.primary.normal,
@@ -43,7 +37,7 @@ export const CUSTOMER_SUMMARIES: CustomerSummary[] = [
   {
     id: "caution",
     title: "이탈 주의 고객 수",
-    count: 12,
+    count: 0,
     image: cautionCustomersImage,
     color: lightTheme.status.warning,
     shadowColor: lightTheme.status.warning,
@@ -51,7 +45,7 @@ export const CUSTOMER_SUMMARIES: CustomerSummary[] = [
   {
     id: "risk",
     title: "이탈 위험 고객 수",
-    count: 12,
+    count: 0,
     image: riskCustomersImage,
     color: lightTheme.status.error,
     shadowColor: lightTheme.status.error,
@@ -68,83 +62,4 @@ export const CUSTOMER_FILTERS: CustomerFilter[] = [
 export const CUSTOMER_SORT_OPTIONS: CustomerSortOption[] = [
   { key: "recent", label: "최근 방문 순" },
   { key: "oldest", label: "오래된 방문 순" },
-];
-
-export const CUSTOMER_DESIGNER_OPTIONS: CustomerDesignerOption[] = [
-  { id: "oh-yong-jun", name: "오용준" },
-  { id: "kim-seo-yun", name: "김서윤" },
-  { id: "han-ji-min", name: "한지민" },
-];
-
-export const CUSTOMER_ROWS: CustomerRow[] = [
-  {
-    id: 1,
-    customerId: "1",
-    name: "오용준",
-    phone: "010-1234-5678",
-    lastVisit: "10/10",
-    daysSinceLastVisit: 0,
-    visitCycle: "약 28일",
-    riskPercent: 84,
-    riskLevel: "risk",
-    tags: ["# 남자", "# 다운펌"],
-    totalVisits: "14회",
-    designer: "오용준",
-  },
-  {
-    id: 2,
-    customerId: "2",
-    name: "오용준",
-    phone: "010-1234-5678",
-    lastVisit: "10/10",
-    daysSinceLastVisit: 0,
-    visitCycle: "약 28일",
-    riskPercent: 10,
-    riskLevel: "normal",
-    tags: ["# 남자", "# 다운펌"],
-    totalVisits: "14회",
-    designer: "오용준",
-  },
-  {
-    id: 3,
-    customerId: "3",
-    name: "오용준",
-    phone: "010-1234-5678",
-    lastVisit: "10/10",
-    daysSinceLastVisit: 0,
-    visitCycle: "약 28일",
-    riskPercent: 50,
-    riskLevel: "caution",
-    tags: ["# 남자", "# 다운펌"],
-    totalVisits: "14회",
-    designer: "오용준",
-  },
-  {
-    id: 4,
-    customerId: "4",
-    name: "오용준",
-    phone: "010-1234-5678",
-    lastVisit: "10/10",
-    daysSinceLastVisit: 0,
-    visitCycle: "약 28일",
-    riskPercent: 50,
-    riskLevel: "caution",
-    tags: ["# 남자", "# 다운펌"],
-    totalVisits: "14회",
-    designer: "오용준",
-  },
-  {
-    id: 5,
-    customerId: "5",
-    name: "오용준",
-    phone: "010-1234-5678",
-    lastVisit: "10/10",
-    daysSinceLastVisit: 0,
-    visitCycle: "약 28일",
-    riskPercent: 10,
-    riskLevel: "normal",
-    tags: ["# 남자", "# 다운펌"],
-    totalVisits: "14회",
-    designer: "오용준",
-  },
 ];
