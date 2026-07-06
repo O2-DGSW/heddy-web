@@ -16,10 +16,7 @@ import {
   isValidVerificationCode,
   toDigits,
 } from "@/features/auth/signup/model/validation";
-import type {
-  OwnerSignupRequest,
-  SmsPurpose,
-} from "@/entities/auth/model/auth.types";
+import type { OwnerSignupRequest, SmsPurpose } from "@/entities/auth/model/auth.types";
 import type { SignupFeedbackTone } from "@/features/auth/signup/ui/types";
 import { SignupLayout } from "@/features/auth/signup/ui/SignupLayout";
 import { LoadingScreen } from "@/shared/ui/loading";
@@ -104,7 +101,7 @@ const SignupTermsPage = () => {
 
   const isCurrentPhoneRequest = (
     phoneNumber: string,
-    carrier: OwnerAccountFormValues["carrier"],
+    carrier: OwnerAccountFormValues["carrier"]
   ) => {
     const currentForm = accountFormRef.current;
 
@@ -114,7 +111,7 @@ const SignupTermsPage = () => {
   const isCurrentVerificationRequest = (
     phoneNumber: string,
     carrier: OwnerAccountFormValues["carrier"],
-    verificationCode: string,
+    verificationCode: string
   ) => {
     const currentForm = accountFormRef.current;
 
@@ -132,7 +129,6 @@ const SignupTermsPage = () => {
     storeName: shopForm.shopName.trim(),
     roadAddress: shopForm.address.trim(),
     detailAddress: shopForm.addressDetail.trim(),
-    category: shopForm.category,
     landline: toDigits(shopForm.landline),
     businessNumber: toDigits(shopForm.businessNumber),
   });
@@ -216,7 +212,7 @@ const SignupTermsPage = () => {
         !isCurrentVerificationRequest(
           verificationPhoneNumber,
           verificationCarrier,
-          verificationCode,
+          verificationCode
         )
       ) {
         return;
@@ -229,7 +225,7 @@ const SignupTermsPage = () => {
         !isCurrentVerificationRequest(
           verificationPhoneNumber,
           verificationCarrier,
-          verificationCode,
+          verificationCode
         )
       ) {
         return;
