@@ -3,8 +3,9 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 import svgr from "vite-plugin-svgr";
+import { createLocalHttpsConfig } from "./vite.https";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   root: resolve(__dirname, "src/renderer/mobile"),
   envDir: __dirname,
   publicDir: resolve(__dirname, "public"),
@@ -28,9 +29,19 @@ export default defineConfig({
   server: {
     port: 5174,
     host: true,
+    ...(command === "serve" && {
+      https: createLocalHttpsConfig(__dirname),
+    }),
+  },
+  preview: {
+    port: 4174,
+    host: true,
+    ...(command === "serve" && {
+      https: createLocalHttpsConfig(__dirname),
+    }),
   },
   build: {
     outDir: resolve(__dirname, "dist/mobile"),
     emptyOutDir: true,
   },
-});
+}));

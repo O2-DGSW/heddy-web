@@ -1,16 +1,17 @@
 /// <reference types="node" />
-import type { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from "@capacitor/cli";
 
-const isLive = process.env.CAPACITOR_LIVE === 'true';
+const isLive = process.env.CAPACITOR_LIVE === "true";
+const liveServerUrl = process.env.CAPACITOR_SERVER_URL ?? "https://localhost:5174";
 
 const config: CapacitorConfig = {
-  appId: 'com.heddy.app',
-  appName: 'heddy',
-  webDir: 'dist/mobile',
+  appId: "com.heddy.app",
+  appName: "heddy",
+  webDir: "dist/mobile",
   ...(isLive && {
     server: {
-      url: 'http://localhost:5174',
-      cleartext: true,
+      url: liveServerUrl,
+      cleartext: liveServerUrl.startsWith("http://"),
     },
   }),
 };
