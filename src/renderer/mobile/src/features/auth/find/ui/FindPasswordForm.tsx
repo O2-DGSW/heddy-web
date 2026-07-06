@@ -8,6 +8,7 @@ import type { Carrier, MvnoCarrier } from '@/features/auth/signup/model/types';
 import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/auth/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
 import { PasswordInput } from '@/private/shared/ui/password-input/PasswordInput';
+import { resetPasswordApi } from '@/entities/auth/api/authApi';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
@@ -15,6 +16,9 @@ const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
 export const FindPasswordForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const { idField, carrierField, phoneField, verificationField, canSubmit: canSubmitBase } = useFindPassword();
   const { passwordField, passwordConfirmField, canSubmit: canReset } = useResetPassword();
   const sms = useSmsVerification("PASSWORD_RESET", phoneField.value);
@@ -48,6 +52,24 @@ export const FindPasswordForm = () => {
     </div>
   );
 
+  const handleReset = async () => {
+    if (!canReset || isSubmitting) return;
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await resetPasswordApi({
+        loginId: idField.value,
+        phoneNumber: phoneField.value.replace(/\D/g, ''),
+        newPassword: passwordField.value,
+      });
+      navigate('/login', { replace: true });
+    } catch (e) {
+      setSubmitError(e instanceof Error ? e.message : '비밀번호 변경에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (step === 2) {
     return (
       <div className="flex flex-col w-full flex-1">
@@ -60,21 +82,27 @@ export const FindPasswordForm = () => {
             <div className="mb-1">
               <PasswordInput placeholder="비밀번호" value={passwordField.value} onChange={passwordField.onChange} />
             </div>
-            <div className="mb-3">
+            <div className="mb-1">
               <PasswordInput placeholder="비밀번호 확인" value={passwordConfirmField.value} onChange={passwordConfirmField.onChange} />
             </div>
+            {submitError && (
+              <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
+                {submitError}
+              </p>
+            )}
           </div>
         </div>
         <div className="w-full pb-8">
           <button
             className={`w-full py-4 rounded-2xl ${font.headline2.semiBold}`}
             style={{
-              backgroundColor: canReset ? lightTheme.primary.normal : lightTheme.line.alternative,
-              color: canReset ? lightTheme.fill.normal : lightTheme.line.normal,
+              backgroundColor: canReset && !isSubmitting ? lightTheme.primary.normal : lightTheme.line.alternative,
+              color: canReset && !isSubmitting ? lightTheme.fill.normal : lightTheme.line.normal,
             }}
-            disabled={!canReset}
+            disabled={!canReset || isSubmitting}
+            onClick={handleReset}
           >
-            비밀번호 찾기
+            {isSubmitting ? '변경 중...' : '비밀번호 변경'}
           </button>
         </div>
       </div>
@@ -141,7 +169,7 @@ export const FindPasswordForm = () => {
               disabled={!phoneField.canRequest || sms.isSending}
               onClick={() => sms.sendCode(phoneField.value, carrierField.value)}
             >
-              {sms.isSending ? "발송 중" : sms.isSent ? "재전송" : "인증번호"}
+              {sms.isSending ? '발송 중' : sms.isSent ? '재전송' : '인증번호'}
             </button>
           </div>
           {sms.isSent && !sms.isVerified && (
@@ -163,7 +191,7 @@ export const FindPasswordForm = () => {
                 disabled={verificationField.value.length === 0 || sms.isVerifying}
                 onClick={() => sms.verifyCode(phoneField.value, verificationField.value)}
               >
-                {sms.isVerifying ? "확인 중" : "확인"}
+                {sms.isVerifying ? '확인 중' : '확인'}
               </button>
             </div>
           )}
@@ -190,7 +218,7 @@ export const FindPasswordForm = () => {
           disabled={!canSubmit}
           onClick={() => setStep(2)}
         >
-          비밀번호 찾기
+          다음
         </button>
       </div>
     </div>

@@ -50,6 +50,13 @@ export const useSignup = () => {
     else if (step === "shop") setStep("terms");
   };
 
+  const goBack = () => {
+    if (step === "type-select") navigate(-1);
+    else if (step === "account") setStep("type-select");
+    else if (step === "shop") setStep("account");
+    else if (step === "terms") setStep(memberType === "owner" ? "shop" : "account");
+  };
+
   const submitSignup = async () => {
     setIsLoading(true);
     setError(null);
@@ -94,6 +101,7 @@ export const useSignup = () => {
     setShopForm,
     selectMemberType,
     nextStep,
+    goBack,
     submitSignup,
     isLoading,
     error,

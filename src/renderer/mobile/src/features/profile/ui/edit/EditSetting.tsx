@@ -143,7 +143,7 @@ export const EditSetting = () => {
               <span className={font.headline2.medium} style={valueStyle}>{"•".repeat(8)}</span>
               <button
                 className="size-[1.25rem] shrink-0"
-                onClick={() => navigate("/find/password")}
+                onClick={() => navigate("/change-password")}
               >
                 <img className="size-full" src={ArrowIcon} alt="arrow" />
               </button>
