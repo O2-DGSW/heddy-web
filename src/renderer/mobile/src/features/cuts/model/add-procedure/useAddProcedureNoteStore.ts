@@ -2,17 +2,19 @@ import { create } from "zustand";
 
 type AddProcedureNoteState = {
   title: string;
-  description: string;
+  memo: string;
   date: Date;
-  customer: string;
+  phoneNumber: string;
+  price: string;
   selectedTags: string[];
   beforeImageFile: File | null;
   afterImageFile: File | null;
 
   setTitle: (value: string) => void;
-  setDescription: (value: string) => void;
+  setMemo: (value: string) => void;
   setDate: (date: Date) => void;
-  setCustomer: (value: string) => void;
+  setPhoneNumber: (value: string) => void;
+  setPrice: (value: string) => void;
   toggleTag: (value: string) => void;
   setBeforeImageFile: (file: File | null) => void;
   setAfterImageFile: (file: File | null) => void;
@@ -21,9 +23,10 @@ type AddProcedureNoteState = {
 
 const getInitialState = () => ({
   title: "",
-  description: "",
+  memo: "",
   date: new Date(),
-  customer: "",
+  phoneNumber: "",
+  price: "",
   selectedTags: [] as string[],
   beforeImageFile: null,
   afterImageFile: null,
@@ -33,9 +36,10 @@ export const useAddProcedureNoteStore = create<AddProcedureNoteState>((set, get)
   ...getInitialState(),
 
   setTitle: (value) => set({ title: value }),
-  setDescription: (value) => set({ description: value }),
+  setMemo: (value) => set({ memo: value }),
   setDate: (date) => set({ date }),
-  setCustomer: (value) => set({ customer: value }),
+  setPhoneNumber: (value) => set({ phoneNumber: value }),
+  setPrice: (value) => set({ price: value }),
   toggleTag: (value) => {
     const { selectedTags } = get();
     const next = selectedTags.includes(value)

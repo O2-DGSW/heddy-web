@@ -1,23 +1,14 @@
 interface AddProcedureNoteFormValues {
-  title: string;
-  description: string;
-  customer: string;
-  selectedTags: string[];
-  beforeImageFile: File | null;
+  phoneNumber: string;
+  price: string;
+  treatmentDate: string;
 }
 
 export const validateAddProcedureNoteForm = ({
-  title,
-  description,
-  customer,
-  selectedTags,
-  beforeImageFile,
+  phoneNumber,
+  price,
+  treatmentDate,
 }: AddProcedureNoteFormValues): boolean => {
-  return (
-    title.trim() !== "" &&
-    description.trim() !== "" &&
-    customer.trim() !== "" &&
-    selectedTags.length > 0 &&
-    beforeImageFile !== null
-  );
+  const digits = phoneNumber.replace(/\D/g, "");
+  return digits.length >= 10 && price.trim() !== "" && Number(price) > 0 && treatmentDate !== "";
 };

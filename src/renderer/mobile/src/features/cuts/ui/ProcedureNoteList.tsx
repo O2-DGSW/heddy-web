@@ -7,12 +7,16 @@ import { useProcedureNotes } from "@/features/cuts/model/useProcedureNotes";
 import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
 import { ProcedureNoteItem } from "./item/ProcedureNoteItem.tsx";
 import icRoundPlus from "@/features/cuts/assets/procedute-note/ic_round-plus.svg";
+import agerSadSvg from "@/features/cuts/assets/procedute-note/agerSad.svg";
 import { NotfoundCutsList } from "@/features/cuts/ui/NotfoundCutsList.tsx";
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 
 export const ProcedureNoteList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { notes, addNote, isLoading, isError } = useProcedureNotes();
+  const { data: profile } = useGetMyProfileQuery();
+  const isCustomer = profile?.userType === "CUSTOMER";
   const processedRef = useRef(false);
   const newNote = location.state?.newNote as ProcedureNote | undefined;
 
@@ -32,12 +36,14 @@ export const ProcedureNoteList = () => {
       {isLoading ? (
         <div className="flex-1" />
       ) : isError ? (
-        <p
-          className={`text-center pt-10 ${font.label.regular}`}
-          style={{ color: lightTheme.label.assistive }}
-        >
-          시술기록을 불러오지 못했어요.
-        </p>
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
+          <img src={agerSadSvg} alt="오류" className="w-32 h-32" />
+          <p className={`text-center ${font.body.regular}`} style={{ color: lightTheme.label.assistive }}>
+            시술기록을 불러오지
+            <br />
+            못했어요..
+          </p>
+        </div>
       ) : notes.length === 0 ? (
         <NotfoundCutsList />
       ) : (
@@ -48,16 +54,18 @@ export const ProcedureNoteList = () => {
         </div>
       )}
 
-      <button
-        className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
-        style={{
-          bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
-          backgroundColor: lightTheme.primary.normal,
-        }}
-        onClick={() => navigate("/cuts/add")}
-      >
-        <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
-      </button>
+      {!isCustomer && (
+        <button
+          className="fixed right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+          style={{
+            bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)",
+            backgroundColor: lightTheme.primary.normal,
+          }}
+          onClick={() => navigate("/cuts/add")}
+        >
+          <img src={icRoundPlus} alt="추가" className="w-8 h-8" />
+        </button>
+      )}
     </div>
   );
 };
