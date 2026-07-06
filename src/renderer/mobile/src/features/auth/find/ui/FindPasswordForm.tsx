@@ -130,6 +130,7 @@ export const FindPasswordForm = () => {
               placeholder="전화번호"
               value={phoneField.value}
               onChange={e => phoneField.onChange(e.target.value)}
+              inputMode="tel"
             />
             <button
               className={`px-4 py-3 rounded-xl ${font.label.medium}`}
@@ -151,6 +152,7 @@ export const FindPasswordForm = () => {
                 placeholder="인증번호"
                 value={verificationField.value}
                 onChange={e => verificationField.onChange(e.target.value)}
+                inputMode="numeric"
               />
               <button
                 className={`px-4 py-3 rounded-xl ${font.label.medium}`}

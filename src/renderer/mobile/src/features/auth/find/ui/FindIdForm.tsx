@@ -40,6 +40,7 @@ export const FindIdForm = () => {
               placeholder="전화번호"
               value={phone}
               onChange={e => handlePhoneChange(e.target.value)}
+              inputMode="tel"
             />
             <button
               className={`px-6 py-4 rounded-xl ${font.label.medium}`}
@@ -58,6 +59,7 @@ export const FindIdForm = () => {
             placeholder="인증번호"
             value={verificationCode}
             onChange={e => setVerificationCode(e.target.value)}
+            inputMode="numeric"
           />
         </div>
       </div>

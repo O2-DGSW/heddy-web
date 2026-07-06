@@ -60,6 +60,7 @@ export const PhoneVerificationField = ({
           placeholder="휴대폰 번호"
           value={phone}
           onChange={e => onPhoneChange(formatPhone(e.target.value))}
+          inputMode="tel"
         />
         <button
           className={`w-[4.5rem] shrink-0 py-3 rounded-xl ${font.label.medium}`}
@@ -86,6 +87,7 @@ export const PhoneVerificationField = ({
             placeholder="인증번호"
             value={verificationCode}
             onChange={e => onVerificationCodeChange(e.target.value)}
+            inputMode="numeric"
           />
           <button
             className={`w-[4.5rem] shrink-0 py-3 rounded-xl ${font.label.medium}`}
