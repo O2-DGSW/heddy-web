@@ -6,13 +6,13 @@ import {
   type CustomerChurn,
   type DashboardResponse,
 } from "@/entities/customer/api/customerApi";
+import { getShopDetail } from "@/entities/employee/api/employeeApi";
 import { getMe } from "@/entities/user/api/userApi";
 import {
   CUSTOMER_CONTENT_BOTTOM_OFFSET_REM,
   CUSTOMER_CONTENT_HEIGHT_REM,
   CUSTOMER_CONTENT_TOP_OFFSET_REM,
   CUSTOMER_CONTENT_WIDTH_REM,
-  CUSTOMER_DESIGNER_OPTIONS,
   CUSTOMER_FILTERS,
   CUSTOMER_PAGE_LEFT_PADDING_REM,
   CUSTOMER_PAGE_RIGHT_PADDING_REM,
@@ -21,6 +21,7 @@ import {
   MIN_CUSTOMER_SCALE,
 } from "./Customer.constant";
 import type {
+  CustomerDesignerOption,
   CustomerFilterKey,
   CustomerRiskLevel,
   CustomerRow,
@@ -166,6 +167,7 @@ export const useCustomer = () => {
   const [selectedDesigners, setSelectedDesigners] = useState<Record<number, string>>({});
   const [shopId, setShopId] = useState<number | null>(null);
   const [rows, setRows] = useState<CustomerRow[]>([]);
+  const [designerOptions, setDesignerOptions] = useState<CustomerDesignerOption[]>([]);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [emptyMessage, setEmptyMessage] = useState("고객 정보가 없습니다");
@@ -248,9 +250,10 @@ export const useCustomer = () => {
       setIsLoading(true);
 
       try {
-        const [nextDashboard, churnData] = await Promise.all([
+        const [nextDashboard, churnData, shop] = await Promise.all([
           getCustomerDashboard(shopId),
           getShopChurnCustomers(shopId),
+          getShopDetail(shopId),
         ]);
 
         if (!ignore) {
@@ -269,11 +272,18 @@ export const useCustomer = () => {
 
           setDashboard(nextDashboard);
           setRows(nextRows);
+          setDesignerOptions(
+            shop.designers.map(designer => ({
+              id: String(designer.designer_id),
+              name: designer.name || `디자이너 ${designer.designer_id}`,
+            }))
+          );
           setEmptyMessage("고객 정보가 없습니다");
         }
       } catch (error) {
         if (!ignore) {
           setRows([]);
+          setDesignerOptions([]);
           setDashboard(null);
           setEmptyMessage(getCustomerErrorMessage(error, "고객 정보를 불러오지 못했습니다."));
         }
@@ -392,7 +402,7 @@ export const useCustomer = () => {
     emptyMessage: searchQuery.trim() ? "검색 결과가 없습니다" : emptyMessage,
     sortLabel: selectedSortOption?.label ?? CUSTOMER_SORT_OPTIONS[0].label,
     sortOptions: CUSTOMER_SORT_OPTIONS,
-    designerOptions: CUSTOMER_DESIGNER_OPTIONS,
+    designerOptions,
     isSortMenuOpen,
     openDesignerMenuRowId,
     onChangeSearchQuery: handleChangeSearchQuery,

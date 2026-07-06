@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { font, lightTheme } from '@design-tokens';
 import { useFindPassword } from '@/features/auth/find/model/useFindPassword';
 import { useResetPassword } from '@/features/auth/find/model/useResetPassword';
+import { useSmsVerification } from '@/features/auth/signup/model/useSmsVerification';
 import type { Carrier, MvnoCarrier } from '@/features/auth/signup/model/types';
 import { MAIN_CARRIERS, MVNO_CARRIERS } from '@/features/auth/signup/constants/signup';
 import { RadioButton } from '@/private/shared/ui/radio/RadioButton';
+import { PasswordInput } from '@/private/shared/ui/password-input/PasswordInput';
 
 const MVNO_SET = new Set<string>(MVNO_CARRIERS);
 const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
@@ -13,8 +15,11 @@ const isMvno = (c: Carrier): c is MvnoCarrier => MVNO_SET.has(c);
 export const FindPasswordForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
-  const { idField, carrierField, phoneField, verificationField, canSubmit } = useFindPassword();
+  const { idField, carrierField, phoneField, verificationField, canSubmit: canSubmitBase } = useFindPassword();
   const { passwordField, passwordConfirmField, canSubmit: canReset } = useResetPassword();
+  const sms = useSmsVerification("PASSWORD_RESET", phoneField.value);
+
+  const canSubmit = canSubmitBase && sms.isVerified;
 
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
@@ -52,22 +57,12 @@ export const FindPasswordForm = () => {
             <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>
               새 비밀번호
             </p>
-            <input
-              className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-1 ${font.caption.regular}`}
-              style={inputStyle}
-              placeholder="비밀번호"
-              type="password"
-              value={passwordField.value}
-              onChange={e => passwordField.onChange(e.target.value)}
-            />
-            <input
-              className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-3 ${font.caption.regular}`}
-              style={inputStyle}
-              placeholder="비밀번호 확인"
-              type="password"
-              value={passwordConfirmField.value}
-              onChange={e => passwordConfirmField.onChange(e.target.value)}
-            />
+            <div className="mb-1">
+              <PasswordInput placeholder="비밀번호" value={passwordField.value} onChange={passwordField.onChange} />
+            </div>
+            <div className="mb-3">
+              <PasswordInput placeholder="비밀번호 확인" value={passwordConfirmField.value} onChange={passwordConfirmField.onChange} />
+            </div>
           </div>
         </div>
         <div className="w-full pb-8">
@@ -139,21 +134,47 @@ export const FindPasswordForm = () => {
             <button
               className={`px-6 py-4 rounded-xl ${font.label.medium}`}
               style={{
-                backgroundColor: phoneField.canRequest ? lightTheme.primary.normal : lightTheme.line.alternative,
-                color: phoneField.canRequest ? lightTheme.fill.normal : lightTheme.line.normal,
+                backgroundColor: phoneField.canRequest && !sms.isSending ? lightTheme.primary.normal : lightTheme.line.alternative,
+                color: phoneField.canRequest && !sms.isSending ? lightTheme.fill.normal : lightTheme.line.normal,
               }}
-              disabled={!phoneField.canRequest}
+              disabled={!phoneField.canRequest || sms.isSending}
+              onClick={() => sms.sendCode(phoneField.value, carrierField.value)}
             >
-              인증번호
+              {sms.isSending ? "발송 중" : sms.isSent ? "재전송" : "인증번호"}
             </button>
           </div>
-          <input
-            className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-3 ${font.caption.regular}`}
-            style={inputStyle}
-            placeholder="인증번호"
-            value={verificationField.value}
-            onChange={e => verificationField.onChange(e.target.value)}
-          />
+          {sms.isSent && !sms.isVerified && (
+            <div className="flex gap-2 mb-1">
+              <input
+                className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+                style={inputStyle}
+                placeholder="인증번호"
+                value={verificationField.value}
+                onChange={e => verificationField.onChange(e.target.value)}
+              />
+              <button
+                className={`px-6 py-4 rounded-xl ${font.label.medium}`}
+                style={{
+                  backgroundColor: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.primary.normal : lightTheme.line.alternative,
+                  color: verificationField.value.length > 0 && !sms.isVerifying ? lightTheme.fill.normal : lightTheme.line.normal,
+                }}
+                disabled={verificationField.value.length === 0 || sms.isVerifying}
+                onClick={() => sms.verifyCode(phoneField.value, verificationField.value)}
+              >
+                {sms.isVerifying ? "확인 중" : "확인"}
+              </button>
+            </div>
+          )}
+          {sms.isVerified && (
+            <p className={`${font.caption.regular} pl-2 mb-1`} style={{ color: lightTheme.status.success }}>
+              인증이 완료되었습니다.
+            </p>
+          )}
+          {sms.smsError && (
+            <p className={`${font.caption.regular} pl-2 mb-1`} style={{ color: lightTheme.status.error }}>
+              {sms.smsError}
+            </p>
+          )}
         </div>
       </div>
 

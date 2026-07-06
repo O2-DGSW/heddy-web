@@ -10,11 +10,11 @@ const DesktopLayout = () => {
 
   return (
     <div
-      className="h-screen overflow-hidden"
+      className="flex h-screen flex-col overflow-hidden"
       style={{ backgroundColor: lightTheme.background.alternative }}
     >
       <TopBar />
-      <div className="flex h-[calc(100vh-4.25rem)] overflow-hidden">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         {!isAuthPage && <Sidebar />}
         <main className="min-w-0 flex-1 overflow-hidden">
           <Outlet />

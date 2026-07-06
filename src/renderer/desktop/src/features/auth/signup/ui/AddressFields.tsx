@@ -5,8 +5,8 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-  SignupInlineButton,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
+import { SignupInlineButton } from "@/features/auth/signup/ui/SignupFormControls";
 import type { AddressFieldsProps } from "@/features/auth/signup/ui/types";
 
 const AddressFields = ({
@@ -15,7 +15,7 @@ const AddressFields = ({
   onAddressChange,
   onAddressDetailChange,
 }: AddressFieldsProps) => (
-  <div className="mt-6 flex flex-col gap-1">
+  <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-1">
     <label
       htmlFor="signup-shop-address"
       className={fieldLabelClassName}
