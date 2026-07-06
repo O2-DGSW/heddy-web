@@ -19,7 +19,8 @@ export interface ScheduleEvent {
   id: number;
   customerName: string;
   designerName: string;
-  designerId: string;
+  designerId: number;
+  reservationStatus: string;
   tags: string[];
   color: ScheduleColorKey;
   date: string;
@@ -29,7 +30,7 @@ export interface ScheduleEvent {
 }
 
 export interface ScheduleDesigner {
-  id: string;
+  id: number;
   name: string;
 }
 
@@ -37,7 +38,7 @@ export interface ScheduleFormValues {
   id?: number;
   color: ScheduleColorKey;
   date: string;
-  designerId: string;
+  designerId: number;
   endTime: string;
   startTime: string;
 }

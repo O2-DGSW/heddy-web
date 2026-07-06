@@ -10,24 +10,24 @@ import modalDateIcon from "@/pages/schedule/assets/svg/modal-date.svg";
 import modalDropdownIcon from "@/pages/schedule/assets/svg/modal-dropdown.svg";
 import modalTimeIcon from "@/pages/schedule/assets/svg/modal-time.svg";
 import {
-  DEFAULT_SCHEDULE_DESIGNER_ID,
   SCHEDULE_COLOR_OPTIONS,
-  SCHEDULE_DESIGNERS,
   SCHEDULE_TIME_STEP_MINUTES,
 } from "@/pages/schedule/model/Schedule.constant";
 import type {
   ScheduleColorKey,
+  ScheduleDesigner,
   ScheduleEvent,
   ScheduleFormValues,
 } from "@/pages/schedule/model/Schedule.types";
 
 interface ScheduleModalProps {
+  designers: ScheduleDesigner[];
   editingEvent: ScheduleEvent | null;
   initialDate: string;
   visibleWeekDateKeys: string[];
   onClose: () => void;
   onDelete: (eventId: number) => void;
-  onSave: (values: ScheduleFormValues) => void;
+  onSave: (values: ScheduleFormValues) => void | Promise<void>;
 }
 
 type OpenPopover = "date" | "designer" | "endTime" | "startTime" | null;
@@ -51,9 +51,10 @@ interface TimeFieldProps {
 }
 
 interface DesignerFieldProps {
+  designers: ScheduleDesigner[];
   isOpen: boolean;
-  value: string;
-  onSelect: (value: string) => void;
+  value: number;
+  onSelect: (value: number) => void;
   onToggle: () => void;
 }
 
@@ -115,10 +116,7 @@ const getSteppedTime = (time: string, stepMinutes: number, maxMinutes = MAX_TIME
 const getCurrentStepCeilMinutes = () => {
   const now = new Date();
   const currentMinutes =
-    now.getHours() * 60 +
-    now.getMinutes() +
-    now.getSeconds() / 60 +
-    now.getMilliseconds() / 60000;
+    now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60 + now.getMilliseconds() / 60000;
 
   return Math.ceil(currentMinutes / TIME_STEP_MINUTES) * TIME_STEP_MINUTES;
 };
@@ -167,9 +165,8 @@ const getSwatchColor = (color: ScheduleColorKey) => {
   return palette.main[90];
 };
 
-const timeOptions = Array.from(
-  { length: MAX_TIME_MINUTES / TIME_STEP_MINUTES + 1 },
-  (_, index) => formatTime(index * TIME_STEP_MINUTES)
+const timeOptions = Array.from({ length: MAX_TIME_MINUTES / TIME_STEP_MINUTES + 1 }, (_, index) =>
+  formatTime(index * TIME_STEP_MINUTES)
 );
 
 const scrollSelectedOptionIntoView = (
@@ -186,7 +183,7 @@ const scrollSelectedOptionIntoView = (
   );
 };
 
-const useSelectedOptionScroll = (isOpen: boolean, value: string) => {
+const useSelectedOptionScroll = (isOpen: boolean, value: number | string) => {
   const listRef = useRef<HTMLDivElement>(null);
   const selectedOptionRef = useRef<HTMLButtonElement>(null);
 
@@ -201,13 +198,7 @@ const useSelectedOptionScroll = (isOpen: boolean, value: string) => {
   return { listRef, selectedOptionRef };
 };
 
-const DateField = ({
-  isOpen,
-  value,
-  visibleWeekDateKeys,
-  onSelect,
-  onToggle,
-}: DateFieldProps) => {
+const DateField = ({ isOpen, value, visibleWeekDateKeys, onSelect, onToggle }: DateFieldProps) => {
   const { listRef, selectedOptionRef } = useSelectedOptionScroll(isOpen, value);
 
   return (
@@ -377,10 +368,9 @@ const TimeField = ({
   );
 };
 
-const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps) => {
+const DesignerField = ({ designers, isOpen, value, onSelect, onToggle }: DesignerFieldProps) => {
   const { listRef, selectedOptionRef } = useSelectedOptionScroll(isOpen, value);
-  const selectedDesigner =
-    SCHEDULE_DESIGNERS.find(designer => designer.id === value) ?? SCHEDULE_DESIGNERS[0];
+  const selectedDesigner = designers.find(designer => designer.id === value) ?? designers[0];
 
   return (
     <div className="flex h-[4.5625rem] w-full flex-col items-end gap-3">
@@ -410,7 +400,7 @@ const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps
               className="font-['Pretendard'] text-[0.875rem] font-normal leading-[1.3]"
               style={valueTextStyle}
             >
-              {selectedDesigner?.name}
+              {selectedDesigner?.name ?? "디자이너 없음"}
             </span>
           </span>
         </button>
@@ -421,7 +411,7 @@ const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps
             className={popoverClassName}
             style={{ borderColor: lightTheme.line.alternative }}
           >
-            {SCHEDULE_DESIGNERS.map(designer => {
+            {designers.map(designer => {
               const isSelected = designer.id === value;
 
               return (
@@ -441,6 +431,17 @@ const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps
                 </button>
               );
             })}
+            {designers.length === 0 ? (
+              <div
+                className={optionClassName}
+                style={{
+                  color: lightTheme.label.assistive,
+                  ...textStyle,
+                }}
+              >
+                등록된 디자이너가 없습니다
+              </div>
+            ) : null}
           </div>
         )}
       </div>
@@ -449,6 +450,7 @@ const DesignerField = ({ isOpen, value, onSelect, onToggle }: DesignerFieldProps
 };
 
 const ScheduleModal = ({
+  designers,
   editingEvent,
   initialDate,
   visibleWeekDateKeys,
@@ -463,7 +465,7 @@ const ScheduleModal = ({
     return {
       color: editingEvent?.color ?? DEFAULT_COLOR,
       date: defaultDate,
-      designerId: editingEvent?.designerId ?? DEFAULT_SCHEDULE_DESIGNER_ID,
+      designerId: editingEvent?.designerId ?? designers[0]?.id ?? 0,
       endTime: editingEvent
         ? formatTimeFromHour(editingEvent.endHour)
         : getDefaultEndTime(defaultStartTime),
@@ -471,7 +473,7 @@ const ScheduleModal = ({
         ? formatTimeFromHour(editingEvent.startHour, MAX_START_TIME_MINUTES)
         : defaultStartTime,
     };
-  }, [editingEvent, initialDate, visibleWeekDateKeys]);
+  }, [designers, editingEvent, initialDate, visibleWeekDateKeys]);
   const [openPopover, setOpenPopover] = useState<OpenPopover>(null);
   const [date, setDate] = useState(initialForm.date);
   const [startTime, setStartTime] = useState(initialForm.startTime);
@@ -521,7 +523,7 @@ const ScheduleModal = ({
     closePopover();
   };
 
-  const handleSelectDesigner = (value: string) => {
+  const handleSelectDesigner = (value: number) => {
     setDesignerId(value);
     closePopover();
   };
@@ -579,7 +581,10 @@ const ScheduleModal = ({
                   <img src={modalCloseIcon} alt="" className="size-7" aria-hidden="true" />
                 </button>
               </div>
-              <div className="h-px w-full" style={{ backgroundColor: lightTheme.line.alternative }} />
+              <div
+                className="h-px w-full"
+                style={{ backgroundColor: lightTheme.line.alternative }}
+              />
             </div>
 
             <div className="flex w-full flex-col gap-5">
@@ -641,6 +646,7 @@ const ScheduleModal = ({
               </div>
 
               <DesignerField
+                designers={designers}
                 isOpen={openPopover === "designer"}
                 value={designerId}
                 onSelect={handleSelectDesigner}
