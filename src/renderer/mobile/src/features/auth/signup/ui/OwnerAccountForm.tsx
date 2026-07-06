@@ -36,8 +36,8 @@ export const OwnerAccountForm = ({ form, onChange, onNext }: OwnerAccountFormPro
       <button
         className={`w-full py-4 rounded-2xl mt-2 ${font.headline2.semiBold}`}
         style={{
-          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.fill.neutral,
-          color: isValid ? lightTheme.fill.normal : lightTheme.label.assistive,
+          backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.line.alternative,
+          color: isValid ? lightTheme.fill.normal : lightTheme.line.normal,
         }}
         disabled={!isValid}
         onClick={handleNext}
