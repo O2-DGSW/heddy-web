@@ -51,7 +51,9 @@ export const useReservation = () => {
   const [selectedDesignerName, setSelectedDesignerName] = useState("");
   const [selectedDesignerId, setSelectedDesignerId] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [memo, setMemo] = useState(""); // 1. 메모 상태 추가
+  const [memo, setMemo] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const myInfo = useGetMyProfileQuery();
   const myShopId = myInfo?.data?.shopMembers[0]?.shopId;
@@ -80,7 +82,7 @@ export const useReservation = () => {
       designer_id: selectedDesignerId,
       reserved_at: new Date(selectedDate).toISOString(),
       service_tags: convertedTags,
-      memo: memo, // 2. 입력된 메모 상태 반영
+      memo: memo,
     };
 
     console.log(requestBody);
@@ -88,21 +90,40 @@ export const useReservation = () => {
     try {
       const response = await reservationApi.postReservation(requestBody);
 
-      if (response.status === 200) {
+      // 💡 201 Created 성공 조건 확인
+      if (response.status === 201) {
         console.log("예약이 성공적으로 등록되었습니다!");
+
+        // 1. 성공 메시지 띄우기
+        setSuccessMessage("예약에 성공했습니다!");
+
+        // 2. 작성된 입력 데이터 모두 초기화 (날짜도 오늘로 리셋)
+        setSelectedDate(getTodayString());
+        setSelectedTags([]);
+        setSelectedDesignerName("");
+        setSelectedDesignerId(null);
+        setIsDropdownOpen(false);
+        setMemo("");
+
+        // 3. 3초 뒤에 성공 메시지만 닫기
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
       }
     } catch (error) {
       console.error("예약 등록 중 오류 발생:", error);
-      console.error("예약 등록에 실패했습니다. 다시 시도해주세요.");
+      alert("예약 등록에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   const handleCancel = () => {
+    setSelectedDate(getTodayString()); // 취소 시에도 오늘 날짜로 리셋
     setSelectedTags([]);
     setSelectedDesignerName("");
     setSelectedDesignerId(null);
     setIsDropdownOpen(false);
-    setMemo(""); // 3. 취소 시 메모 초기화
+    setMemo("");
+    setSuccessMessage(null);
   };
 
   const handleTagClick = (tagValue: string) => {
@@ -128,8 +149,9 @@ export const useReservation = () => {
     selectedDesignerName,
     designerList,
     isDropdownOpen,
-    memo, // 4. 컴포넌트에서 바인딩할 수 있도록 반환
-    setMemo, // 5. 반환
+    memo,
+    setMemo,
+    successMessage,
     handleSave,
     handleCancel,
     handleTagClick,

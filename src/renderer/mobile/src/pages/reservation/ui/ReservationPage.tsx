@@ -22,17 +22,33 @@ export const ReservationPage = () => {
     selectedDesignerName,
     designerList,
     isDropdownOpen,
-    memo, // 1. 훅에서 상태값 받아오기
-    setMemo, // 2. 훅에서 상태 변경 함수 받아오기
+    memo,
+    setMemo,
     handleSave,
     handleCancel,
     handleTagClick,
     handleSelectDesigner,
     toggleDropdown,
+    successMessage, // 💡 훅에서 성공 메시지 가져오기
   } = useReservation();
 
   return (
-    <>
+    // 💡 최상단을 relative 포지션으로 감싸서 팝업 위치의 기준을 잡습니다.
+    <div className="relative min-h-screen pb-[3rem]">
+      {/* 💡 성공 알림 메시지 토스트 배너 (화면 상단 정중앙에 플로팅) */}
+      {successMessage && (
+        <div
+          className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-xl shadow-lg border text-center whitespace-nowrap min-w-[200px] ${font.body.semiBold}`}
+          style={{
+            backgroundColor: "#ffffff",
+            borderColor: lightTheme.primary.normal,
+            color: lightTheme.primary.normal,
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
+
       <p
         className={`${font.headline1.bold} text-center py-[1rem]`}
         style={{ color: lightTheme.label.neutral }}
@@ -92,6 +108,7 @@ export const ReservationPage = () => {
               저장
             </button>
           </div>
+          {/* 💡 기존의 애매한 위치에 있던 메시지 태그는 삭제했습니다. */}
         </div>
         <div className="w-full h-[1.5px]" style={{ backgroundColor: lightTheme.fill.neutral }} />
 
@@ -198,6 +215,6 @@ export const ReservationPage = () => {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
