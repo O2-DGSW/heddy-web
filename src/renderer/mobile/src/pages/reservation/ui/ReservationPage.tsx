@@ -3,12 +3,7 @@ import { Calendar } from "@/shared/ui/calendar";
 import { SHOP_SCHEDULE_WEEK_DAYS } from "@/features/reservation/constants/schedule-calander.ts";
 import { useReservation } from "@/features/reservation/model/useReservation.ts";
 import React from "react";
-
-const HairTag = {
-  CUT: "컷트",
-  PERM: "펌",
-  DYE: "염색",
-} as const;
+import { HairTag } from "@/pages/reservation/constant/hairTag.ts";
 
 type HairTagType = (typeof HairTag)[keyof typeof HairTag];
 
