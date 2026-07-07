@@ -146,9 +146,8 @@ export const getQuarterlySalesPredict = async (
 ) => {
   return requestApiData(
     () =>
-      api.post<ApiResponse<QuarterlySalesPredictResponse>>(
+      api.get<ApiResponse<QuarterlySalesPredictResponse>>(
         `/shops/${shopId}/analytics/sales/beauty-salon/quarterly-predict`,
-        null,
         {
           params,
         }
