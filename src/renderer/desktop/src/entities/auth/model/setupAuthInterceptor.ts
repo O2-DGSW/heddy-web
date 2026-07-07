@@ -133,8 +133,10 @@ export const setupAuthInterceptor = () => {
       }
 
       if (status === 401 && !isPublicAuthRequest) {
-        clearAccessToken();
-        redirectToLogin();
+        if (getAccessToken()) {
+          clearAccessToken();
+          redirectToLogin();
+        }
       }
 
       return Promise.reject(error);
