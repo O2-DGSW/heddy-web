@@ -3,6 +3,7 @@ import { lightTheme } from "@design-tokens";
 
 import {
   getCustomerDashboard,
+  getQuarterlySalesPredict,
   type CustomerGradeResponse,
   type DashboardResponse,
   type QuarterlySalesPredictResponse,
@@ -338,6 +339,10 @@ const createHomeDashboardViewModel = (
   };
 };
 
+const getFulfilledValue = <T>(result: PromiseSettledResult<T>) => {
+  return result.status === "fulfilled" ? result.value : undefined;
+};
+
 const initialViewModel = createHomeDashboardViewModel(createEmptyDashboard());
 
 export const useHomeDashboard = () => {
@@ -358,10 +363,25 @@ export const useHomeDashboard = () => {
           throw new Error("연결된 매장이 없습니다.");
         }
 
-        const dashboard = await getCustomerDashboard(firstShopId, getTodayDateKey());
+        const today = getTodayDateKey();
+        const [dashboardResult, weeklySalesResult, monthlySalesResult] = await Promise.allSettled([
+          getCustomerDashboard(firstShopId, today),
+          getQuarterlySalesPredict(firstShopId, { periodType: "DAY", predictionCount: 7 }),
+          getQuarterlySalesPredict(firstShopId, { periodType: "MONTH", predictionCount: 1 }),
+        ]);
+
+        if (dashboardResult.status === "rejected") {
+          throw dashboardResult.reason;
+        }
 
         if (!ignore) {
-          setViewModel(createHomeDashboardViewModel(dashboard));
+          setViewModel(
+            createHomeDashboardViewModel(
+              dashboardResult.value,
+              getFulfilledValue(weeklySalesResult),
+              getFulfilledValue(monthlySalesResult)
+            )
+          );
         }
       } catch (error) {
         if (!ignore) {
