@@ -9,7 +9,7 @@ const ReservationCardList = ({
   reservations,
 }: ReservationCardListProps) => {
   return (
-    <div className="flex h-full w-full flex-col gap-3.75">
+    <div className="scrollbar-thin flex h-full w-full flex-col gap-3.75 overflow-y-auto pr-1">
       {reservations.length === 0 ? (
         <div
           className="flex h-full items-center justify-center rounded-xl bg-[#F7F7F7] font-['Pretendard'] text-base font-medium leading-[1.3]"

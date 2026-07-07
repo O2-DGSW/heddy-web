@@ -33,16 +33,17 @@ export const FindIdForm = () => {
           <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>
             전화번호
           </p>
-          <div className="flex gap-2 mb-1">
+          <div className="flex gap-2 mb-1 w-full overflow-hidden">
             <input
-              className={`flex-1 px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+              className={`min-w-0 flex-1 px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`}
               style={{ backgroundColor: lightTheme.background.neutral, color: lightTheme.label.normal }}
               placeholder="전화번호"
               value={phone}
               onChange={e => handlePhoneChange(e.target.value)}
+              inputMode="tel"
             />
             <button
-              className={`px-6 py-4 rounded-xl ${font.label.medium}`}
+              className={`shrink-0 w-[4.5rem] py-3 rounded-xl ${font.label.medium}`}
               style={{
                 backgroundColor: canRequestVerification ? lightTheme.primary.normal : lightTheme.line.alternative,
                 color: canRequestVerification ? lightTheme.fill.normal : lightTheme.line.normal,
@@ -53,11 +54,12 @@ export const FindIdForm = () => {
             </button>
           </div>
           <input
-            className={`w-full px-4 py-4 rounded-xl focus:outline-none mb-3 ${font.caption.regular}`}
+            className={`w-full px-4 py-3 rounded-xl focus:outline-none mb-3 ${font.caption.regular}`}
             style={{ backgroundColor: lightTheme.background.neutral, color: lightTheme.label.normal }}
             placeholder="인증번호"
             value={verificationCode}
             onChange={e => setVerificationCode(e.target.value)}
+            inputMode="numeric"
           />
         </div>
       </div>

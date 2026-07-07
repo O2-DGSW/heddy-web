@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { ProcedureNote } from "@/features/cuts/model/types/AddProcedureNoteModal.types";
+import { customerApi } from "@/entities/customer/api/customerApi";
+import { useGetMyProfileQuery } from "@/entities/profile/api/query/useGetMyProfile.query";
 import { useAddProcedureNoteStore } from "@/features/cuts/model/add-procedure/useAddProcedureNoteStore.ts";
+import { formatPhone } from "@/private/shared/utils/formatPhone";
 
 const toInputDateValue = (date: Date) => {
   const year = date.getFullYear();
@@ -10,65 +13,68 @@ const toInputDateValue = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
-const createObjectUrl = (file: File | null) => {
-  if (!file) return null;
-  return URL.createObjectURL(file);
-};
-
 export const useAddProcedureNoteForm = () => {
   const navigate = useNavigate();
+  const { data: profile } = useGetMyProfileQuery();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    date,
-    setDate,
-    customer,
-    setCustomer,
-    selectedTags,
-    toggleTag,
-    beforeImageFile,
-    setBeforeImageFile,
-    afterImageFile,
-    setAfterImageFile,
+    title, setTitle,
+    memo, setMemo,
+    date, setDate,
+    phoneNumber, setPhoneNumber,
+    price, setPrice,
+    selectedTags, toggleTag,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
     reset,
   } = useAddProcedureNoteStore();
 
-  const handleSubmit = () => {
-    const beforeImageUrl = createObjectUrl(beforeImageFile);
-    const afterImageUrl = createObjectUrl(afterImageFile);
+  const handlePhoneChange = (value: string) => setPhoneNumber(formatPhone(value));
 
-    const newNote: ProcedureNote = {
-      id: crypto.randomUUID(),
-      customerName: customer || "고객",
-      title,
-      description,
-      date,
-      tags: selectedTags.join(", "),
-      imageUrl: beforeImageUrl,
-      afterImageUrl,
-    };
+  const handleSubmit = async () => {
+    const shopId = profile?.shopMembers?.[0]?.shopId;
+    if (!shopId) {
+      setSubmitError("소속 미용실 정보를 찾을 수 없어요.");
+      return;
+    }
 
-    reset();
-    navigate("/cuts", { state: { newNote } });
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await customerApi.registerTreatmentRecord({
+        shopId,
+        phoneNumber: phoneNumber.replace(/\D/g, ""),
+        title: title || undefined,
+        treatmentDate: toInputDateValue(date),
+        serviceTags: selectedTags.length > 0 ? selectedTags : undefined,
+        memo: memo || undefined,
+        price: Number(price),
+        beforeImage: beforeImageFile,
+        afterImage: afterImageFile,
+      });
+      reset();
+      navigate("/cuts");
+    } catch {
+      setSubmitError("시술기록 등록에 실패했어요.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {
-    title,
-    setTitle,
-    description,
-    setDescription,
+    title, setTitle,
+    memo, setMemo,
     dateValue: toInputDateValue(date),
     setDate,
-    customer,
-    setCustomer,
-    selectedTags,
-    toggleTag,
-    beforeImageFile,
-    setBeforeImageFile,
-    afterImageFile,
-    setAfterImageFile,
+    phoneNumber, handlePhoneChange,
+    price, setPrice,
+    selectedTags, toggleTag,
+    beforeImageFile, setBeforeImageFile,
+    afterImageFile, setAfterImageFile,
+    isSubmitting,
+    submitError,
     handleSubmit,
   };
 };

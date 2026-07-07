@@ -3,7 +3,10 @@ import { lightTheme } from "@design-tokens";
 import DropdownIcon from "@/pages/reservation/assets/dropdown.svg?react";
 import customerImage from "@/pages/reservation/assets/reservation-customer.png";
 import radioButtonIcon from "@/pages/reservation/assets/radio-button.svg";
-import { RESERVATION_STATUS_META } from "@/pages/reservation/model/Reservation.constant";
+import {
+  RESERVATION_STATUS_META,
+  RESERVATION_STATUS_PANEL_MIN_WIDTH_REM,
+} from "@/pages/reservation/model/Reservation.constant";
 import type {
   ReservationStatusKey,
   ReservationStatusPanelProps,
@@ -32,7 +35,10 @@ const ReservationStatusPanel = ({
     : "다른 날짜를 선택하거나 필터를 변경해보세요";
 
   return (
-    <section className="h-full min-w-197.75 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
+    <section
+      className="h-full flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]"
+      style={{ minWidth: `${RESERVATION_STATUS_PANEL_MIN_WIDTH_REM}rem` }}
+    >
       <div className="flex h-full w-full flex-col gap-5 pt-7.75">
         <div className="flex w-full items-center justify-between px-[1.84375rem]">
           <h2

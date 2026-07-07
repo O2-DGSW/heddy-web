@@ -1,5 +1,6 @@
 import { font, lightTheme } from "@design-tokens";
 import { useNavigate } from "react-router-dom";
+import arrowSvg from "@/private/shared/ui/dialog/assets/Arrow.svg";
 import {
   useSignup,
   SignupTypeSelect,
@@ -24,6 +25,7 @@ export const SignupPage = () => {
     setShopForm,
     selectMemberType,
     nextStep,
+    goBack,
     submitSignup,
     isLoading,
     error,
@@ -35,14 +37,19 @@ export const SignupPage = () => {
 
   return (
     <div
-      className="h-full overflow-y-auto flex flex-col items-center px-6 pt-4"
+      className="relative h-full overflow-y-auto flex flex-col items-center px-6 pt-8"
       style={{ backgroundColor: lightTheme.background.normal }}
     >
       <div className="flex flex-col items-center gap-2 mb-8">
         <img src="/heddyIcon.svg" alt="heddy" className="w-50" />
-        <p className={font.body.medium} style={{ color: lightTheme.label.assistive }}>
-          {STEP_TITLE[step]}
-        </p>
+        <div className="flex items-center gap-1">
+          <button type="button" onClick={goBack} className="p-1 -ml-5">
+            <img src={arrowSvg} alt="뒤로가기" className="w-4 h-4" />
+          </button>
+          <p className={font.body.medium} style={{ color: lightTheme.label.assistive }}>
+            {STEP_TITLE[step]}
+          </p>
+        </div>
       </div>
 
       {step === "type-select" && <SignupTypeSelect onSelect={selectMemberType} />}

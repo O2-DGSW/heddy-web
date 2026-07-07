@@ -13,6 +13,7 @@ import { ShopPage } from "@/pages/shop";
 import { AddProcedureNotePage, CustomerSearchPage } from "@/pages/cuts";
 import { AiStyleRecommendationListPage } from "@/pages/ai-style-recommendation/ui/AiStyleRecommendationListPage";
 import { AiStyleRecommendationDetailPage } from "@/pages/ai-style-recommendation/ui/AiStyleRecommendationDetailPage";
+import { ChangePasswordPage } from "@/pages/profile/change-password/ui/ChangePasswordPage";
 
 type AuthStatus = "checking" | "authenticated" | "unauthenticated";
 
@@ -58,6 +59,7 @@ export const AppRoutes = () => {
         <Route element={<RequireAuth />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/profile/*" element={<ProfilePage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route path="/cuts/add" element={<AddProcedureNotePage />} />
           <Route path="/cuts/customer-search" element={<CustomerSearchPage />} />
           <Route path="/cuts/*" element={<ProcedureNotePage />} />

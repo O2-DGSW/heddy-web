@@ -20,13 +20,13 @@ export interface CalendarProps {
   onChangeViewMode?: (mode: CalendarViewMode) => void;
   onMonthChange?: (date: string) => void;
   onSelectDate?: (date: string) => void;
+  tabs?: boolean;
 }
 
-export interface CalendarViewProps
-  extends Omit<
-    CalendarProps,
-    "initialMonthDate" | "markerMap" | "monthDate" | "onMonthChange" | "variant"
-  > {
+export interface CalendarViewProps extends Omit<
+  CalendarProps,
+  "initialMonthDate" | "markerMap" | "monthDate" | "onMonthChange" | "variant"
+> {
   calendarRows: CalendarDate[][];
   displayedMonthDate: string;
   weekDays: string[];

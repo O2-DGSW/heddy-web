@@ -1,34 +1,46 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearAuthTokens } from "@/entities/auth/model/token";
+import { logoutApi } from "@/entities/auth/api/authApi";
 
 export const useDefaultSetting = () => {
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // navigate
-  const handleGoToBookmark = () => {
-    navigate("/profile/bookmarks/styles");
+  const handleNavigate = (alt: string) => {
+    switch (alt) {
+      case "bookmark":
+        navigate("/profile/bookmarks/styles");
+        break;
+      case "portfolio":
+        navigate("/profile/portfolio");
+        break;
+      case "setting":
+        navigate("/profile/edit");
+        break;
+      case "alarm":
+        navigate("/profile/alarm");
+        break;
+    }
   };
 
-  const handleGoToEditInfo = () => {
-    navigate("/profile/edit");
+  const handleLogoutConfirm = () => setShowLogoutConfirm(true);
+  const handleLogoutCancel = () => setShowLogoutConfirm(false);
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+    } catch {
+      // 서버 오류여도 로컬 토큰은 반드시 삭제
+    }
+    await clearAuthTokens();
+    navigate("/login", { replace: true });
   };
-
-  const handleGoToManagePortfolio = () => {
-    navigate("/profile/portfolio");
-  };
-
-  const handleGoToAlarm = () => {
-    navigate("/profile/alarm");
-  };
-
-  // navigation
-  const handleNavigation = [
-    handleGoToBookmark,
-    handleGoToManagePortfolio,
-    handleGoToEditInfo,
-    handleGoToAlarm,
-  ];
 
   return {
-    handleNavigation,
+    handleNavigate,
+    handleLogoutConfirm,
+    showLogoutConfirm,
+    handleLogoutCancel,
+    handleLogout,
   };
 };
