@@ -330,12 +330,15 @@ const DashboardTopBar = () => {
       if (event.key !== "Escape") return;
 
       setIsProfileMenuOpen(false);
+      if (activeDialog === "edit") {
+        setProfileFormValues(createProfileFormValues(profile));
+      }
       setActiveDialog(null);
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [activeDialog, isProfileMenuOpen]);
+  }, [activeDialog, isProfileMenuOpen, profile]);
 
   useEffect(() => {
     if ((!isProfileMenuOpen && activeDialog === null) || hasRequestedProfileRef.current) return;
@@ -362,14 +365,37 @@ const DashboardTopBar = () => {
 
   const openProfileDialog = (dialog: Exclude<ProfileDialog, null>) => {
     setIsProfileMenuOpen(false);
+    if (dialog === "edit") {
+      setProfileFormValues(createProfileFormValues(profile));
+    }
     setActiveDialog(dialog);
   };
 
   const closeProfileDialog = () => {
+    setProfileFormValues(createProfileFormValues(profile));
     setActiveDialog(null);
   };
 
   const handleProfileSave = () => {
+    if (profile) {
+      const nextProfile = {
+        ...profile,
+        name: profileFormValues.ownerName.trim() || profile.name,
+        shopMembers: profile.shopMembers.map((member, index) =>
+          index === 0
+            ? {
+                ...member,
+                shopName: profileFormValues.shopName.trim() || member.shopName,
+              }
+            : member
+        ),
+      };
+
+      // TODO: 프로필 수정 API가 연결되면 서버 저장으로 교체합니다.
+      setProfile(nextProfile);
+      setProfileFormValues(createProfileFormValues(nextProfile));
+    }
+
     setActiveDialog(null);
   };
 
