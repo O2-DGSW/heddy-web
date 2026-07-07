@@ -360,20 +360,6 @@ const getHomeDashboardErrorMessage = (error: unknown) => {
   return getErrorMessage(error, "대시보드 정보를 불러오지 못했습니다.");
 };
 
-const getSalesPredictionErrorMessage = (
-  ...results: PromiseSettledResult<QuarterlySalesPredictResponse>[]
-) => {
-  const rejectedResult = results.find(
-    (result): result is PromiseRejectedResult => result.status === "rejected"
-  );
-
-  if (!rejectedResult) {
-    return "";
-  }
-
-  return getErrorMessage(rejectedResult.reason, "매출 예측 정보를 불러오지 못했습니다.");
-};
-
 const getFulfilledValue = <T>(result: PromiseSettledResult<T>) => {
   return result.status === "fulfilled" ? result.value : undefined;
 };
@@ -411,11 +397,6 @@ export const useHomeDashboard = () => {
           throw dashboardResult.reason;
         }
 
-        const salesPredictionErrorMessage = getSalesPredictionErrorMessage(
-          weeklySalesResult,
-          monthlySalesResult
-        );
-
         if (!ignore) {
           setViewModel(
             createHomeDashboardViewModel(
@@ -424,7 +405,7 @@ export const useHomeDashboard = () => {
               getFulfilledValue(monthlySalesResult)
             )
           );
-          setErrorMessage(salesPredictionErrorMessage);
+          setErrorMessage("");
         }
       } catch (error) {
         if (!ignore) {
