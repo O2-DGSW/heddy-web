@@ -27,11 +27,6 @@
       sans-serif;
   }
 
-  /* iOS focus zoom 방지 - font-size 16px 미만이면 iOS가 자동 확대함 */
-  input, select, textarea {
-    font-size: max(1rem, 16px);
-  }
-
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
@@ -46,6 +41,16 @@
     caret-color: #3c3e3f;
     transition: background-color 9999s ease-out;
   }
+}
+
+/*
+  iOS input focus zoom 방지
+  - @layer base 안에 두면 Tailwind utilities(text-[0.75rem] 등)에 덮어써짐
+  - @layer 밖에 두면 모든 레이어보다 우선순위가 높아 확실히 적용됨
+  - 16px 미만 font-size 입력창에 포커스 시 iOS Safari/WebKit이 자동 확대하는 동작 차단
+*/
+input, select, textarea {
+  font-size: 16px;
 }
 
 @layer utilities {
