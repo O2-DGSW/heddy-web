@@ -7,7 +7,7 @@ import {
   type DesignerResponse,
 } from "@/entities/employee/api/employeeApi";
 import { getMe } from "@/entities/user/api/userApi";
-import { showErrorToastFromError } from "@/lib/toast";
+import { showErrorToast, showErrorToastFromError } from "@/lib/toast";
 import {
   EMPLOYEE_CONTENT_BOTTOM_OFFSET_REM,
   EMPLOYEE_CONTENT_HEIGHT_REM,
@@ -324,10 +324,7 @@ export const useEmployee = () => {
     }
 
     if (shopId === null || employee.designerId === undefined) {
-      showErrorToastFromError(
-        new Error("서버에 연결된 직원만 삭제할 수 있습니다."),
-        "서버에 연결된 직원만 삭제할 수 있습니다."
-      );
+      showErrorToast("서버에 연결된 직원만 삭제할 수 있습니다.");
       return;
     }
 
@@ -364,28 +361,22 @@ export const useEmployee = () => {
     const nextAccountId = accountId.trim();
 
     if (nextAccountId.length === 0) {
-      showErrorToastFromError(new Error("계정 ID를 입력해주세요."), "계정 ID를 입력해주세요.");
+      showErrorToast("계정 ID를 입력해주세요.");
       return;
     }
 
     if (selectedPermissionRole === null) {
-      showErrorToastFromError(new Error("권한을 선택해주세요."), "권한을 선택해주세요.");
+      showErrorToast("권한을 선택해주세요.");
       return;
     }
 
     if (editingEmployeeId === null && selectedPermissionRole !== "designer") {
-      showErrorToastFromError(
-        new Error("서버는 디자이너 초대만 지원합니다."),
-        "서버는 디자이너 초대만 지원합니다."
-      );
+      showErrorToast("서버는 디자이너 초대만 지원합니다.");
       return;
     }
 
     if (hasDuplicateAccountId(nextAccountId)) {
-      showErrorToastFromError(
-        new Error("이미 등록된 계정 ID입니다."),
-        "이미 등록된 계정 ID입니다."
-      );
+      showErrorToast("이미 등록된 계정 ID입니다.");
       return;
     }
 
@@ -399,20 +390,17 @@ export const useEmployee = () => {
     const nextAccountId = accountId.trim();
 
     if (nextAccountId.length === 0) {
-      showErrorToastFromError(new Error("계정 ID를 입력해주세요."), "계정 ID를 입력해주세요.");
+      showErrorToast("계정 ID를 입력해주세요.");
       return;
     }
 
     if (selectedPermissionRole === null) {
-      showErrorToastFromError(new Error("권한을 선택해주세요."), "권한을 선택해주세요.");
+      showErrorToast("권한을 선택해주세요.");
       return;
     }
 
     if (hasDuplicateAccountId(nextAccountId)) {
-      showErrorToastFromError(
-        new Error("이미 등록된 계정 ID입니다."),
-        "이미 등록된 계정 ID입니다."
-      );
+      showErrorToast("이미 등록된 계정 ID입니다.");
       return;
     }
 
@@ -441,15 +429,12 @@ export const useEmployee = () => {
     }
 
     if (selectedPermissionRole !== "designer") {
-      showErrorToastFromError(
-        new Error("서버는 디자이너 초대만 지원합니다."),
-        "서버는 디자이너 초대만 지원합니다."
-      );
+      showErrorToast("서버는 디자이너 초대만 지원합니다.");
       return;
     }
 
     if (shopId === null) {
-      showErrorToastFromError(new Error("연결된 매장이 없습니다."), "연결된 매장이 없습니다.");
+      showErrorToast("연결된 매장이 없습니다.");
       return;
     }
 
