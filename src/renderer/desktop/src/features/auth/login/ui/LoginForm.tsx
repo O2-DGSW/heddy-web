@@ -3,7 +3,7 @@ import { lightTheme } from "@design-tokens";
 import { useLoginForm } from "@/features/auth/login/model/login";
 
 const LoginForm = () => {
-  const { id, setId, password, setPassword, error, isLoading, handleLogin } = useLoginForm();
+  const { id, setId, password, setPassword, isLoading, handleLogin } = useLoginForm();
 
   const inputStyle = (value: string) => ({
     backgroundColor: lightTheme.background.neutral,
@@ -76,15 +76,6 @@ const LoginForm = () => {
           회원가입
         </Link>
       </nav>
-
-      {error && (
-        <p
-          className="mt-4 font-['Pretendard'] text-xs font-normal leading-[130%]"
-          style={{ color: lightTheme.status.error }}
-        >
-          {error}
-        </p>
-      )}
 
       <button
         type="submit"

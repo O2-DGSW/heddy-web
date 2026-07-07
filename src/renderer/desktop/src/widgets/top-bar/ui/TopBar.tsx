@@ -4,6 +4,7 @@ import { lightTheme, palette } from "@design-tokens";
 
 import { clearAccessToken } from "@/entities/auth/model/token";
 import { getMe, type MeResponse } from "@/entities/user/api/userApi";
+import { showErrorToastFromError } from "@/lib/toast";
 import designerDinosaurImage from "@/pages/employee/assets/png/designer-dinosaur.png";
 import alarmIcon from "@/widgets/top-bar/assets/svg/alarm.svg";
 import checkIcon from "@/widgets/top-bar/assets/svg/check.svg";
@@ -348,9 +349,10 @@ const DashboardTopBar = () => {
         setProfile(me);
         setProfileFormValues(createProfileFormValues(me));
       })
-      .catch(() => {
+      .catch(error => {
         if (isCancelled) return;
         setProfile(null);
+        showErrorToastFromError(error, "프로필 정보를 불러오지 못했습니다.");
       });
 
     return () => {

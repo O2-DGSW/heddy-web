@@ -21,7 +21,7 @@ const ReservationPage = () => {
     filterTabs,
     reservationStatusRows,
     isLoading,
-    errorMessage,
+    hasNoConnectedShop,
     openedReservation,
     openedTimeChangeReservation,
     timeOptions,
@@ -95,7 +95,7 @@ const ReservationPage = () => {
               filterTabs={filterTabs}
               rows={reservationStatusRows}
               isLoading={isLoading}
-              errorMessage={errorMessage}
+              hasNoConnectedShop={hasNoConnectedShop}
               activeStatusMenuReservationId={activeStatusMenuReservationId}
               onSelectFilter={setSelectedFilterKey}
               onToggleStatusMenu={toggleStatusMenu}

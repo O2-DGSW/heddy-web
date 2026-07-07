@@ -7,6 +7,7 @@ import {
   type DesignerResponse,
 } from "@/entities/employee/api/employeeApi";
 import { getMe } from "@/entities/user/api/userApi";
+import { showErrorToastFromError } from "@/lib/toast";
 import {
   EMPLOYEE_CONTENT_BOTTOM_OFFSET_REM,
   EMPLOYEE_CONTENT_HEIGHT_REM,
@@ -118,18 +119,6 @@ const mapDesignerToEmployee = (designer: DesignerResponse): EmployeeRow => ({
   role: "designer",
 });
 
-const getEmployeeErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 직원 정보를 확인해주세요.";
-  }
-
-  return error.message;
-};
-
 export const useEmployee = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(getEmployeeScale);
@@ -202,7 +191,8 @@ export const useEmployee = () => {
       } catch (error) {
         if (!ignore) {
           setEmployees([]);
-          setEmptyMessage(getEmployeeErrorMessage(error, "사용자 정보를 불러오지 못했습니다."));
+          setEmptyMessage("직원 정보가 없습니다");
+          showErrorToastFromError(error, "사용자 정보를 불러오지 못했습니다.");
           setIsLoading(false);
         }
       }
@@ -235,7 +225,8 @@ export const useEmployee = () => {
       } catch (error) {
         if (!ignore) {
           setEmployees([]);
-          setEmptyMessage(getEmployeeErrorMessage(error, "직원 정보를 불러오지 못했습니다."));
+          setEmptyMessage("직원 정보가 없습니다");
+          showErrorToastFromError(error, "직원 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -333,7 +324,10 @@ export const useEmployee = () => {
     }
 
     if (shopId === null || employee.designerId === undefined) {
-      setAccountIdMessage("서버에 연결된 직원만 삭제할 수 있습니다.");
+      showErrorToastFromError(
+        new Error("서버에 연결된 직원만 삭제할 수 있습니다."),
+        "서버에 연결된 직원만 삭제할 수 있습니다."
+      );
       return;
     }
 
@@ -349,7 +343,7 @@ export const useEmployee = () => {
         setAccountIdMessage("삭제되었습니다.");
       }
     } catch (error) {
-      setAccountIdMessage(getEmployeeErrorMessage(error, "직원을 삭제하지 못했습니다."));
+      showErrorToastFromError(error, "직원을 삭제하지 못했습니다.");
     }
   };
   const handleStartEditEmployee = (employee: EmployeeRow) => {
@@ -370,22 +364,28 @@ export const useEmployee = () => {
     const nextAccountId = accountId.trim();
 
     if (nextAccountId.length === 0) {
-      setAccountIdMessage("계정 ID를 입력해주세요.");
+      showErrorToastFromError(new Error("계정 ID를 입력해주세요."), "계정 ID를 입력해주세요.");
       return;
     }
 
     if (selectedPermissionRole === null) {
-      setAccountIdMessage("권한을 선택해주세요.");
+      showErrorToastFromError(new Error("권한을 선택해주세요."), "권한을 선택해주세요.");
       return;
     }
 
     if (editingEmployeeId === null && selectedPermissionRole !== "designer") {
-      setAccountIdMessage("서버는 디자이너 초대만 지원합니다.");
+      showErrorToastFromError(
+        new Error("서버는 디자이너 초대만 지원합니다."),
+        "서버는 디자이너 초대만 지원합니다."
+      );
       return;
     }
 
     if (hasDuplicateAccountId(nextAccountId)) {
-      setAccountIdMessage("이미 등록된 계정 ID입니다.");
+      showErrorToastFromError(
+        new Error("이미 등록된 계정 ID입니다."),
+        "이미 등록된 계정 ID입니다."
+      );
       return;
     }
 
@@ -399,17 +399,20 @@ export const useEmployee = () => {
     const nextAccountId = accountId.trim();
 
     if (nextAccountId.length === 0) {
-      setAccountIdMessage("계정 ID를 입력해주세요.");
+      showErrorToastFromError(new Error("계정 ID를 입력해주세요."), "계정 ID를 입력해주세요.");
       return;
     }
 
     if (selectedPermissionRole === null) {
-      setAccountIdMessage("권한을 선택해주세요.");
+      showErrorToastFromError(new Error("권한을 선택해주세요."), "권한을 선택해주세요.");
       return;
     }
 
     if (hasDuplicateAccountId(nextAccountId)) {
-      setAccountIdMessage("이미 등록된 계정 ID입니다.");
+      showErrorToastFromError(
+        new Error("이미 등록된 계정 ID입니다."),
+        "이미 등록된 계정 ID입니다."
+      );
       return;
     }
 
@@ -438,12 +441,15 @@ export const useEmployee = () => {
     }
 
     if (selectedPermissionRole !== "designer") {
-      setAccountIdMessage("서버는 디자이너 초대만 지원합니다.");
+      showErrorToastFromError(
+        new Error("서버는 디자이너 초대만 지원합니다."),
+        "서버는 디자이너 초대만 지원합니다."
+      );
       return;
     }
 
     if (shopId === null) {
-      setAccountIdMessage("연결된 매장이 없습니다.");
+      showErrorToastFromError(new Error("연결된 매장이 없습니다."), "연결된 매장이 없습니다.");
       return;
     }
 
@@ -456,7 +462,7 @@ export const useEmployee = () => {
       setEmployees(shop.designers.map(mapDesignerToEmployee));
       resetPermissionForm("초대가 발송되었습니다.");
     } catch (error) {
-      setAccountIdMessage(getEmployeeErrorMessage(error, "직원 초대에 실패했습니다."));
+      showErrorToastFromError(error, "직원 초대에 실패했습니다.");
     }
   };
 

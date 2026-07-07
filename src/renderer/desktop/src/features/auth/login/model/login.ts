@@ -1,39 +1,54 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { loginApi } from "@/entities/auth/api/authApi";
 import { setAccessToken } from "@/entities/auth/model/token";
+import { showErrorToast } from "@/lib/toast";
+
+const getSafeRedirectPath = (value: string | null) => {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
+    return "/";
+  }
+
+  if (value.startsWith("/login") || value.startsWith("/signup")) {
+    return "/";
+  }
+
+  return value;
+};
 
 export const useLoginForm = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async () => {
     if (!id.trim() || !password.trim()) {
-      setError("아이디와 비밀번호를 입력해주세요.");
+      showErrorToast("아이디와 비밀번호를 입력해주세요.");
       return;
     }
 
-    setError(null);
     setIsLoading(true);
     try {
       const { accessToken } = await loginApi({ loginId: id, password });
+      const redirectPath = getSafeRedirectPath(
+        new URLSearchParams(location.search).get("redirect")
+      );
+
       setAccessToken(accessToken);
-      navigate("/");
+      navigate(redirectPath, { replace: true });
     } catch (err) {
-      console.error("로그인 실패:", err);
       if (err instanceof Error) {
-        setError(err.message);
+        showErrorToast(err.message);
       } else {
-        setError("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+        showErrorToast("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { id, setId, password, setPassword, error, isLoading, handleLogin };
+  return { id, setId, password, setPassword, isLoading, handleLogin };
 };

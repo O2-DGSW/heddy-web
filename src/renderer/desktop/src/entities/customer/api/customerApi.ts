@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 
 import { api } from "@/shared/api";
+import { isErrorToastHandled } from "@/lib/toast";
 
 type ApiError = { code: string; message: string } | null;
 
@@ -46,14 +47,16 @@ const requestApiData = async <T>(
     const res = await request();
 
     if (!res.data.success) {
-      throw new Error(
-        res.data.error?.message || res.data.message || fallbackMessage
-      );
+      throw new Error(res.data.error?.message || res.data.message || fallbackMessage);
     }
 
     return res.data.data;
   } catch (error) {
-    throw new Error(getApiErrorMessage(error, fallbackMessage));
+    if (isErrorToastHandled(error)) {
+      throw error;
+    }
+
+    throw new Error(getApiErrorMessage(error, fallbackMessage), { cause: error });
   }
 };
 

@@ -7,6 +7,7 @@ import {
   type ReservationResponse,
 } from "@/entities/reservation/api/reservationApi";
 import { getMe } from "@/entities/user/api/userApi";
+import { showErrorToastFromError } from "@/lib/toast";
 import {
   MIN_RESERVATION_SCALE,
   RESERVATION_CONTENT_HEIGHT_REM,
@@ -154,18 +155,6 @@ const mapReservationResponse = (reservation: ReservationResponse): ReservationRe
   };
 };
 
-const getReservationErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 예약 정보를 확인해주세요.";
-  }
-
-  return error.message;
-};
-
 const getNextStatus = (status: ReservationStatusKey) => {
   const currentIndex = RESERVATION_STATUS_CYCLE.indexOf(status);
   const nextIndex = (currentIndex + 1) % RESERVATION_STATUS_CYCLE.length;
@@ -192,7 +181,7 @@ export const useReservation = () => {
   const [isChangedTimeMenuOpen, setIsChangedTimeMenuOpen] = useState(false);
   const [isDetailTimeMenuOpen, setIsDetailTimeMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [hasNoConnectedShop, setHasNoConnectedShop] = useState(false);
 
   useEffect(() => {
     const updateLayout = () => {
@@ -241,11 +230,12 @@ export const useReservation = () => {
 
         if (!ignore) {
           setShopId(firstShopId);
-          setErrorMessage("");
+          setHasNoConnectedShop(false);
         }
       } catch (error) {
         if (!ignore) {
-          setErrorMessage(getReservationErrorMessage(error, "사용자 정보를 불러오지 못했습니다."));
+          setHasNoConnectedShop(error instanceof Error && error.message.includes("연결된 매장"));
+          showErrorToastFromError(error, "사용자 정보를 불러오지 못했습니다.");
           setIsLoading(false);
         }
       }
@@ -267,7 +257,6 @@ export const useReservation = () => {
 
     const loadReservations = async () => {
       setIsLoading(true);
-      setErrorMessage("");
 
       try {
         const reservationResponses = await getReservations({
@@ -281,7 +270,7 @@ export const useReservation = () => {
       } catch (error) {
         if (!ignore) {
           setReservations([]);
-          setErrorMessage(getReservationErrorMessage(error, "예약 목록을 불러오지 못했습니다."));
+          showErrorToastFromError(error, "예약 목록을 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -349,8 +338,6 @@ export const useReservation = () => {
       return false;
     }
 
-    setErrorMessage("");
-
     try {
       const updatedReservation = await updateReservationStatusApi(reservationId, {
         status: toReservationApiStatus(status),
@@ -360,7 +347,7 @@ export const useReservation = () => {
       replaceReservation(mapReservationResponse(updatedReservation));
       return true;
     } catch (error) {
-      setErrorMessage(getReservationErrorMessage(error, "예약 상태를 변경하지 못했습니다."));
+      showErrorToastFromError(error, "예약 상태를 변경하지 못했습니다.");
       return false;
     }
   };
@@ -392,7 +379,7 @@ export const useReservation = () => {
     filterTabs,
     reservationStatusRows: filteredReservationRows,
     isLoading,
-    errorMessage,
+    hasNoConnectedShop,
     openedReservation,
     openedTimeChangeReservation,
     timeOptions: RESERVATION_TIME_OPTIONS,

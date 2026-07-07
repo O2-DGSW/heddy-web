@@ -7,6 +7,7 @@ import {
 } from "@/entities/reservation/api/reservationApi";
 import { registerTreatmentRecord } from "@/entities/treatment-record/api/treatmentRecordApi";
 import { getMe } from "@/entities/user/api/userApi";
+import { showErrorToastFromError } from "@/lib/toast";
 import customerAvatar from "@/pages/procedure/assets/images/customer-avatar.png";
 import {
   MIN_PROCEDURE_SCALE,
@@ -196,26 +197,6 @@ const mapReservationsToCustomers = (reservations: ReservationResponse[]): Proced
   return Array.from(customerMap.values());
 };
 
-const getProcedureErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 시술 정보를 확인해주세요.";
-  }
-
-  if (error.message.includes("404")) {
-    return "요청한 시술 API를 찾지 못했습니다.";
-  }
-
-  if (error.message.includes("500")) {
-    return "서버 오류로 시술 정보를 처리하지 못했습니다.";
-  }
-
-  return error.message || fallbackMessage;
-};
-
 export const useProcedure = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const uploadUrlsRef = useRef<Set<string>>(new Set());
@@ -339,7 +320,8 @@ export const useProcedure = () => {
           setDesigners([]);
           setSelectedCustomerId(null);
           setSelectedDesignerId(null);
-          setLoadMessage(getProcedureErrorMessage(error, "시술 정보를 불러오지 못했습니다."));
+          setLoadMessage("예약 고객 정보가 없습니다");
+          showErrorToastFromError(error, "시술 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -368,7 +350,11 @@ export const useProcedure = () => {
         if (!ignore) {
           setCustomers([]);
           setSelectedCustomerId(null);
-          setLoadMessage("시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요");
+          setLoadMessage("예약 고객 정보가 없습니다");
+          showErrorToastFromError(
+            new Error("시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요."),
+            "시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요."
+          );
         }
       });
 
@@ -400,7 +386,8 @@ export const useProcedure = () => {
         if (!ignore) {
           setCustomers([]);
           setSelectedCustomerId(null);
-          setLoadMessage(getProcedureErrorMessage(error, "예약 고객 정보를 불러오지 못했습니다."));
+          setLoadMessage("예약 고객 정보가 없습니다");
+          showErrorToastFromError(error, "예약 고객 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -546,32 +533,41 @@ export const useProcedure = () => {
     const priceValue = Number(price);
 
     if (shopId === null) {
-      setSaveMessage("연결된 매장이 없습니다.");
+      showErrorToastFromError(new Error("연결된 매장이 없습니다."), "연결된 매장이 없습니다.");
       return;
     }
 
     if (!normalizedProcedureDate) {
-      setSaveMessage("시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요.");
+      showErrorToastFromError(
+        new Error("시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요."),
+        "시술 날짜를 YYYY-MM-DD 형식으로 입력해주세요."
+      );
       return;
     }
 
     if (!selectedCustomer) {
-      setSaveMessage("시술 기록을 등록할 예약 고객을 선택해주세요.");
+      showErrorToastFromError(
+        new Error("시술 기록을 등록할 예약 고객을 선택해주세요."),
+        "시술 기록을 등록할 예약 고객을 선택해주세요."
+      );
       return;
     }
 
     if (!selectedCustomer.phoneNumber) {
-      setSaveMessage("선택한 고객의 전화번호가 응답에 없어 시술 기록을 등록할 수 없습니다.");
+      showErrorToastFromError(
+        new Error("선택한 고객의 전화번호가 응답에 없어 시술 기록을 등록할 수 없습니다."),
+        "선택한 고객의 전화번호가 응답에 없어 시술 기록을 등록할 수 없습니다."
+      );
       return;
     }
 
     if (selectedDesignerId === null) {
-      setSaveMessage("디자이너를 선택해주세요.");
+      showErrorToastFromError(new Error("디자이너를 선택해주세요."), "디자이너를 선택해주세요.");
       return;
     }
 
     if (!Number.isFinite(priceValue) || priceValue <= 0) {
-      setSaveMessage("시술 금액을 입력해주세요.");
+      showErrorToastFromError(new Error("시술 금액을 입력해주세요."), "시술 금액을 입력해주세요.");
       return;
     }
 
@@ -597,7 +593,7 @@ export const useProcedure = () => {
       setSelectedTagIds(new Set());
       resetImageState();
     } catch (error) {
-      setSaveMessage(getProcedureErrorMessage(error, "시술 기록을 등록하지 못했습니다."));
+      showErrorToastFromError(error, "시술 기록을 등록하지 못했습니다.");
     } finally {
       setIsSaving(false);
     }

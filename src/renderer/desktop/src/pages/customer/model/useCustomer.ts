@@ -8,6 +8,7 @@ import {
 } from "@/entities/customer/api/customerApi";
 import { getShopDetail } from "@/entities/employee/api/employeeApi";
 import { getMe } from "@/entities/user/api/userApi";
+import { showErrorToastFromError } from "@/lib/toast";
 import {
   CUSTOMER_CONTENT_BOTTOM_OFFSET_REM,
   CUSTOMER_CONTENT_HEIGHT_REM,
@@ -142,18 +143,6 @@ const mapCustomerChurnToRow = (customer: CustomerChurn, index: number): Customer
   };
 };
 
-const getCustomerErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 고객 정보를 확인해주세요.";
-  }
-
-  return error.message;
-};
-
 export const useCustomer = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(getCustomerScale);
@@ -226,7 +215,8 @@ export const useCustomer = () => {
         if (!ignore) {
           setRows([]);
           setDashboard(null);
-          setEmptyMessage(getCustomerErrorMessage(error, "사용자 정보를 불러오지 못했습니다."));
+          setEmptyMessage("고객 정보가 없습니다");
+          showErrorToastFromError(error, "사용자 정보를 불러오지 못했습니다.");
           setIsLoading(false);
         }
       }
@@ -285,7 +275,8 @@ export const useCustomer = () => {
           setRows([]);
           setDesignerOptions([]);
           setDashboard(null);
-          setEmptyMessage(getCustomerErrorMessage(error, "고객 정보를 불러오지 못했습니다."));
+          setEmptyMessage("고객 정보가 없습니다");
+          showErrorToastFromError(error, "고객 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
