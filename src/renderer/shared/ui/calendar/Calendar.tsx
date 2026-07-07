@@ -1,12 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { DEFAULT_WEEK_DAYS } from "./model/constants.ts";
-import {
-  createCalendarRows,
-  getMonthStartKey,
-  isSameMonthKey,
-  toDateKey,
-} from "./model/date.ts";
+import { createCalendarRows, getMonthStartKey, isSameMonthKey, toDateKey } from "./model/date.ts";
 import type { CalendarProps } from "./model/types.ts";
 import { DesktopCalendar } from "./ui/DesktopCalendar.tsx";
 import { MobileCalendar } from "./ui/MobileCalendar.tsx";
@@ -20,6 +15,7 @@ const Calendar = ({
   selectedDate,
   variant = "desktop",
   weekDays = DEFAULT_WEEK_DAYS,
+  tabs,
   ...props
 }: CalendarProps) => {
   const [internalMonthDate, setInternalMonthDate] = useState(() =>
@@ -55,6 +51,7 @@ const Calendar = ({
     displayedMonthDate,
     selectedDate,
     weekDays,
+    tabs,
     onChangeMonth: changeMonth,
     onSelectDate: selectDate,
   };
