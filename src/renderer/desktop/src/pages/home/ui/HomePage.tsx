@@ -11,7 +11,7 @@ import { useHomeDashboard } from "@/pages/home/model/useHomeDashboard";
 import { DESKTOP_PAGE_LAYOUT_OFFSET_REM } from "@/shared/constants/Layout.constant";
 
 const HomePage = () => {
-  const { viewModel, isLoading, errorMessage } = useHomeDashboard();
+  const { viewModel, isLoading } = useHomeDashboard();
 
   return (
     <div
@@ -25,16 +25,16 @@ const HomePage = () => {
         paddingTop: `${DESKTOP_PAGE_LAYOUT_OFFSET_REM.top}rem`,
       }}
     >
-      {(isLoading || errorMessage) && (
+      {isLoading && (
         <div
           className="pointer-events-none absolute right-10 top-8 z-20 rounded-full px-4 py-2 font-['Pretendard'] text-[14px] font-medium leading-[1.3]"
           style={{
             backgroundColor: lightTheme.background.normal,
             boxShadow: `0 0 4px color-mix(in srgb, ${lightTheme.label.strong} 8%, transparent)`,
-            color: errorMessage ? lightTheme.status.error : lightTheme.label.assistive,
+            color: lightTheme.label.assistive,
           }}
         >
-          {errorMessage || "대시보드 정보를 불러오는 중입니다"}
+          대시보드 정보를 불러오는 중입니다
         </div>
       )}
       <DashboardCanvas>

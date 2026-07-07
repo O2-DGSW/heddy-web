@@ -15,6 +15,7 @@ import {
   parseDateKey,
   toDateKey,
 } from "@/shared/ui/calendar/model/date";
+import { showErrorToastFromError, showSuccessToast } from "@/lib/toast";
 
 import {
   MIN_SCHEDULE_SCALE,
@@ -258,26 +259,6 @@ const createSummaryItem = (event: ScheduleEvent): ScheduleSummaryItem => ({
   tags: event.tags,
 });
 
-const getScheduleErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 스케줄 정보를 확인해주세요.";
-  }
-
-  if (error.message.includes("404")) {
-    return "요청한 스케줄 API를 찾지 못했습니다.";
-  }
-
-  if (error.message.includes("500")) {
-    return "서버 오류로 스케줄 정보를 불러오지 못했습니다.";
-  }
-
-  return error.message || fallbackMessage;
-};
-
 export const useSchedule = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [initialDate] = useState(getTodayDateKey);
@@ -294,8 +275,6 @@ export const useSchedule = () => {
   const [editingEventId, setEditingEventId] = useState<number | null>(null);
   const [isBootstrapLoading, setIsBootstrapLoading] = useState(true);
   const [isScheduleLoading, setIsScheduleLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [actionMessage, setActionMessage] = useState("");
   const layoutHeightRem = SCHEDULE_CONTENT_HEIGHT_REM;
 
   useLayoutEffect(() => {
@@ -340,7 +319,6 @@ export const useSchedule = () => {
 
     const loadShopContext = async () => {
       setIsBootstrapLoading(true);
-      setErrorMessage("");
 
       try {
         const me = await getMe();
@@ -359,14 +337,19 @@ export const useSchedule = () => {
         if (!ignore) {
           setShopId(firstShopId);
           setDesigners(nextDesigners);
-          setActionMessage(nextDesigners.length === 0 ? "매장에 등록된 디자이너가 없습니다." : "");
+          if (nextDesigners.length === 0) {
+            showErrorToastFromError(
+              new Error("매장에 등록된 디자이너가 없습니다."),
+              "매장에 등록된 디자이너가 없습니다."
+            );
+          }
         }
       } catch (error) {
         if (!ignore) {
           setShopId(null);
           setDesigners([]);
           setEvents([]);
-          setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+          showErrorToastFromError(error, "스케줄 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -394,7 +377,6 @@ export const useSchedule = () => {
       }
 
       setIsScheduleLoading(true);
-      setErrorMessage("");
 
       try {
         const reservationResponses = await getReservations({
@@ -410,7 +392,7 @@ export const useSchedule = () => {
         );
       } catch (error) {
         setEvents([]);
-        setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+        showErrorToastFromError(error, "스케줄 정보를 불러오지 못했습니다.");
       } finally {
         setIsScheduleLoading(false);
       }
@@ -427,7 +409,6 @@ export const useSchedule = () => {
       }
 
       setIsScheduleLoading(true);
-      setErrorMessage("");
 
       try {
         const reservationResponses = await getReservations({
@@ -446,7 +427,7 @@ export const useSchedule = () => {
       } catch (error) {
         if (!ignore) {
           setEvents([]);
-          setErrorMessage(getScheduleErrorMessage(error, "스케줄 정보를 불러오지 못했습니다."));
+          showErrorToastFromError(error, "스케줄 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -498,7 +479,6 @@ export const useSchedule = () => {
 
   const selectDate = useCallback(
     (date: string) => {
-      setActionMessage("");
       focusDate(date);
     },
     [focusDate]
@@ -517,7 +497,6 @@ export const useSchedule = () => {
   }, [focusDate]);
 
   const openModal = useCallback(() => {
-    setActionMessage("");
     setEditingEventId(null);
     setIsModalOpen(true);
   }, []);
@@ -530,7 +509,6 @@ export const useSchedule = () => {
         return;
       }
 
-      setActionMessage("");
       setEditingEventId(event.id);
       focusDate(event.date);
       setIsModalOpen(true);
@@ -546,8 +524,11 @@ export const useSchedule = () => {
   const saveSchedule = useCallback(
     async (values: ScheduleFormValues) => {
       if (!values.id) {
-        setActionMessage(
-          "예약 생성 API에는 고객/서비스 정보가 필요하지만 현재 스케줄 모달에는 해당 입력이 없어 저장하지 않았습니다."
+        showErrorToastFromError(
+          new Error(
+            "예약 생성 API에는 고객/서비스 정보가 필요하지만 현재 스케줄 모달에는 해당 입력이 없어 저장하지 않았습니다."
+          ),
+          "스케줄을 저장하지 못했습니다."
         );
         return;
       }
@@ -555,7 +536,10 @@ export const useSchedule = () => {
       const event = events.find(currentEvent => currentEvent.id === values.id);
 
       if (!event) {
-        setActionMessage("수정할 예약을 찾지 못했습니다.");
+        showErrorToastFromError(
+          new Error("수정할 예약을 찾지 못했습니다."),
+          "수정할 예약을 찾지 못했습니다."
+        );
         return;
       }
 
@@ -567,12 +551,12 @@ export const useSchedule = () => {
         });
         focusDate(values.date);
         await loadCalendarReservations(getMonthStartKey(values.date), getWeekDateKeys(values.date));
-        setActionMessage(
+        showSuccessToast(
           "예약 시간/디자이너 변경을 저장했습니다. 종료 시간은 서버 API가 없어 반영하지 않았습니다."
         );
         closeModal();
       } catch (error) {
-        setActionMessage(getScheduleErrorMessage(error, "스케줄을 저장하지 못했습니다."));
+        showErrorToastFromError(error, "스케줄을 저장하지 못했습니다.");
       }
     },
     [closeModal, events, focusDate, loadCalendarReservations]
@@ -582,10 +566,13 @@ export const useSchedule = () => {
     (eventId: number) => {
       const event = events.find(currentEvent => currentEvent.id === eventId);
 
-      setActionMessage(
-        event
-          ? "Swagger에 예약 삭제 API가 없어 서버 데이터를 삭제하지 않았습니다."
-          : "삭제할 예약을 찾지 못했습니다."
+      showErrorToastFromError(
+        new Error(
+          event
+            ? "Swagger에 예약 삭제 API가 없어 서버 데이터를 삭제하지 않았습니다."
+            : "삭제할 예약을 찾지 못했습니다."
+        ),
+        "스케줄을 삭제하지 못했습니다."
       );
       closeModal();
     },
@@ -618,8 +605,6 @@ export const useSchedule = () => {
     monthLabel,
     isModalOpen,
     isLoading: isBootstrapLoading || isScheduleLoading,
-    errorMessage,
-    actionMessage,
     setCalendarMonthDate,
     selectDate,
     openModal,

@@ -19,7 +19,7 @@ const ReservationStatusPanel = ({
   filterTabs,
   rows,
   isLoading,
-  errorMessage,
+  hasNoConnectedShop,
   activeStatusMenuReservationId,
   onSelectFilter,
   onToggleStatusMenu,
@@ -27,8 +27,6 @@ const ReservationStatusPanel = ({
   onOpenReservation,
   onOpenTimeChangeModal,
 }: ReservationStatusPanelProps) => {
-  const hasNoConnectedShop = errorMessage === "연결된 매장을 찾지 못했습니다.";
-  const shouldShowErrorMessage = errorMessage.length > 0 && !hasNoConnectedShop;
   const emptyTitle = hasNoConnectedShop ? "연결된 매장이 없어요" : "예약된 내역이 없어요";
   const emptyDescription = hasNoConnectedShop
     ? "매장 등록 또는 초대 수락 후 예약을 확인할 수 있어요"
@@ -67,14 +65,6 @@ const ReservationStatusPanel = ({
         </div>
 
         <div className="flex min-h-0 w-full flex-1 flex-col">
-          {shouldShowErrorMessage ? (
-            <p
-              className="px-[2.65625rem] pb-3 font-['Pretendard'] text-base font-medium leading-[1.3]"
-              style={{ color: lightTheme.status.error }}
-            >
-              {errorMessage}
-            </p>
-          ) : null}
           <div
             className="flex h-9 items-center justify-center font-['Pretendard'] text-lg font-medium leading-[1.3]"
             style={{

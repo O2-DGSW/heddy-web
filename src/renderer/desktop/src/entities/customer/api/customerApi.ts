@@ -1,4 +1,7 @@
+import { isAxiosError } from "axios";
+
 import { api } from "@/shared/api";
+import { isErrorToastHandled } from "@/lib/toast";
 
 type ApiError = { code: string; message: string } | null;
 
@@ -7,6 +10,54 @@ type ApiResponse<T> = {
   message: string;
   data: T;
   error: ApiError;
+};
+
+const getResponseErrorMessage = (value: unknown) => {
+  if (typeof value !== "object" || value === null) {
+    return null;
+  }
+
+  const response = value as { error?: { message?: unknown } | null; message?: unknown };
+  if (typeof response.error?.message === "string") {
+    return response.error.message;
+  }
+  if (typeof response.message === "string") {
+    return response.message;
+  }
+
+  return null;
+};
+
+const getApiErrorMessage = (error: unknown, fallbackMessage: string) => {
+  if (isAxiosError(error)) {
+    return getResponseErrorMessage(error.response?.data) || fallbackMessage;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallbackMessage;
+};
+
+const requestApiData = async <T>(
+  request: () => Promise<{ data: ApiResponse<T> }>,
+  fallbackMessage: string
+) => {
+  try {
+    const res = await request();
+
+    if (!res.data.success) {
+      throw new Error(res.data.error?.message || res.data.message || fallbackMessage);
+    }
+
+    return res.data.data;
+  } catch (error) {
+    if (isErrorToastHandled(error)) {
+      throw error;
+    }
+
+    throw new Error(getApiErrorMessage(error, fallbackMessage), { cause: error });
+  }
 };
 
 export type MetricsResponse = {
@@ -78,57 +129,41 @@ export type ShopChurnResponse = {
 };
 
 export const getCustomerDashboard = async (shopId: number, date?: string) => {
-  const res = await api.get<ApiResponse<DashboardResponse>>(
-    `/shops/${shopId}/analytics/dashboard`,
-    {
-      params: {
-        date,
-      },
-    }
+  return requestApiData(
+    () =>
+      api.get<ApiResponse<DashboardResponse>>(`/shops/${shopId}/analytics/dashboard`, {
+        params: {
+          date,
+        },
+      }),
+    "고객 요약 정보를 불러오지 못했습니다."
   );
-
-  if (!res.data.success) {
-    throw new Error(
-      res.data.error?.message || res.data.message || "고객 요약 정보를 불러오지 못했습니다."
-    );
-  }
-
-  return res.data.data;
 };
 
 export const getQuarterlySalesPredict = async (
   shopId: number,
   params: SalesPredictionParams = {}
 ) => {
-  const res = await api.post<ApiResponse<QuarterlySalesPredictResponse>>(
-    `/shops/${shopId}/analytics/sales/beauty-salon/quarterly-predict`,
-    null,
-    {
-      params,
-    }
+  return requestApiData(
+    () =>
+      api.get<ApiResponse<QuarterlySalesPredictResponse>>(
+        `/shops/${shopId}/analytics/sales/beauty-salon/quarterly-predict`,
+        {
+          params,
+        }
+      ),
+    "매출 예측 정보를 불러오지 못했습니다."
   );
-
-  if (!res.data.success) {
-    throw new Error(
-      res.data.error?.message || res.data.message || "매출 예측 정보를 불러오지 못했습니다."
-    );
-  }
-
-  return res.data.data;
 };
 
 export const getShopChurnCustomers = async (shopId: number) => {
-  const res = await api.get<ApiResponse<ShopChurnResponse>>(`/shops/${shopId}/analytics/churn`, {
-    params: {
-      limit: 1000,
-    },
-  });
-
-  if (!res.data.success) {
-    throw new Error(
-      res.data.error?.message || res.data.message || "고객 목록을 불러오지 못했습니다."
-    );
-  }
-
-  return res.data.data;
+  return requestApiData(
+    () =>
+      api.get<ApiResponse<ShopChurnResponse>>(`/shops/${shopId}/analytics/churn`, {
+        params: {
+          limit: 1000,
+        },
+      }),
+    "고객 목록을 불러오지 못했습니다."
+  );
 };

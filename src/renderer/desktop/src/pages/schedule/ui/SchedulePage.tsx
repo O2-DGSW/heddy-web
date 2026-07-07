@@ -34,8 +34,6 @@ const SchedulePage = () => {
     monthLabel,
     isModalOpen,
     isLoading,
-    errorMessage,
-    actionMessage,
     setCalendarMonthDate,
     selectDate,
     openModal,
@@ -60,16 +58,16 @@ const SchedulePage = () => {
         paddingTop: `${SCHEDULE_CONTENT_TOP_OFFSET_REM}rem`,
       }}
     >
-      {(isLoading || errorMessage || actionMessage) && (
+      {isLoading && (
         <div
           className="pointer-events-none absolute right-10 top-8 z-20 rounded-full px-4 py-2 font-['Pretendard'] text-[14px] font-medium leading-[1.3]"
           style={{
             backgroundColor: lightTheme.background.normal,
             boxShadow: `0 0 4px color-mix(in srgb, ${lightTheme.label.strong} 8%, transparent)`,
-            color: errorMessage ? lightTheme.status.error : lightTheme.label.assistive,
+            color: lightTheme.label.assistive,
           }}
         >
-          {errorMessage || actionMessage || "스케줄 정보를 불러오는 중입니다"}
+          스케줄 정보를 불러오는 중입니다
         </div>
       )}
 

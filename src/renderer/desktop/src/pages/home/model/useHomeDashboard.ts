@@ -19,6 +19,7 @@ import {
   type RevenueChartPoint,
   type SummaryCardItem,
 } from "@/pages/home/model/homeDashboardData";
+import { showErrorToastFromError } from "@/lib/toast";
 
 type HomeDashboardViewModel = {
   summaryCards: SummaryCardItem[];
@@ -141,10 +142,7 @@ const createSummaryCards = (
     ["오늘 예약자 수", formatInteger(metrics?.today_reservation_count)],
     ["이달의 신규 단골 수", formatInteger(metrics?.monthly_new_regular_customer_count)],
     ["오늘 방문자 수", formatInteger(metrics?.today_visitor_count)],
-    [
-      "이달의 예상 매출",
-      monthlyExpectedSales == null ? "-" : formatInteger(monthlyExpectedSales),
-    ],
+    ["이달의 예상 매출", monthlyExpectedSales == null ? "-" : formatInteger(monthlyExpectedSales)],
   ]);
 
   return summaryCardDefinitions.map(card => ({
@@ -179,9 +177,7 @@ const createCustomerGrades = (
   grades: CustomerGradeResponse[],
   totalCustomerCount: number
 ): CustomerGrade[] => {
-  const countsByGrade = new Map<GradeLabel, number>(
-    GRADE_LABELS.map(label => [label, 0])
-  );
+  const countsByGrade = new Map<GradeLabel, number>(GRADE_LABELS.map(label => [label, 0]));
 
   grades.forEach(grade => {
     const label = normalizeGradeLabel(grade.customer_grade);
@@ -196,8 +192,7 @@ const createCustomerGrades = (
     const percentValue = total > 0 ? Math.round((value / total) * 100) : 0;
     const barWidth =
       value > 0 ? Math.max(32, Math.round((percentValue / 100) * GRADE_BAR_WIDTH)) : 0;
-    const valueLeft =
-      barWidth > 0 ? Math.max(8, Math.min(barWidth - 18, GRADE_BAR_WIDTH - 32)) : 8;
+    const valueLeft = barWidth > 0 ? Math.max(8, Math.min(barWidth - 18, GRADE_BAR_WIDTH - 32)) : 8;
 
     return {
       ...baseGrade,
@@ -344,36 +339,6 @@ const createHomeDashboardViewModel = (
   };
 };
 
-const getErrorMessage = (error: unknown, fallbackMessage: string) => {
-  if (!(error instanceof Error)) {
-    return fallbackMessage;
-  }
-
-  if (error.message.includes("401")) {
-    return "로그인 후 대시보드 정보를 확인해주세요.";
-  }
-
-  return error.message || fallbackMessage;
-};
-
-const getHomeDashboardErrorMessage = (error: unknown) => {
-  return getErrorMessage(error, "대시보드 정보를 불러오지 못했습니다.");
-};
-
-const getSalesPredictionErrorMessage = (
-  ...results: PromiseSettledResult<QuarterlySalesPredictResponse>[]
-) => {
-  const rejectedResult = results.find(
-    (result): result is PromiseRejectedResult => result.status === "rejected"
-  );
-
-  if (!rejectedResult) {
-    return "";
-  }
-
-  return getErrorMessage(rejectedResult.reason, "매출 예측 정보를 불러오지 못했습니다.");
-};
-
 const getFulfilledValue = <T>(result: PromiseSettledResult<T>) => {
   return result.status === "fulfilled" ? result.value : undefined;
 };
@@ -383,7 +348,6 @@ const initialViewModel = createHomeDashboardViewModel(createEmptyDashboard());
 export const useHomeDashboard = () => {
   const [viewModel, setViewModel] = useState<HomeDashboardViewModel>(initialViewModel);
   const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     let ignore = false;
@@ -400,21 +364,15 @@ export const useHomeDashboard = () => {
         }
 
         const today = getTodayDateKey();
-        const [dashboardResult, weeklySalesResult, monthlySalesResult] =
-          await Promise.allSettled([
-            getCustomerDashboard(firstShopId, today),
-            getQuarterlySalesPredict(firstShopId, { periodType: "DAY", predictionCount: 7 }),
-            getQuarterlySalesPredict(firstShopId, { periodType: "MONTH", predictionCount: 1 }),
-          ]);
+        const [dashboardResult, weeklySalesResult, monthlySalesResult] = await Promise.allSettled([
+          getCustomerDashboard(firstShopId, today),
+          getQuarterlySalesPredict(firstShopId, { periodType: "DAY", predictionCount: 7 }),
+          getQuarterlySalesPredict(firstShopId, { periodType: "MONTH", predictionCount: 1 }),
+        ]);
 
         if (dashboardResult.status === "rejected") {
           throw dashboardResult.reason;
         }
-
-        const salesPredictionErrorMessage = getSalesPredictionErrorMessage(
-          weeklySalesResult,
-          monthlySalesResult
-        );
 
         if (!ignore) {
           setViewModel(
@@ -424,12 +382,11 @@ export const useHomeDashboard = () => {
               getFulfilledValue(monthlySalesResult)
             )
           );
-          setErrorMessage(salesPredictionErrorMessage);
         }
       } catch (error) {
         if (!ignore) {
           setViewModel(createHomeDashboardViewModel(createEmptyDashboard()));
-          setErrorMessage(getHomeDashboardErrorMessage(error));
+          showErrorToastFromError(error, "대시보드 정보를 불러오지 못했습니다.");
         }
       } finally {
         if (!ignore) {
@@ -448,6 +405,5 @@ export const useHomeDashboard = () => {
   return {
     viewModel,
     isLoading,
-    errorMessage,
   };
 };
