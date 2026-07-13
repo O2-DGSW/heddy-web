@@ -7,9 +7,11 @@ export const AccountFormFields = ({
   form,
   showPasswordError,
   showPhoneError,
+  showNameError,
   canRequestVerification,
+  nameLabel = "이름",
+  smsVerification,
   onChange,
-  middleSlot,
 }: Props) => {
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
@@ -37,7 +39,21 @@ export const AccountFormFields = ({
         onPasswordConfirmChange={v => onChange({ ...form, passwordConfirm: v })}
       />
 
-      {middleSlot}
+      <div className="flex flex-col gap-1">
+        <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>{nameLabel}</p>
+        <input
+          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+          style={inputStyle}
+          placeholder={nameLabel}
+          value={form.name}
+          onChange={e => onChange({ ...form, name: e.target.value })}
+        />
+        {showNameError && (
+          <p className={`${font.caption.regular} pl-2`} style={{ color: lightTheme.status.error }}>
+            {nameLabel}을 입력해주세요.
+          </p>
+        )}
+      </div>
 
       <PhoneVerificationField
         carrier={form.carrier}
@@ -45,6 +61,7 @@ export const AccountFormFields = ({
         verificationCode={form.verificationCode}
         canRequestVerification={canRequestVerification}
         showPhoneError={showPhoneError}
+        smsVerification={smsVerification}
         onCarrierChange={v => onChange({ ...form, carrier: v })}
         onPhoneChange={v => onChange({ ...form, phone: v })}
         onVerificationCodeChange={v => onChange({ ...form, verificationCode: v })}

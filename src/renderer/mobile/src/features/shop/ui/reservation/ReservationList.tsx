@@ -1,19 +1,15 @@
-import { useState } from "react";
-
 import { lightTheme } from "@design-tokens";
-
-import { RESERVATIONS } from "@/features/shop/constrants/reservations";
+import { ReservationCard } from "./ReservationCard";
+import { useReservationList } from "@/features/shop/model/useReservationList.ts";
 import type { ReservationStatus } from "@/features/shop/model/types/Reservation.types";
 
-import { ReservationCard } from "./ReservationCard";
-
 export const ReservationList = () => {
-  const [statuses, setStatuses] = useState<Record<string, ReservationStatus>>(
-    () => Object.fromEntries(RESERVATIONS.map((r) => [r.id, r.status]))
-  );
+  const { reservationList, handleStatusChange } = useReservationList();
 
-  const handleStatusChange = (id: string, status: ReservationStatus) => {
-    setStatuses((prev) => ({ ...prev, [id]: status }));
+  const statusMap: Record<string, ReservationStatus> = {
+    APPROVED: "approve",
+    REJECTED: "reject",
+    TIME_CHANGED: "time-change",
   };
 
   return (
@@ -21,14 +17,25 @@ export const ReservationList = () => {
       className="flex flex-col gap-3 overflow-y-auto h-full px-4 py-4"
       style={{ backgroundColor: lightTheme.background.neutral }}
     >
-      {RESERVATIONS.map((reservation) => (
-        <ReservationCard
-          key={reservation.id}
-          reservation={reservation}
-          status={statuses[reservation.id]}
-          onStatusChange={(status) => handleStatusChange(reservation.id, status)}
-        />
-      ))}
+      {reservationList.map(reservation => {
+        const currentStatus =
+          statusMap[reservation.status] || (reservation.status.toLowerCase() as ReservationStatus);
+
+        return (
+          <ReservationCard
+            key={reservation.reservation_id}
+            reservation={reservation}
+            status={currentStatus}
+            onStatusChange={status => handleStatusChange(reservation.reservation_id, status)}
+          />
+        );
+      })}
+
+      {reservationList.length === 0 && (
+        <p className="text-center py-8 text-sm" style={{ color: lightTheme.label.assistive }}>
+          예약 내역이 없습니다.
+        </p>
+      )}
     </div>
   );
 };

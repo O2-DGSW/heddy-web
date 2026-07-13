@@ -1,14 +1,24 @@
 import { Link } from "react-router-dom";
 import { lightTheme } from "@design-tokens";
+import { useLoginForm } from "@/features/auth/login/model/login";
 
 const LoginForm = () => {
-  const inputStyle = {
+  const { id, setId, password, setPassword, isLoading, handleLogin } = useLoginForm();
+
+  const inputStyle = (value: string) => ({
     backgroundColor: lightTheme.background.neutral,
-    color: lightTheme.label.neutral,
-  };
+    color: value ? lightTheme.label.normal : lightTheme.label.assistive,
+  });
 
   return (
-    <form className="flex w-full flex-col" aria-label="로그인">
+    <form
+      className="flex w-full flex-col"
+      aria-label="로그인"
+      onSubmit={event => {
+        event.preventDefault();
+        handleLogin();
+      }}
+    >
       <div className="flex flex-col gap-1">
         <label
           htmlFor="login-id"
@@ -23,7 +33,9 @@ const LoginForm = () => {
           type="text"
           placeholder="아이디"
           className="h-[47px] rounded-[10px] px-3.5 font-['Pretendard'] text-xs font-normal leading-[130%] outline-none placeholder:text-[#c1c2c3] focus:ring-2 focus:ring-[#41be8e]/30"
-          style={inputStyle}
+          style={inputStyle(id)}
+          value={id}
+          onChange={event => setId(event.target.value)}
         />
       </div>
 
@@ -41,7 +53,9 @@ const LoginForm = () => {
           type="password"
           placeholder="비밀번호"
           className="h-[47px] rounded-[10px] px-3.5 font-['Pretendard'] text-xs font-normal leading-[130%] outline-none placeholder:text-[#c1c2c3] focus:ring-2 focus:ring-[#41be8e]/30"
-          style={inputStyle}
+          style={inputStyle(password)}
+          value={password}
+          onChange={event => setPassword(event.target.value)}
         />
       </div>
 
@@ -66,9 +80,14 @@ const LoginForm = () => {
       <button
         type="submit"
         className="mt-[clamp(46px,6.5vh,64px)] h-12 rounded-[10px] font-['Pretendard'] text-lg font-semibold leading-[130%] transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#41be8e]/40 focus:ring-offset-2"
-        style={{ backgroundColor: lightTheme.primary.normal, color: lightTheme.fill.normal }}
+        style={{
+          backgroundColor: lightTheme.primary.normal,
+          color: lightTheme.fill.normal,
+          opacity: isLoading ? 0.6 : 1,
+        }}
+        disabled={isLoading}
       >
-        로그인
+        {isLoading ? "로그인 중..." : "로그인"}
       </button>
     </form>
   );

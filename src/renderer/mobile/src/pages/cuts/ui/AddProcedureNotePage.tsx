@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { font, lightTheme } from "@design-tokens";
 import { PROCEDURE_TAGS } from "@/features/cuts/constrants/procedure-tags";
@@ -12,27 +11,21 @@ import { ImageUploadArea } from "./ImageUploadArea";
 
 export const AddProcedureNotePage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const {
     title, setTitle,
-    description, setDescription,
+    memo, setMemo,
     dateValue, setDate,
-    customer, setCustomer,
+    phoneNumber, handlePhoneChange,
+    price, setPrice,
     selectedTags, toggleTag,
     beforeImageFile, setBeforeImageFile,
     afterImageFile, setAfterImageFile,
+    isSubmitting,
+    submitError,
     handleSubmit,
   } = useAddProcedureNoteForm();
 
-  useEffect(() => {
-    const selected = location.state?.selectedCustomer as string | undefined;
-    if (selected) {
-      setCustomer(selected);
-      navigate("/cuts/add", { replace: true, state: null });
-    }
-  }, []);
-
-  const isValid = validateAddProcedureNoteForm({ title, description, customer, selectedTags, beforeImageFile });
+  const isValid = validateAddProcedureNoteForm({ phoneNumber, price, treatmentDate: dateValue });
 
   const inputClass = `w-full px-4 py-3 rounded-xl focus:outline-none ${font.caption.regular}`;
   const inputStyle = {
@@ -46,7 +39,6 @@ export const AddProcedureNotePage = () => {
       className="fixed inset-0 flex flex-col overflow-hidden pt-safe"
       style={{ backgroundColor: lightTheme.background.normal }}
     >
-      {/* 헤더 */}
       <div className="relative flex items-center px-4 py-3 pt-5 shrink-0">
         <button type="button" onClick={() => navigate(-1)} className="absolute left-4 p-1">
           <img src={arrowSvg} alt="뒤로가기" className="w-4 h-4" />
@@ -59,8 +51,45 @@ export const AddProcedureNotePage = () => {
         </h2>
       </div>
 
-      {/* 폼 영역 */}
       <div className="flex-1 overflow-y-auto px-4 flex flex-col gap-4 pb-28">
+        {/* 고객 전화번호 */}
+        <div className="flex flex-col gap-1">
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>고객 전화번호 *</label>
+          <input
+            className={inputClass}
+            style={inputStyle}
+            placeholder="010-0000-0000"
+            value={phoneNumber}
+            onChange={(e) => handlePhoneChange(e.target.value)}
+            inputMode="tel"
+          />
+        </div>
+
+        {/* 시술 날짜 */}
+        <div className="flex flex-col gap-1">
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>시술 날짜 *</label>
+          <input
+            type="date"
+            className={`${inputClass} appearance-none`}
+            style={inputStyle}
+            value={dateValue}
+            onChange={(e) => setDate(new Date(e.target.value))}
+          />
+        </div>
+
+        {/* 가격 */}
+        <div className="flex flex-col gap-1">
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>가격 *</label>
+          <input
+            className={inputClass}
+            style={inputStyle}
+            placeholder="시술 금액을 입력해주세요."
+            value={price}
+            onChange={(e) => setPrice(e.target.value.replace(/\D/g, ""))}
+            inputMode="numeric"
+          />
+        </div>
+
         {/* 제목 */}
         <div className="flex flex-col gap-1">
           <label className={labelClass} style={{ color: lightTheme.label.assistive }}>제목</label>
@@ -73,43 +102,16 @@ export const AddProcedureNotePage = () => {
           />
         </div>
 
-        {/* 부가설명 */}
+        {/* 메모 */}
         <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>부가설명</label>
+          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>메모</label>
           <input
             className={inputClass}
             style={inputStyle}
-            placeholder="부가설명을 입력해주세요."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            placeholder="메모를 입력해주세요."
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
           />
-        </div>
-
-        {/* 시술 날짜 */}
-        <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>시술 날짜</label>
-          <input
-            type="date"
-            className={`${inputClass} appearance-none`}
-            style={inputStyle}
-            value={dateValue}
-            onChange={(e) => setDate(new Date(e.target.value))}
-          />
-        </div>
-
-        {/* 고객 찾기 */}
-        <div className="flex flex-col gap-1">
-          <label className={labelClass} style={{ color: lightTheme.label.assistive }}>고객 찾기</label>
-          <button
-            type="button"
-            className={`${inputClass} text-left`}
-            style={inputStyle}
-            onClick={() => navigate("/cuts/customer-search")}
-          >
-            {customer || (
-              <span style={{ color: lightTheme.label.assistive }}>고객 찾기</span>
-            )}
-          </button>
         </div>
 
         {/* 시술 태그 */}
@@ -132,21 +134,26 @@ export const AddProcedureNotePage = () => {
             <ImageUploadArea label="After 사진" initialFile={afterImageFile} onFileChange={setAfterImageFile} />
           </div>
         </div>
+
+        {submitError && (
+          <p className={`${font.caption.regular} pl-1`} style={{ color: lightTheme.status.error }}>
+            {submitError}
+          </p>
+        )}
       </div>
 
-      {/* 추가 버튼 */}
       <div className="px-4 py-3 shrink-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 6.25rem)" }}>
         <button
           type="button"
           className={`w-full py-3 rounded-xl ${font.body.bold}`}
           style={{
-            backgroundColor: isValid ? lightTheme.primary.normal : lightTheme.fill.neutral,
-            color: isValid ? lightTheme.label.buttonText : lightTheme.label.assistive,
+            backgroundColor: isValid && !isSubmitting ? lightTheme.primary.normal : lightTheme.fill.neutral,
+            color: isValid && !isSubmitting ? lightTheme.label.buttonText : lightTheme.label.assistive,
           }}
-          disabled={!isValid}
+          disabled={!isValid || isSubmitting}
           onClick={() => handleSubmit()}
         >
-          추가
+          {isSubmitting ? "등록 중..." : "추가"}
         </button>
       </div>
     </div>

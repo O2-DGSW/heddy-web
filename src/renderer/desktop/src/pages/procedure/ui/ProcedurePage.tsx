@@ -30,6 +30,11 @@ const ProcedurePage = () => {
     selectedDesignerId,
     tags,
     memo,
+    price,
+    isLoading,
+    isSaving,
+    emptyMessage,
+    saveMessage,
     imagePreviews,
     setQuery,
     setSelectedCustomerId,
@@ -37,8 +42,10 @@ const ProcedurePage = () => {
     setSelectedDesignerId,
     handleToggleTag,
     handleMemoChange,
+    handlePriceChange,
     handleImageChange,
     handleCancel,
+    handleSave,
   } = useProcedure();
 
   return (
@@ -95,6 +102,8 @@ const ProcedurePage = () => {
                   customers={customers}
                   query={query}
                   selectedCustomerId={selectedCustomerId}
+                  isLoading={isLoading}
+                  emptyMessage={emptyMessage}
                   onQueryChange={setQuery}
                   onSelectCustomer={setSelectedCustomerId}
                 />
@@ -110,12 +119,16 @@ const ProcedurePage = () => {
               <ProcedureRecordPanel
                 tags={tags}
                 memo={memo}
+                price={price}
+                isSaving={isSaving}
+                saveMessage={saveMessage}
                 imagePreviews={imagePreviews}
                 onToggleTag={handleToggleTag}
                 onMemoChange={handleMemoChange}
+                onPriceChange={handlePriceChange}
                 onImageChange={handleImageChange}
                 onCancel={handleCancel}
-                onSave={() => undefined}
+                onSave={handleSave}
               />
             </div>
           </div>

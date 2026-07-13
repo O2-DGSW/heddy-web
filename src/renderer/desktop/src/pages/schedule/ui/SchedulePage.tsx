@@ -27,11 +27,13 @@ const SchedulePage = () => {
     calendarMarkerMap,
     summaryItems,
     events,
+    designers,
     editingEvent,
     visibleWeekDateKeys,
     weekLabels,
     monthLabel,
     isModalOpen,
+    isLoading,
     setCalendarMonthDate,
     selectDate,
     openModal,
@@ -47,7 +49,7 @@ const SchedulePage = () => {
   return (
     <div
       ref={pageRef}
-      className="h-full w-full overflow-auto"
+      className="relative h-full w-full overflow-auto"
       style={{
         backgroundColor: lightTheme.background.alternative,
         paddingBottom: `${SCHEDULE_CONTENT_BOTTOM_OFFSET_REM}rem`,
@@ -56,6 +58,19 @@ const SchedulePage = () => {
         paddingTop: `${SCHEDULE_CONTENT_TOP_OFFSET_REM}rem`,
       }}
     >
+      {isLoading && (
+        <div
+          className="pointer-events-none absolute right-10 top-8 z-20 rounded-full px-4 py-2 font-['Pretendard'] text-[14px] font-medium leading-[1.3]"
+          style={{
+            backgroundColor: lightTheme.background.normal,
+            boxShadow: `0 0 4px color-mix(in srgb, ${lightTheme.label.strong} 8%, transparent)`,
+            color: lightTheme.label.assistive,
+          }}
+        >
+          스케줄 정보를 불러오는 중입니다
+        </div>
+      )}
+
       <div
         className="shrink-0 overflow-visible"
         style={{
@@ -106,6 +121,7 @@ const SchedulePage = () => {
 
       {isModalOpen && (
         <ScheduleModal
+          designers={designers}
           editingEvent={editingEvent}
           initialDate={selectedDate}
           visibleWeekDateKeys={visibleWeekDateKeys}

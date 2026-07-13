@@ -3,7 +3,10 @@ import { lightTheme } from "@design-tokens";
 import DropdownIcon from "@/pages/reservation/assets/dropdown.svg?react";
 import customerImage from "@/pages/reservation/assets/reservation-customer.png";
 import radioButtonIcon from "@/pages/reservation/assets/radio-button.svg";
-import { RESERVATION_STATUS_META } from "@/pages/reservation/model/Reservation.constant";
+import {
+  RESERVATION_STATUS_META,
+  RESERVATION_STATUS_PANEL_MIN_WIDTH_REM,
+} from "@/pages/reservation/model/Reservation.constant";
 import type {
   ReservationStatusKey,
   ReservationStatusPanelProps,
@@ -15,6 +18,8 @@ const STATUS_MENU_OPTIONS: ReservationStatusKey[] = ["approved", "rejected", "ch
 const ReservationStatusPanel = ({
   filterTabs,
   rows,
+  isLoading,
+  hasNoConnectedShop,
   activeStatusMenuReservationId,
   onSelectFilter,
   onToggleStatusMenu,
@@ -22,8 +27,16 @@ const ReservationStatusPanel = ({
   onOpenReservation,
   onOpenTimeChangeModal,
 }: ReservationStatusPanelProps) => {
+  const emptyTitle = hasNoConnectedShop ? "연결된 매장이 없어요" : "예약된 내역이 없어요";
+  const emptyDescription = hasNoConnectedShop
+    ? "매장 등록 또는 초대 수락 후 예약을 확인할 수 있어요"
+    : "다른 날짜를 선택하거나 필터를 변경해보세요";
+
   return (
-    <section className="h-full min-w-197.75 flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]">
+    <section
+      className="h-full flex-1 overflow-hidden rounded-xl bg-white shadow-[0_0_0.25rem_rgba(0,0,0,0.08)]"
+      style={{ minWidth: `${RESERVATION_STATUS_PANEL_MIN_WIDTH_REM}rem` }}
+    >
       <div className="flex h-full w-full flex-col gap-5 pt-7.75">
         <div className="flex w-full items-center justify-between px-[1.84375rem]">
           <h2
@@ -69,10 +82,15 @@ const ReservationStatusPanel = ({
           </div>
 
           <div className="flex min-h-0 flex-1 flex-col">
-            {rows.length === 0 ? (
+            {isLoading ? (
               <div
-                className="flex flex-1 flex-col items-center justify-center gap-[clamp(1rem,1.6vw,1.5rem)]"
+                className="flex flex-1 items-center justify-center font-['Pretendard'] text-xl font-medium leading-[1.3]"
+                style={{ color: lightTheme.label.assistive }}
               >
+                예약을 불러오는 중입니다
+              </div>
+            ) : rows.length === 0 ? (
+              <div className="flex flex-1 flex-col items-center justify-center gap-[clamp(1rem,1.6vw,1.5rem)]">
                 <div className="relative size-[clamp(5.25rem,6vw,7rem)] overflow-hidden rounded-full bg-white shadow-[0_0_0.375rem_rgba(0,0,0,0.02)]">
                   <img
                     src={customerImage}
@@ -86,13 +104,13 @@ const ReservationStatusPanel = ({
                     className="font-['Pretendard'] text-[clamp(1rem,1.12vw,1.25rem)] font-semibold leading-[1.3]"
                     style={{ color: lightTheme.label.alternative }}
                   >
-                    예약된 내역이 없어요
+                    {emptyTitle}
                   </p>
                   <p
                     className="font-['Pretendard'] text-[clamp(0.875rem,0.98vw,1.0625rem)] font-medium leading-[1.3]"
                     style={{ color: lightTheme.label.assistive }}
                   >
-                    다른 날짜를 선택하거나 필터를 변경해보세요
+                    {emptyDescription}
                   </p>
                 </div>
               </div>
@@ -106,9 +124,7 @@ const ReservationStatusPanel = ({
                     key={row.id}
                     className="flex h-16 items-center justify-center border-b border-[#F7F7F7]"
                   >
-                    <div
-                      className="grid w-full grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)_2.5rem_5.231875rem] items-center px-[2.65625rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]"
-                    >
+                    <div className="grid w-full grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)_2.5rem_5.231875rem] items-center px-[2.65625rem] font-['Pretendard'] text-lg font-semibold leading-[1.3]">
                       <button
                         type="button"
                         className="col-start-1 col-end-8 grid w-full cursor-pointer grid-cols-[4.5rem_2.5rem_3rem_2.5rem_8.875rem_2.5rem_minmax(12.5rem,1fr)] items-center border-0 bg-transparent p-0 text-left font-['Pretendard'] text-lg font-semibold leading-[1.3]"
@@ -169,9 +185,7 @@ const ReservationStatusPanel = ({
                         </button>
 
                         {isStatusMenuOpen ? (
-                          <div
-                            className="absolute right-0 top-8 z-10 flex w-29.5 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.05)]"
-                          >
+                          <div className="absolute right-0 top-8 z-10 flex w-29.5 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_0_0.5rem_rgba(0,0,0,0.05)]">
                             {STATUS_MENU_OPTIONS.map(option => {
                               const optionMeta = RESERVATION_STATUS_META[option];
 

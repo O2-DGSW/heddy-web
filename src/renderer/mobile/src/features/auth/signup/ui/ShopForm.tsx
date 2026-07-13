@@ -22,7 +22,8 @@ export const ShopForm = ({ form, onChange, onNext }: ShopFormProps) => {
     setShowModal(false);
   });
 
-  const isValid = !!form.shopName && !!form.address && !!form.category && !!form.landline && !!form.businessNumber;
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValid = !!form.shopName && !!form.address && !!form.category && !!form.landline && isValidEmail(form.storeEmail) && !!form.businessNumber;
 
   const inputStyle = {
     backgroundColor: lightTheme.background.neutral,
@@ -93,6 +94,18 @@ export const ShopForm = ({ form, onChange, onNext }: ShopFormProps) => {
           placeholder="유선번호"
           value={form.landline}
           onChange={e => onChange({ ...form, landline: formatLandline(e.target.value) })}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <p className={`${font.label.medium} pl-2`} style={{ color: lightTheme.label.assistive }}>매장 이메일</p>
+        <input
+          type="email"
+          className={`w-full px-4 py-4 rounded-xl focus:outline-none ${font.caption.regular}`}
+          style={inputStyle}
+          placeholder="매장 이메일"
+          value={form.storeEmail}
+          onChange={e => onChange({ ...form, storeEmail: e.target.value })}
         />
       </div>
 

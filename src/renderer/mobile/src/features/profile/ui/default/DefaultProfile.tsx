@@ -12,12 +12,22 @@ interface StatItemProps {
   alt: string;
   value: number;
   unit: string;
+  label: string;
 }
 
-const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
+const StatItem = ({ icon, alt, value, unit, label }: StatItemProps) => {
   return (
     <div className="flex flex-col items-center gap-[0.25rem]">
       <img className="size-[2.25rem]" src={icon} alt={alt} />
+
+      <p
+        className={font.caption.regular}
+        style={{
+          color: lightTheme.label.alternative,
+        }}
+      >
+        {label}
+      </p>
 
       <div className="flex flex-row gap-[0.175rem]">
         <p
@@ -43,26 +53,33 @@ const StatItem = ({ icon, alt, value, unit }: StatItemProps) => {
 };
 
 export const DefaultProfile = () => {
-  const { data } = useDefaultProfile();
+  const { data, isLoading, isError } = useDefaultProfile();
+
+  if (isLoading || isError || !data) {
+    return <div className="h-full px-[1.25rem] py-[1.75rem]" />;
+  }
 
   const stats = [
     {
       icon: CustomerIcon,
       alt: "customer",
-      value: data.customer,
-      unit: "명",
+      value: data.reservationCount,
+      unit: "회",
+      label: "총 예약",
     },
     {
       icon: DateIcon,
       alt: "date",
-      value: data.cutCnt,
+      value: data.treatmentRecordCount,
       unit: "건",
+      label: "시술기록",
     },
     {
       icon: DocumentIcon,
       alt: "document",
-      value: data.cutData,
-      unit: "데이터",
+      value: data.savedStyleCount,
+      unit: "개",
+      label: "저장 스타일",
     },
   ];
 
@@ -121,6 +138,7 @@ export const DefaultProfile = () => {
               alt={item.alt}
               value={item.value}
               unit={item.unit}
+              label={item.label}
             />
           ))}
         </div>

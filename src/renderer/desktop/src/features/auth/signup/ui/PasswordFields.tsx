@@ -5,7 +5,7 @@ import {
   inputClassName,
   inputStyle,
   primaryRingStyle,
-} from "@/features/auth/signup/ui/SignupFormControls";
+} from "@/features/auth/signup/ui/SignupFormStyles";
 import type { PasswordFieldsProps } from "@/features/auth/signup/ui/types";
 
 const PasswordFields = ({
@@ -14,7 +14,7 @@ const PasswordFields = ({
   onPasswordChange,
   onPasswordConfirmChange,
 }: PasswordFieldsProps) => (
-  <div className="mt-6 flex flex-col gap-1">
+  <div className="mt-[clamp(10px,2.8vh,24px)] flex flex-col gap-1">
     <label
       htmlFor="signup-owner-password"
       className={fieldLabelClassName}

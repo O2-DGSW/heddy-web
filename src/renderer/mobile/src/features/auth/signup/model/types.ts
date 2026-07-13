@@ -10,6 +10,7 @@ export type BaseAccountForm = {
   id: string;
   password: string;
   passwordConfirm: string;
+  name: string;
   carrier: Carrier;
   phone: string;
   verificationCode: string;
@@ -17,9 +18,7 @@ export type BaseAccountForm = {
 
 export type CustomerAccountForm = BaseAccountForm;
 
-export type OwnerAccountForm = BaseAccountForm & {
-  representativeName: string;
-};
+export type OwnerAccountForm = BaseAccountForm;
 
 export type ShopForm = {
   shopName: string;
@@ -27,5 +26,6 @@ export type ShopForm = {
   addressDetail: string;
   category: string;
   landline: string;
+  storeEmail: string;
   businessNumber: string;
 };

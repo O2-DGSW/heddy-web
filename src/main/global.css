@@ -11,6 +11,11 @@
 }
 
 @layer base {
+  html {
+    /* 390px 기준 16px, 좁을수록 줄어들고 최소 14px */
+    font-size: clamp(14px, 4.1vw, 16px);
+  }
+
   html,
   body,
   #root {
@@ -36,6 +41,16 @@
     caret-color: #3c3e3f;
     transition: background-color 9999s ease-out;
   }
+}
+
+/*
+  iOS input focus zoom 방지
+  - @layer base 안에 두면 Tailwind utilities(text-[0.75rem] 등)에 덮어써짐
+  - @layer 밖에 두면 모든 레이어보다 우선순위가 높아 확실히 적용됨
+  - 16px 미만 font-size 입력창에 포커스 시 iOS Safari/WebKit이 자동 확대하는 동작 차단
+*/
+input, select, textarea {
+  font-size: 16px;
 }
 
 @layer utilities {

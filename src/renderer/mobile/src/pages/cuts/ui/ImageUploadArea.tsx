@@ -14,13 +14,29 @@ export const ImageUploadArea = ({ label, initialFile, onFileChange }: ImageUploa
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (!initialFile) {
-      setPreviewUrl(null);
-      return;
+      void Promise.resolve().then(() => {
+        if (isMounted) {
+          setPreviewUrl(null);
+        }
+      });
+
+      return () => {
+        isMounted = false;
+      };
     }
+
     const url = URL.createObjectURL(initialFile);
-    setPreviewUrl(url);
+    void Promise.resolve().then(() => {
+      if (isMounted) {
+        setPreviewUrl(url);
+      }
+    });
+
     return () => {
+      isMounted = false;
       URL.revokeObjectURL(url);
     };
   }, [initialFile]);

@@ -42,6 +42,9 @@ lerna-debug.log*
 !.env.example
 !.env.*.example
 
+# Local HTTPS certificates
+certs/
+
 # Capacitor native platforms
 ios/
 android/

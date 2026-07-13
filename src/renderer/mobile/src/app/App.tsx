@@ -1,11 +1,36 @@
-import { BrowserRouter } from "react-router-dom";
+import { useEffect } from "react";
+import { HashRouter } from "react-router-dom";
 import { AppRoutes } from "./routes";
+import { restoreAuthSession } from "@/entities/auth/model/session";
+import { setupInterceptor } from "@/private/shared/api/interceptor";
+
+setupInterceptor();
+
+const shouldRestoreAuthSession = () => {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const path = window.location.hash.replace(/^#/, "").split("?")[0] || "/";
+  return (
+    !["/login", "/signup"].includes(path) &&
+    !path.startsWith("/find/")
+  );
+};
 
 const App = () => {
+  useEffect(() => {
+    if (!shouldRestoreAuthSession()) {
+      return;
+    }
+
+    void restoreAuthSession();
+  }, []);
+
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppRoutes />
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

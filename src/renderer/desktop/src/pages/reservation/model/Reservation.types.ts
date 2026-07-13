@@ -34,12 +34,13 @@ export interface ReservationCardListProps {
 }
 
 export interface ReservationNavigationPanelProps
-  extends ReservationCalendarProps,
-    ReservationCardListProps {}
+  extends ReservationCalendarProps, ReservationCardListProps {}
 
 export interface ReservationStatusPanelProps {
   filterTabs: FilterTab[];
   rows: ReservationRecord[];
+  isLoading: boolean; 
+  hasNoConnectedShop: boolean;
   onSelectFilter: (filterKey: ReservationFilterKey) => void;
   activeStatusMenuReservationId: number | null;
   onToggleStatusMenu: (reservationId: number) => void;
